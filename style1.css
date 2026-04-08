@@ -1,3 +1,64 @@
+:root {
+    --primary-color: rgb(255, 242, 234);
+ --pop-color: rgb(240, 90, 34);
+ --dark-color: rgb(8, 0, 37);
+ --light-color: #ffffff;
+ --secondary-color: rgba(14, 1, 63, 0.7);
+}
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
 body {
-    background-color: aquamarine;
+    margin-top: 75px;
+    background-color: var(--dark-color);
+    color: var(--light-color);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--dark-color);
+    z-index: 1000;
+}
+.navlogo img{
+    width: 280px;
+    height: auto;
+    margin-top: 10px;
+}
+.navbar ul{
+    display: flex;
+}
+.navbar li {
+    padding-left: 30px;
+}
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 10px;
+    /* border: 1px solid red; */
+}
+.nav-links li a {
+    color: var(--light-color);
+    text-decoration: none;
+    font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    transition: 0.5s;
+}
+nav a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--pop-color);
 }
