@@ -1,85 +1,98 @@
-body{
+:root {
+    --dark-color: #231916;
+    --pop-color: #4a2c1f;
+}
+
+body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
     background: #f4ecde;
 }
 
-/* HERO  */
+/* HERO SECTION */
 .hero {
-  display: flex;
-  flex-direction: row; 
-  flex-wrap: nowrap;  
-  align-items: center;
-  min-height: 90vh;
-  background-color: var(--dark-color);
-  color: white;
-  padding: 0 10%; 
-  gap: 50px; 
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: nowrap;  
+    align-items: center;
+    min-height: 90vh;
+    background-color: var(--dark-color);
+    color: white;
+    padding: 0 10%; 
+    gap: 50px; 
+    overflow: hidden;
 }
+
 .hero-text {
-  flex: 1;
-  max-width: 500px;
-  margin-left: 2rem; 
-  text-align: left; 
-  z-index: 2;
+    flex: 1;
+    max-width: 500px;
+    text-align: left; 
+    z-index: 2;
 }
 
 .hero-text h1 {
-  font-size: 4rem;
-  font-weight: 800;
-  line-height: 1.1;
-  margin: 0 0 1.5rem 0;
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 0 0 1.5rem 0;
 }
 
 .hero-text p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
 }
 
 .hero-img {
-  flex: 1; 
-  display:flex;
-  justify-content: flex-end;
-  z-index: 1;
+    flex: 1.2; /* Gives the image a bit more space than the text */
+    display: flex;
+    justify-content: flex-end;
+    z-index: 1;
 }
 
 .hero-img img {
-  width: 100%;
-  max-width: 550px;
-  height: auto;
-  object-fit: contain;
+    width: 100%;
+    max-width: 650px; /* Made the Hero cup larger */
+    height: auto;
+    object-fit: contain;
 }
 
-.scallop{
-  width:100%;
-    height:50px;
-    margin-top: -10px;
-    background:radial-gradient(circle at 20px -10px, var(--dark-color) 30px,transparent 31px)repeat-x;
-    background-size:40px 40px;
+/* SCALLOPED DIVIDER */
+.scallop {
+    width: 100%;
+    height: 50px;
+    margin-top: -15px; 
+    background: radial-gradient(circle at 20px -10px, var(--dark-color) 30px, transparent 31px) repeat-x;
+    background-size: 40px 40px;
+    position: relative;
+    z-index: 5;
 }
-/* MENU */
+
+/* MENU SECTION */
 .menu-section {
-    padding:40px;
-    text-align:center;
+    padding: 40px;
+    text-align: center;
     color: var(--dark-color);
 }
 
-.tabs{
-    margin:20px 0;
+.tabs {
+    margin: 20px 0;
 }
 
-.tab{
-    border:none;
-    padding:8px 18px;
+.tab {
+    border: none;
+    padding: 8px 18px;
     margin: 5px;
     border-radius: 20px;
     cursor: pointer;
+    background: white;
     color: var(--dark-color);
+    transition: 0.3s;
 }
-.tab:hover{
+
+.tab:hover {
     background-color: var(--pop-color);
-    color:white;
+    color: white;
 }
 
 .products {
@@ -91,27 +104,25 @@ body{
     padding: 40px;
 }
 
-/* CARD */
+/* CARD SYSTEM */
 .card {
     width: 20%;
+    min-width: 250px; /* Prevents cards from getting too skinny */
     min-height: 250px;
 }
 
-/* INNER */
 .card-inner {
     position: relative;
     width: 100%;
-    height: 280px;
+    height: 320px; /* Increased height to accommodate larger images */
     transition: transform 0.6s;
     transform-style: preserve-3d;
 }
 
-/* FLIP */
 .card.flip .card-inner {
     transform: rotateY(180deg);
 }
 
-/* FRONT & BACK */
 .card-front,
 .card-back {
     position: absolute;
@@ -120,26 +131,23 @@ body{
     border-radius: 90px 90px 20px 20px; 
     background: white;
     backface-visibility: hidden;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* IMAGE */
+/* MENU ITEM IMAGES (LARGIFIED) */
 .card-front img {
-    width: 85%;
-    max-height: 180px;
-    max-width: 160px;
+    width: 85%;           /* Increased width to fill card */
+    max-height: 210px;    /* Increased max height */
     height: auto;
     object-fit: contain;
-    margin-bottom: 90px 90px 0 0;
+    margin-top: -20px;    /* Pulls image up into the rounded area */
+    margin-bottom: 10px;  /* Tight gap to the text */
 }
 
-/* BACK */
 .card-back {
     background: #4a2c1f;
     color: white;
@@ -149,6 +157,7 @@ body{
 }
 
 /* BUTTONS */
+
 .flip-btn {
     position: absolute;
     top: 30px;
@@ -160,53 +169,62 @@ body{
     cursor: pointer;
 }
 
+
 .add-btn {
     position: absolute;
-    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -17.5px;
     background: #4a2c1f;
     color: white;
     border: none;
     border-radius: 50%;
     width: 35px;
     height: 35px;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: bold;
     cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
 }
 
-/* MOBILE */
-@media (max-width: 700px) {
-    .products {
+/* RESPONSIVE DESIGN */
+@media (max-width: 992px) {
+    .hero {
         flex-direction: column;
-        align-items: center;
+        text-align: center;
+        padding: 80px 5%;
+    }
+
+    .hero-text {
+        max-width: 100%;
+        margin-left: 0;
+        margin-bottom: 30px;
+    }
+
+    .hero-img {
+        justify-content: center;
+    }
+
+    .hero-img img {
+        max-width: 400px;
     }
 
     .card {
-        width: 80%;
+        width: 40%;
     }
-  
- .hero {
-    flex-direction: column;
-    text-align: center;
-    padding: 100px 5%;
-  }
-
-  .hero-text {
-    max-width: 100%;
-    margin-left: 0;
-    margin-bottom: 30px;
-  }
-
-  .hero-img {
-    justify-content: center;
-  }
-
-  .hero-img img {
-    max-width: 300px; /* Smaller cup for mobile */
-  }
-
-  .card {
-    width: 80%;
-  }
 }
 
+@media (max-width: 600px) {
+    .card {
+        width: 90%;
+    }
+    
+    .hero-text h1 {
+        font-size: 2.8rem;
+    }
+}
  
