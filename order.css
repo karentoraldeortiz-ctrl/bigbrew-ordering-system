@@ -6,24 +6,40 @@ body{
 
 /* HERO  */
 .hero {
-    display:flex;
-    justify-content: space-between;
-    align-items: center;    
-    background-color: var(--dark-color);
-    color:white;
-    padding:80px;
-    border-bottom-left-radius: 40px;
-    border-bottom-right-radius: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 90vh;
+  background-color: var(--dark-color);
+  color: white;
+  padding: 80px 40px;
+  gap: 30px; 
+}
+.hero-text {
+  flex: 1;
+  min-width: 280px;
 }
 
-.hero h1{
-    font-size: 48px;
-    margin-bottom:15px;
+.hero-text h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+.hero-text p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
+.hero-img {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
-/* .hero img {
-    width: 260px;
-} */
+.hero-img img {
+  width: 100%;
+  max-width: 300px; 
+  height: auto;
+}
 
 .scallop{
     height:40px;
@@ -33,7 +49,7 @@ body{
 }
 /* MENU */
 .menu-section {
-    padding:50px;
+    padding:40px;
     text-align:center;
     color: var(--dark-color);
 }
@@ -53,4 +69,92 @@ body{
 .tab:hover{
     background-color: var(--bright-color);
     color:white;
+}
+
+.products {
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:20px;
+    padding:20px;
+}
+.card {
+    perspective: 1000px;
+}
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+.card.flip .card-inner {
+  transform: rotateY(180deg);
+}
+
+/* FRONT & BACK */
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background: #fff;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* FRONT STYLE */
+.card-front img {
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.card-front p {
+  font-weight: 500;
+}
+
+/* BACK STYLE */
+.card-back {
+  background: #4a2c1f;
+  color: white;
+  transform: rotateY(180deg);
+  padding: 15px;
+  text-align: center;
+}
+
+/* BUTTONS */
+.flip-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: #d4a373;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.add-btn {
+  position: absolute;
+  bottom: 10px;
+  background: #4a2c1f;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .card-inner {
+    height: 220px;
+  }
 }

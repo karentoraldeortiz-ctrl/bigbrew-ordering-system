@@ -1,7 +1,7 @@
 :root {
  --dark-color: #2D1E17;
  --light-color: #FFF8E4;
- --bright-color: #B86D25;
+ --pop-color: #B86D25;
  /* we also use black and white */
 }
 * {
@@ -15,7 +15,7 @@ html {
 body {
     margin-top: 80px;
     background-color: var(--dark-color);
-    color: var(--light-color);
+    color: white;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -71,7 +71,7 @@ nav a:hover {
     background-color: white;
     border-radius: 3px;
 }
-@media (max-width: 650px) {
+@media (max-width: 700px) {
     .hamburger {
         display: flex;
     }
