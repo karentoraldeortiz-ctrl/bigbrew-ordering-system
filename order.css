@@ -1,12 +1,12 @@
-:root {
+/* :root {
     --dark-color: #231916;
     --pop-color: #4a2c1f;
-}
+} */
 
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: #f4ecde;
+    background: var(--light-color);
 }
 
 /* HERO SECTION */
@@ -91,7 +91,7 @@ body {
 }
 
 .tab:hover {
-    background-color: var(--pop-color);
+    background-color: #B86D25;
     color: white;
 }
 

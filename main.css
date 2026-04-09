@@ -88,8 +88,8 @@ body {
 }
 .product-card .flip-btn {
    position: absolute;
-    top: 30px;
-    right: 60px; /* pwede mo adjust */
+    top: 25px;
+    right: 35px; 
     cursor: pointer;
 }
 .product-card h3 {
@@ -180,5 +180,88 @@ body {
 }
 .step img {
     width: 25px;
+}
+
+/* specials section */
+.specials {
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.specials h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+.specials p {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    padding: 0 15%;
+}
+.special-list {
+    /* border: red solid 1px; */
+    width: 100%;
+    padding: 0 5%;
+}
+.special-card {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    margin-top: 3.5rem;
+}
+
+.box {
+    width: 95%;
+    height: 100%;
+    background: #7A7D24;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    padding-left: 120px; /* space inside for image overlap */
+}
+.box-text {
+    color: white;
+    max-width: 500px;
+    border: red solid 1px;
+    max-height: 90%;
+    
+}
+.box-text h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    margin-left: 20%;
+}
+.box-text p {
+    font-size: 1.1rem;
+    text-align: left;
+    margin-left: 5%;
+    border: red solid 1px;
+}
+.box-text button {
+    background-color: var(--pop-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 1rem;
+    margin-left: 85%;
+    border: red solid 1px;
+}
+.box-text button a {
+    text-decoration: none;
+    color: white;
+}
+.special-card img {
+    position: absolute;
+    top: -10%; 
+    left: 15%;
+    /* left: 50%; */
+    transform: translateX(-50%);
+    height: 120%; /* mas malaki kaysa box */
+    z-index: 2;
 }
 /* end of home page */

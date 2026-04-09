@@ -109,9 +109,8 @@ nav a:hover {
   margin-bottom: 40px;
 }
 .footer-logo img {
-    width:300px;
+    width:280px;
     height:auto;
-    display: block;
     margin-bottom:15px;
     margin-left: 0;
 }
@@ -134,6 +133,12 @@ nav a:hover {
   opacity: 0.7;
 }
 
+.footer-column {
+    color: white;
+}
+.footer-brand p {
+    color: white;
+}
 .footer-column h3 {
   font-size: 1.1rem;
   margin-bottom: 20px;
