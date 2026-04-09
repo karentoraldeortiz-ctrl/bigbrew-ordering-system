@@ -3,10 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>BigBrew | Our Menu</title>
     <link rel="stylesheet" href="style1.css" />
   </head>
+
   <body>
+    <!-- NAVBAR -->
     <header>
       <nav class="navbar">
         <div class="navlogo">
@@ -14,17 +16,22 @@
             <img src="assets/logo/bb-maysan-logo-1.png" alt="" />
           </a>
         </div>
-        <div class="nav-links">
+
+        <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <div class="nav-links" id="navLinks">
           <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="#">Our Menu</a></li>
-            <li><a href="about.html"></a></li>
-            <li>
+            <li><a class="active" href="#">Our Menu</a></li>
+            <li><a href="about.html">About</a></li>
+
+            <li class="icon cart">
               <a href="cart.html">
-                <img src="assets/icons/icons8-cart-24.png" alt=""
-              /></a>
+                <img src="assets/icons/icons8-cart-24.png" />
+                <span id="cartCount">0</span>
+              </a>
             </li>
-            <li>
+
+            <li class="icon">
               <a href="account.html">
                 <img src="assets/icons/icons8-profile-24.png" alt=""
               /></a>
@@ -33,5 +40,31 @@
         </div>
       </nav>
     </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Quality in Every Cup</h1>
+        <p>
+          Every drink we serve is made with premium ingredients, crafted with
+          care, and priced fairly. We understand the student hustle — late-night
+          study sessions, early morning classes, and everything in between.
+          That's why we're here.
+        </p>
+      </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu-section">
+      <h2>MENU</h2>
+
+      <div class="tabs">
+        <button class="tab active">all</button>
+        <button class="tab">milk tea</button>
+        <button class="tab">coffee</button>
+        <button class="tab">fruit tea</button>
+        <button class="tab">breasty</button>
+      </div>
+    </section>
   </body>
 </html>
