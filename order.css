@@ -131,7 +131,11 @@ body{
 
 /* IMAGE */
 .card-front img {
-    width: 60%;
+    width: 85%;
+    max-height: 180px;
+    max-width: 160px;
+    height: auto;
+    object-fit: contain;
     margin-bottom: 90px 90px 0 0;
 }
 
