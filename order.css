@@ -72,89 +72,100 @@ body{
 }
 
 .products {
-    display:grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap:20px;
-    padding:20px;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 40px;
 }
+
+/* CARD */
 .card {
+    width: 220px;
     perspective: 1000px;
 }
+
+/* INNER */
 .card-inner {
     position: relative;
     width: 100%;
-    height: 260px;
+    height: 280px;
     transition: transform 0.6s;
     transform-style: preserve-3d;
 }
+
+/* FLIP */
 .card.flip .card-inner {
-  transform: rotateY(180deg);
+    transform: rotateY(180deg);
 }
 
 /* FRONT & BACK */
 .card-front,
 .card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  background: #fff;
-  backface-visibility: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 90px 90px 20px 20px; 
+    background: white;
+    backface-visibility: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* FRONT STYLE */
+/* IMAGE */
 .card-front img {
-  width: 100px;
-  margin-bottom: 10px;
+    width: 60%;
+    margin-bottom: 90px 90px 0 0;
 }
 
-.card-front p {
-  font-weight: 500;
-}
-
-/* BACK STYLE */
+/* BACK */
 .card-back {
-  background: #4a2c1f;
-  color: white;
-  transform: rotateY(180deg);
-  padding: 15px;
-  text-align: center;
+    background: #4a2c1f;
+    color: white;
+    transform: rotateY(180deg);
+    padding: 20px;
+    text-align: center;
 }
 
 /* BUTTONS */
 .flip-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  border: none;
-  background: #d4a373;
-  color: white;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
 }
 
 .add-btn {
-  position: absolute;
-  bottom: 10px;
-  background: #4a2c1f;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  font-size: 18px;
-  cursor: pointer;
+    position: absolute;
+    bottom: 15px;
+    background: #4a2c1f;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+    cursor: pointer;
 }
 
 /* MOBILE */
-@media (max-width: 600px) {
-  .card-inner {
-    height: 220px;
-  }
+@media (max-width: 700px) {
+    .products {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        width: 80%;
+    }
 }
