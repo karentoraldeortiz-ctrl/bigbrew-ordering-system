@@ -3,27 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style1.css">
+
+    <!-- GLOBAL METADATA -->
+     <meta name="description" content="Big Brew Maysan - Big in Taste, Bit in Price. ">
+    <meta name="keywords" content="BigBrew Maysan, Maysan, Online Order, Milktea">
+    <meta name="author" content="Allyana Flores, Karen Ortiz">
+    <title>BigBrew - Maysan</title>    
+    <link rel="stylesheet" href="global.css">
+    <link rel="shortcut icon" href="assets/logo/logo-black.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <!-- END GLOBAL METADATA -->
+
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
     <header>
         <nav class="navbar">
-        <div class="navlogo">
-            <a href="index.html">
-                <img src="assets/logo/bb-maysan-logo-1.png" alt="">
-            </a>
-        </div>
-        <div class="nav-links">
-            <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="menu.html">Our Menu</a></li>
-            <li><a href="about.html"></a></li>
-            <li><a href="cart.html"> <img src="assets/icons/icons8-cart-24.png" alt=""></a></li>
-            <li><a href="account.html"> <img src="assets/icons/icons8-profile-24.png" alt=""></a></li>
-            </ul>
-        </div>
-    </nav>
+            <div class="navlogo">
+                <a href="index.html">
+                    <img src="assets/logo/bb-maysan-logo-1.png" alt="">
+                </a>
+            </div>
+            <div class="nav-links" id="navlinks">
+                <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="menu.html">Our Menu</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="cart.html"> <img src="assets/icons/icons8-cart-24.png" alt=""></a></li>
+                <li><a href="account.html"> <img src="assets/icons/icons8-profile-24.png" alt=""></a></li>
+                </ul>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
     </header>
+
+    <div class="hero1">
+        <div class="hero1-text">
+            <h1>Sip Your Favorites Without the Wait</h1>
+            <p>Discover your favorite BigBrew drinks and order online for quick and easy pickup.</p>
+            <button><a href="menu.html">Order Now</a></button>
+        </div>
+        <div class="hero1-img">
+            <img src="assets/pictures/2milkteas.png" alt="BigBrew Hero Image">
+        </div>
+    </div>
+
+    <section class="best-seller">
+        <h2>Famous Five</h2>
+        <p>Discover our most popular drinks, made with high-quality tea leaves, vibrant fruit flavors, rich creamy textures, and delightful toppings in every sip.</p>
+        <div class="product-list">
+            <div class="product-card">
+                <img src="assets/products/best-seller-1.png" alt="Best Seller 1">
+                <h3>Classic Milk Tea</h3>
+                <p>Our signature blend of black tea and creamy milk, sweetened to perfection.</p>
+            </div>
+            <div class="product-card">
+                <img src="assets/products/best-seller-2.png" alt="Best Seller 2">
+                <h3>Brown Sugar Boba Milk</h3>
+                <p>A rich and indulgent treat with caramelized brown sugar and chewy boba pearls.</p>
+            </div>
+            <div class="product-card">
+                <img src="assets/products/best-seller-3.png" alt="Best Seller 3">
+                <h3>Matcha Green Tea Latte</h3>
+                <p>A vibrant blend of earthy matcha and creamy milk, lightly sweetened for balance.</p>
+            </div>
+        </div>
+        <div>
+            <button class="best-seller">
+                <a href="menu.html">Explore the Menu</a>
+            </button>
+        </div>
+    </section>
+
+    <section class="how-to-order">
+        <h2>How to Order</h2>
+        <p>Ordering your favorite BigBrew drinks is as easy as 1-2-3! Just follow these simple steps:</p>
+        <div class="order-steps">
+            <div class="step">
+                <img src="assets/icons/step1.png" alt="Step 1">
+                <h3>Browse the Menu</h3>
+                <p>Explore our wide selection of delicious drinks and find your new favorite.</p>
+            </div>
+            <div class="step">
+                <img src="assets/icons/step2.png" alt="Step 2">
+                <h3>Customize Your Drink</h3>
+                <p>Choose your sweetness level, ice preference, and any extra toppings you love.</p>
+            </div>
+            <div class="step">
+                <img src="assets/icons/step3.png" alt="Step 3">
+                <h3>Place Your Order</h3>
+                <p>Checkout online and select your pickup time for a quick and convenient experience.</p>
+            </div>
+        </div>
+    </section>
+
+
+<script src="global.js"></script>    
 </body>
+<footer>
+    <div class="footer-content">
+        <div class="footer-section about">
+            <h2>About BigBrew</h2>
+            <p>BigBrew is a student-run milktea business dedicated to providing high-quality, affordable drinks for students. We believe in using premium ingredients and crafting each drink with care to ensure every sip is a delightful experience.</p>
+        </div>
+        <div class="footer-section contact">
+            <h2>Contact Us</h2>
+            <p>Email: info@bigbrew.com</p>
+            <p>Phone: (123) 456-7890</p>
+        </div>
+    </div>
+</footer>
 </html>

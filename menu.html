@@ -1,44 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BigBrew | Our Menu</title>
-    <link rel="stylesheet" href="style1.css" />
-  </head>
-
-  <body>
-    <!-- NAVBAR -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Big Brew Maysan - Big in Taste, Bit in Price. ">
+    <meta name="keywords" content="BigBrew Maysan, Maysan, Online Order, Milktea">
+    <meta name="author" content="Allyana Flores, Karen Ortiz">
+    <title>BigBrew | Our Menu</title>    
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="order.css">
+    <link rel="shortcut icon" href="assets/logo/logo-black.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+  
+    
+</head>
+<body>
+  <!-- NAV BAR -->
     <header>
-      <nav class="navbar">
-        <div class="navlogo">
-          <a href="index.html">
-            <img src="assets/logo/bb-maysan-logo-1.png" alt="" />
-          </a>
-        </div>
+        <nav class="navbar">
+            <div class="navlogo">
+                <a href="index.html">
+                    <img src="assets/logo/bb-maysan-logo-1.png" alt="">
+                </a>
+            </div>
+            <div class="nav-links" id="navlinks">
+                <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Our Menu</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="cart.html"> <img src="assets/icons/icons8-cart-24.png" alt=""></a></li>
+                <li><a href="account.html"> <img src="assets/icons/icons8-profile-24.png" alt=""></a></li>
+                </ul>
+            </div>
 
-        <div class="hamburger" onclick="toggleMenu()">☰</div>
-        <div class="nav-links" id="navLinks">
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a class="active" href="#">Our Menu</a></li>
-            <li><a href="about.html">About</a></li>
-
-            <li class="icon cart">
-              <a href="cart.html">
-                <img src="assets/icons/icons8-cart-24.png" />
-                <span id="cartCount">0</span>
-              </a>
-            </li>
-
-            <li class="icon">
-              <a href="account.html">
-                <img src="assets/icons/icons8-profile-24.png" alt=""
-              /></a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
     </header>
 
     <!-- Hero Section -->
@@ -52,7 +52,15 @@
           That's why we're here.
         </p>
       </div>
+
+      <div class="hero-img">
+        <img src="assets/products/hero">
+      </div>
+
+    </div>
+   
     </section>
+     <div class="scallop"></div>
 
     <!-- Menu Section -->
     <section class="menu-section">
@@ -63,8 +71,29 @@
         <button class="tab">milk tea</button>
         <button class="tab">coffee</button>
         <button class="tab">fruit tea</button>
-        <button class="tab">breasty</button>
+        <button class="tab">brosty</button>
       </div>
+
+      <div class="products">
+      <!-- Products -->
+      <div class="card-inner">
+      <div class="card-front">
+      <button class="flip-btn">↻</button>
+      <img src="assets/products/1755220656_DARK CHOCO.webp">
+      <p>Dark Choco</p>
+      <button class="add-btn">+</button>
+      </div>
+
+      <div class="card-back">
+        <button class="flip-btn">↻</button>
+        <h4>Dark Choco</h4>
+        <p>Indulge in the rich, velvety goodness of our Dark Choco. Made with premium cocoa, this drink is a chocolate lover's dream come true. Perfectly balanced sweetness and a hint of bitterness create a decadent treat that will satisfy your cravings. Whether you're looking for a comforting pick-me-up or a delicious dessert, our Dark Choco is the ultimate choice for chocolate enthusiasts.</p>
+      </div>
+      
+      </div>
+      </div>
+        
     </section>
+    <script src="global.js"></script>
   </body>
 </html>

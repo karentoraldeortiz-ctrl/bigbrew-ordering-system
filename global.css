@@ -1,21 +1,19 @@
 :root {
-    --primary-color: rgb(255, 242, 234);
- --pop-color: rgb(240, 90, 34);
- --dark-color: rgb(8, 0, 37);
- --light-color: #ffffff;
- --secondary-color: rgba(14, 1, 63, 0.7);
+ --dark-color: #2D1E17;
+ --light-color: #FFF8E4;
+ --bright-color: #B86D25;
+ /* we also use black and white */
 }
 * {
     margin: 0;
     padding: 0;
-    list-style: none;
     box-sizing: border-box;
 }
 html {
   scroll-behavior: smooth;
 }
 body {
-    margin-top: 75px;
+    margin-top: 80px;
     background-color: var(--dark-color);
     color: var(--light-color);
     font-family: 'Poppins', sans-serif;
@@ -44,12 +42,11 @@ body {
 }
 .navbar li {
     padding-left: 30px;
+    list-style: none;
 }
 .nav-links {
     display: flex;
-    list-style: none;
     gap: 10px;
-    /* border: 1px solid red; */
 }
 .nav-links li a {
     color: var(--light-color);
@@ -61,4 +58,35 @@ body {
 nav a:hover {
   text-decoration: underline;
   text-decoration-color: var(--pop-color);
+}
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+.hamburger span{
+    width: 28px;
+    height: 3px;
+    background-color: white;
+    border-radius: 3px;
+}
+@media (max-width: 650px) {
+    .hamburger {
+        display: flex;
+    }
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: row;
+        background-color: var(--dark-color);
+        padding: 15px 0;
+        gap: 20px;
+        display: none;
+    }
+    .nav-links.active {
+        display: flex;
+    }
 }

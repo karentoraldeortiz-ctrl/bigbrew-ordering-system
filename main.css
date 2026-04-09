@@ -1,0 +1,35 @@
+/* for home, about, account, review pages */
+
+
+body {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    padding: 5%;
+}
+
+/* for home page */
+
+.hero1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 90vh;
+    border: red 1px solid;
+}
+.hero1 img {
+    width: 400px;
+    height: auto;
+        border: red 1px solid;
+
+}
+.hero1-text {
+    max-width: 500px;
+    border: rgb(187, 51, 142) 1px solid;
+    margin-left: 2rem;
+    justify-items: center;
+}  
+.hero1-text h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+} 
+/* end of home page */
