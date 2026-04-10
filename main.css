@@ -427,6 +427,145 @@ body {
 }
 /* end of home page */
 
+/* ============= ACCOUNT PAGE ============= */
+.account-hero header{
+    background-color: var(--dark-color);
+    color: var(--light-color);
+    text-align: center;
+    padding: 2rem;
+    border-radius: 0 0 100% 100%;
+}
+.account-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 5%;
+}
+.account-container1, .account-container2 {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    width: 400px;
+}
+.account-container1 {
+    width: 30%;
+}
+.account-container2 {
+    width: 70%;
+    overflow-y: auto;
+}
+.account-container2 h2 {
+    padding-bottom: 10px;
+}
+.orderbox {
+    border: solid 1px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    justify-content: center;
+}
+.order-box-header {
+    margin: 0 0 10px 0;
+}
+.order-box-header, .OB-header1, .OB-header2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.fa-clock, .OB-header2, hr {
+    color: rgba(0, 0, 0, 0.4);
+}
+.OB-header1 div {
+    background-color: #FEF9C2 ;
+    color: #A84B00;
+    padding: 3px 10px;
+    border-radius: 50px;
+}
+.order-box-body ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: rgba(0, 0, 0, 0.5);
+}
+.orderbox hr{
+  height: 1px;
+  width: 100%;
+}
+.hr {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+    width: 100%;
+}
+.hr hr {
+    border: 1px rgba(0, 0, 0, 0.1) solid;
+}
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+.order-total h4 {
+    margin: 0;
+    color: var(--pop-color);
+}
+
+.acc-info-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.fa-user {
+    background-color: var(--pop-color);
+    padding: 10px;
+    margin: 0 15px;
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    font-size: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+.fa-pen, .acc-info-header p {
+    color: rgba(0, 0, 0, 0.4);
+}
+.acc-info-body {
+    padding: 5px 20px;
+}
+.info-body-list div{
+    margin: 15px 0;
+}
+.fa-envelope, .fa-phone, .fa-calendar {
+    color: var(--pop-color);
+    margin-right: 10px;
+}
+.acc-info-footer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 10px;
+    border: var(--pop-color) solid 1px;
+}
+.acc-info-footer button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    color: var(--pop-color);
+    padding: 10px;
+    background-color: white;
+}
+
+/* ===== END of ACCOUNT PAGE =====     */
+
+
 /*-------------------------------ABOUT PAGE-----------------------*/
 
 /* Hero section */
@@ -434,7 +573,7 @@ body {
     background-color: var(--light-color);
     position: relative;
     padding-bottom: 0;
-    overflow: hidden; /* Prevent wave from causing horizontal scroll */
+    overflow: hidden;
 }
 
 .about-hero {
@@ -462,7 +601,7 @@ body {
 }
 
 .about-img img {
-    width: 100%;
+    width: 200%;
     max-width: 600px;
     height: auto;
 }
@@ -483,7 +622,7 @@ body {
     background-color: var(--dark-color);
     color: white;
     padding: 0 10% 100px 10%;
-    margin-top: -2px; /* Fixes pixel gap */
+    margin-top: -2px; 
 }
 
 .about-intro {

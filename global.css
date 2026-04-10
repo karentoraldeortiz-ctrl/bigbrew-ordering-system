@@ -13,7 +13,7 @@ html {
   scroll-behavior: smooth;
 }
 body {
-    margin-top: 80px;
+    margin-top: 75px;
     color: white;
     font-family: 'Poppins', sans-serif;
 }
@@ -120,7 +120,7 @@ nav a:hover {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 0;
 }
 
 .footer-brand h2 {

@@ -44,7 +44,7 @@ body {
 }
 
 .hero-img {
-    flex: 1.2; /* Gives the image a bit more space than the text */
+    flex: 1.2; 
     display: flex;
     justify-content: flex-end;
     z-index: 1;
@@ -52,7 +52,7 @@ body {
 
 .hero-img img {
     width: 100%;
-    max-width: 650px; /* Made the Hero cup larger */
+    max-width: 650px; 
     height: auto;
     object-fit: contain;
 }
@@ -69,6 +69,16 @@ body {
 }
 
 /* MENU SECTION */
+#no-results {
+    padding: 50px;
+    font-size: 1.2rem;
+    color: var(--dark-color);
+    grid-column: 1 / -1; /* Ensures it spans the whole grid */
+}
+
+.menu-item {
+    transition: opacity 0.3s ease;
+}
 .menu-section {
     padding: 40px;
     text-align: center;
@@ -107,14 +117,14 @@ body {
 /* CARD SYSTEM */
 .card {
     width: 20%;
-    min-width: 250px; /* Prevents cards from getting too skinny */
+    min-width: 250px; 
     min-height: 250px;
 }
 
 .card-inner {
     position: relative;
     width: 100%;
-    height: 320px; /* Increased height to accommodate larger images */
+    height: 320px;
     transition: transform 0.6s;
     transform-style: preserve-3d;
 }
@@ -138,14 +148,14 @@ body {
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* MENU ITEM IMAGES (LARGIFIED) */
+
 .card-front img {
-    width: 85%;           /* Increased width to fill card */
-    max-height: 210px;    /* Increased max height */
+    width: 85%;         
+    max-height: 210px;  
     height: auto;
     object-fit: contain;
-    margin-top: -20px;    /* Pulls image up into the rounded area */
-    margin-bottom: 10px;  /* Tight gap to the text */
+    margin-top: -20px;   
+    margin-bottom: 10px; 
 }
 
 .card-back {
