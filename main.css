@@ -427,71 +427,113 @@ body {
 }
 /* end of home page */
 
-/*-------------------------------ABOUT PAGEEE-----------------------*/
+/*-------------------------------ABOUT PAGE-----------------------*/
 
-/* hero section */
+/* Hero section */
 .about-hero-wrapper {
     background-color: var(--light-color);
     position: relative;
-    overflow: hidden;
+    padding-bottom: 0;
+    overflow: hidden; /* Prevent wave from causing horizontal scroll */
 }
+
 .about-hero {
     display: flex;
     align-items: center;
     padding: 80px 10% 120px 10%;
     gap: 40px;
-    background-color:var(--light-color);
+    background-color: var(--light-color);
 }
+
 .about-text {
-    flex:1;
+    flex: 1;
+    z-index: 5;
 }
+
 .about-text h1 {
     font-size: 3.5rem;
     margin-bottom: 20px;
     color: var(--dark-color);
 }
+
 .about-img {
     flex: 1;
+    z-index: 5;
 }
+
 .about-img img {
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
     height: auto;
 }
-/* INTRO */
+
+.hero-wave {
+    background-color: var(--dark-color); 
+    height: 250px;
+    width: 150%; 
+    position: absolute;
+    bottom: -80px;
+    left: -25%; 
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    z-index: 2;
+}
+
+/* INTRO & DARK CONTENT */
+.dark-content-area {
+    background-color: var(--dark-color);
+    color: white;
+    padding: 0 10% 100px 10%;
+    margin-top: -2px; /* Fixes pixel gap */
+}
+
 .about-intro {
     text-align: center;
     padding: 60px 20%;
     background-color: var(--dark-color);
 }
+
 .about-intro p {
     color: var(--light-color);
     line-height: 1.8;
     max-width: 800px;
     margin: 0 auto;
 }
-.splash-img {
+
+.intro-glass-icon {
     width: 60px;
     height: auto;
-    margin-bottom:25px;
+    margin-bottom: 25px;
 }
+
 .our-story-bg {
     background-color: var(--dark-color);
-    color:white;
-    padding: 120px 10%;
-    margin-top: -60px;
+    color: white;
+    padding: 80px 0;
 }
+
 .our-story {
     display: flex;
     align-items: center;
     gap: 80px;
 }
+
+.story-content {
+    flex: 1;
+}
+
 .story-content h2 {
     font-size: 2.5rem;
     margin-bottom: 20px;
 }
-.story-content {
-    flex: 1
+
+.testimonial-link {
+    color: #d4a373;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.story-img {
+    flex: 1;
 }
 
 .story-img img {
@@ -500,6 +542,7 @@ body {
     border-radius: 40px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.5);
 }
+
 /* --- VALUES --- */
 .values-section {
     padding: 100px 10%;
@@ -519,6 +562,11 @@ body {
     border-radius: 20px;
     flex: 1;
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-10px);
 }
 
 .value-img {
@@ -526,7 +574,7 @@ body {
     margin-bottom: 15px;
 }
 
-/* --- VISIT US & MAP CURVE --- */
+/* --- VISIT US & MAP --- */
 .visit-section {
     padding: 100px 10%;
     background-color: var(--light-color);
@@ -545,7 +593,6 @@ body {
     flex: 1;
     padding: 60px;
     background: var(--dark-color);
-   
     clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
     z-index: 2;
 }
@@ -571,35 +618,40 @@ body {
     border: none;
 }
 
-@media(max-width: 700px) {
+/* --- RESPONSIVE --- */
+@media(max-width: 768px) {
     .about-hero {
         flex-direction: column;
         text-align: center;
+        padding-top: 40px;
     }
-    .about-img img {
-        max-width: 100%;
+
+    .about-text h1 {
+        font-size: 2.5rem;
     }
+
     .our-story {
         flex-direction: column;
         text-align: center;
+        gap: 40px;
     }
-    .story-img img {
-        max-width: 100%;
-    }
+
     .values-grid {
         flex-direction: column;
     }
+
     .visit-card {
         flex-direction: column;
     }
+
     .visit-info {
         clip-path: none;
         padding: 40px 20px;
+        text-align: center;
     }
+
     .visit-map {
         margin-left: 0;
         height: 300px;
     }
 }
-
-/* ---------------------END OF ABOUT PAGE --------------------- */
