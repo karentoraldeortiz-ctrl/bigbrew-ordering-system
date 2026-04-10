@@ -14,13 +14,14 @@ html {
 }
 body {
     margin-top: 80px;
-    background-color: var(--dark-color);
     color: white;
     font-family: 'Poppins', sans-serif;
 }
 
 /* navbar */
+
 .navbar {
+
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -49,7 +50,7 @@ body {
     gap: 10px;
 }
 .nav-links li a {
-    color: var(--light-color);
+    color: white;
     text-decoration: none;
     font-size: 15px;
     font-family: 'Poppins', sans-serif;
