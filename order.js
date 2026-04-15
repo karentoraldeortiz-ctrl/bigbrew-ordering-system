@@ -44,23 +44,11 @@ filterButtons.forEach(button => {
     });
 });
 
-// //==========cart notif ========//
-// document.addEventListener('DOMContentLoaded', () => {
-//     const addButtons = document.querySelectorAll('.add-btn');
-//     const notification = document.querySelectorAll('cart-notification');
-
-//     addButtons.forEach(button => {
-//         button.addEventListener('click', (e) => {
-//             const cardFront = e.target.closest('.card-front');
-//             const itemName = cardFront.querySelector('h3').innerText;
-//         })
-//     })
-// })
 // =========================
-// SAFE ELEMENT SELECTORS
+// ELEMENTS
 // =========================
 const modal = document.getElementById("productModal");
-const closeModal = document.querySelector(".close-modal");
+const closeModal = document.querySelector(".close-btn");
 
 const addButtons = document.querySelectorAll(".add-btn");
 
@@ -87,41 +75,34 @@ const notifMessage = document.getElementById("notif-message");
 // =========================
 let selectedBasePrice = 0;
 let quantity = 1;
+let currentProduct = {};
 
 // =========================
 // OPEN MODAL
 // =========================
 addButtons.forEach(btn => {
-  btn.addEventListener("click", (e) => {
+  btn.addEventListener("click", () => {
 
-    const card = e.target.closest(".card");
+    const card = btn.closest(".card");
+    const title = card.querySelector("h3")?.innerText;
+    const img = card.querySelector("img")?.src;
 
-    if (!card) return;
-
-    const title = card.querySelector("h3")?.innerText || "";
-    const img = card.querySelector("img")?.src || "";
+    currentProduct = { title, img };
 
     modalTitle.innerText = title;
     modalImg.src = img;
 
     resetModal();
-
-    if (modal) {
-  modal.style.display = "flex";
-} else {
-  console.error("productModal not found in HTML");
-}
+    modal.style.display = "flex";
   });
 });
 
 // =========================
 // CLOSE MODAL
 // =========================
-if (closeModal) {
-  closeModal.addEventListener("click", () => {
-    modal.style.display = "none";
-  });
-}
+closeModal.addEventListener("click", () => {
+  modal.style.display = "none";
+});
 
 window.addEventListener("click", (e) => {
   if (e.target === modal) {
@@ -130,10 +111,9 @@ window.addEventListener("click", (e) => {
 });
 
 // =========================
-// RESET MODAL
+// RESET
 // =========================
 function resetModal() {
-
   selectedBasePrice = 0;
   quantity = 1;
 
@@ -142,18 +122,18 @@ function resetModal() {
   sizeOptions.forEach(opt => opt.checked = false);
   addonOptions.forEach(opt => opt.checked = false);
 
-  totalPriceDisplay.innerText = "P 0";
+  totalPriceDisplay.innerText = "₱0";
   selectionSummary.innerText = "Please select a size";
 
   addToCartBtn.disabled = true;
 }
 
 // =========================
-// SIZE SELECTION
+// SIZE SELECT
 // =========================
 sizeOptions.forEach(option => {
   option.addEventListener("change", () => {
-    selectedBasePrice = parseInt(option.value);
+    selectedBasePrice = Number(option.value);
 
     updateTotal();
     updateSummary();
@@ -172,7 +152,7 @@ addonOptions.forEach(option => {
 });
 
 // =========================
-// QUANTITY
+// QTY
 // =========================
 plusQty.addEventListener("click", () => {
   quantity++;
@@ -189,7 +169,7 @@ minusQty.addEventListener("click", () => {
 });
 
 // =========================
-// TOTAL
+// TOTAL CALCULATION
 // =========================
 function updateTotal() {
 
@@ -197,13 +177,13 @@ function updateTotal() {
 
   addonOptions.forEach(opt => {
     if (opt.checked) {
-      addonTotal += parseInt(opt.value);
+      addonTotal += Number(opt.value);
     }
   });
 
   let total = (selectedBasePrice + addonTotal) * quantity;
 
-  totalPriceDisplay.innerText = `P ${total}`;
+  totalPriceDisplay.innerText = `₱${total}`;
 }
 
 // =========================
@@ -233,12 +213,10 @@ function updateSummary() {
 }
 
 // =========================
-// BUTTON ENABLE
+// ENABLE BUTTON
 // =========================
 function checkReady() {
-
   let sizeSelected = document.querySelector("input[name='size']:checked");
-
   addToCartBtn.disabled = !sizeSelected;
 }
 
@@ -247,15 +225,22 @@ function checkReady() {
 // =========================
 addToCartBtn.addEventListener("click", () => {
 
-  if (notif) {
-    notif.style.display = "block";
-    notifMessage.innerText = "Item added to cart!";
+  const item = {
+    name: currentProduct.title,
+    image: currentProduct.img,
+    price: totalPriceDisplay.innerText
+  };
 
-    setTimeout(() => {
-      notif.style.display = "none";
-    }, 2000);
-  }
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.push(item);
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  notif.style.display = "block";
+  notifMessage.innerText = "Item added to cart!";
+
+  setTimeout(() => {
+    notif.style.display = "none";
+  }, 2000);
 
   modal.style.display = "none";
 });
-

@@ -348,43 +348,79 @@
     </div>
 
     <!-- Cart Page -->
-   <div id="productModal" class="modal">
+   <!-- PRODUCT MODAL -->
+<div id="productModal" class="modal">
 
-  <div class="popup-box">
+  <div class="modal-content">
 
-    <span class="close-btn" onclick="closePopup()">✖</span>
+    <!-- CLOSE -->
+    <span class="close-btn">&times;</span>
 
-    <div class="popup-left">
-      <img id="modalImg" src="">
-    </div>
+    <div class="modal-body">
 
-    <div class="popup-right">
-
-      <h2 id="modalTitle"></h2>
-
-      <p>Choose Size</p>
-
-      <div class="sizes">
-        <button onclick="selectSize('Medium',29)">Medium ₱29</button>
-        <button onclick="selectSize('Grande',39)">Grande ₱39</button>
+      <!-- LEFT (IMAGE) -->
+      <div class="modal-left">
+        <img id="modalImg" src="">
       </div>
 
-      <p>Add Ons</p>
+      <!-- RIGHT (DETAILS) -->
+      <div class="modal-right">
 
-      <div class="addons">
-        <label><input type="checkbox" value="9" onchange="computeTotal()"> Pearl ₱9</label>
-        <label><input type="checkbox" value="9" onchange="computeTotal()"> Cream Cheese ₱9</label>
-        <label><input type="checkbox" value="9" onchange="computeTotal()"> Crystal ₱9</label>
+        <h2 id="modalTitle">Product Name</h2>
+
+
+
+        <!-- SIZE -->
+        <h4>Choose Size</h4>
+
+        <label class="size-card">
+          <input type="radio" name="size" value="29" data-name="Medium">
+          <span>Medium ₱29</span>
+        </label>
+
+        <label class="size-card">
+          <input type="radio" name="size" value="39" data-name="Grande">
+          <span>Grande ₱39</span>
+        </label>
+
+        <!-- ADD ONS -->
+        <h4>Add Ons</h4>
+
+        <div class="addons">
+
+          <label class="addon-card">
+            <input type="checkbox" value="9" data-name="Pearl">
+            <span>Pearl ₱9</span>
+          </label>
+
+          <label class="addon-card">
+            <input type="checkbox" value="9" data-name="Cream Cheese">
+            <span>Cream Cheese ₱9</span>
+          </label>
+
+          <label class="addon-card">
+            <input type="checkbox" value="9" data-name="Crystal">
+            <span>Crystal ₱9</span>
+          </label>
+
+        </div>
+
+        <!-- QUANTITY -->
+        <div class="qty">
+          <button id="minusQty">-</button>
+          <span id="qtyCount">1</span>
+          <button id="plusQty">+</button>
+        </div>
+
+        <!-- TOTAL -->
+        <h3 id="totalPriceDisplay">P 0</h3>
+
+        <!-- ADD BUTTON -->
+        <button id="addToCartFinal" disabled>Add to Cart</button>
+
       </div>
-
-      <h3>Total ₱<span id="popupPrice">29</span></h3>
-
-      <button class="cart-btn" onclick="addToCart()">Add to Cart</button>
-
     </div>
-
   </div>
-
 </div>
 <!-- Notification -->
   <div id="cart-notification" class="cart-notification">
