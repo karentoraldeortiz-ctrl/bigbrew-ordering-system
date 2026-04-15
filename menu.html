@@ -347,6 +347,70 @@
       </div>
     </div>
 
+    <!-- Cart Page -->
+   <div id="productModal" class="modal-overlay">
+    <div class="modal-container">
+        <span class="close-modal">&times;</span>
+        
+        <div class="modal-layout">
+            <div class="modal-image-section">
+                <img id="modalImg" src="" alt="Product Image">
+            </div>
+
+            <div class="modal-details-section">
+                <h2 id="modalTitle">Product Name</h2>
+                
+                <p class="section-label">choose size</p>
+                <div class="size-options">
+                    <label class="size-card">
+                        <input type="radio" name="size" value="29" data-name="medio">
+                        <div class="size-box">
+                            <span>medio</span>
+                            <span>P 29</span>
+                        </div>
+                    </label>
+                    <label class="size-card">
+                        <input type="radio" name="size" value="39" data-name="grande">
+                        <div class="size-box">
+                            <span>grande</span>
+                            <span>P 39</span>
+                        </div>
+                    </label>
+                </div>
+
+                <p class="section-label">adds on</p>
+                <div class="addons-grid">
+                    <label class="addon-card"><input type="checkbox" value="9" data-name="pearl"> pearl <span>P 9</span></label>
+                    <label class="addon-card"><input type="checkbox" value="9" data-name="cream cheese"> cream cheese <span>P 9</span></label>
+                    <label class="addon-card"><input type="checkbox" value="9" data-name="cream puff"> cream puff <span>P 9</span></label>
+                    <label class="addon-card"><input type="checkbox" value="9" data-name="crystal"> crystal <span>P 9</span></label>
+                    <label class="addon-card"><input type="checkbox" value="8" data-name="whipped cream"> whipped cream <span>P 8</span></label>
+                    <label class="addon-card"><input type="checkbox" value="8" data-name="cheesecake"> cheesecake <span>P 8</span></label>
+                    <label class="addon-card"><input type="checkbox" value="8" data-name="crushed oreo"> crushed oreo <span>P 8</span></label>
+                    <label class="addon-card"><input type="checkbox" value="8" data-name="coffee jelly"> coffee jelly <span>P 8</span></label>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="price-info">
+                        <h2 id="totalPriceDisplay">P 0</h2>
+                        <p id="selectionSummary">Please select a size</p>
+                    </div>
+                    <div class="quantity-control">
+                        <button type="button" id="minusQty">-</button>
+                        <span id="qtyCount">1</span>
+                        <button type="button" id="plusQty">+</button>
+                    </div>
+                </div>
+                
+                <button class="add-to-cart-btn" id="addToCartFinal" disabled>add to cart</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Notification -->
+  <div id="cart-notification " class="cart-notification">
+    <i class="fas fa-check-circle"></i> <span id="notif-message">Item added to cart!</span>
+  </div>
     <div class="footer-column">
       <h3>Follow us on</h3>
       <div class="social-icons">
@@ -360,6 +424,7 @@
   <div class="footer-bottom">
     <p>&copy; 2026. BigBrew Maysan. All Rights Reserved.</p>
   </div>
+
   </footer>
     <script src="order.js"></script>
      <script src="global.js"></script>
