@@ -238,3 +238,20 @@ body {
     }
 }
  
+/* ======== FOR CART PAGE =========*/
+.cart-container {
+    color: var(--dark-color);
+    margin-top: 5rem;
+    display: flex;
+    gap: 20px;
+    padding: 2rem
+}
+main {
+    flex:3;
+    background-color: grey
+}
+aside {
+    flex: 1;
+    background-color: white;
+}
+/* ======= END OF CART PAGE ========= */
