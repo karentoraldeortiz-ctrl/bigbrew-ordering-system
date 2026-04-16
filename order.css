@@ -248,7 +248,8 @@ body {
 }
 main {
     flex:3;
-    background-color: grey
+    background-color: grey;
+    padding: 1rem;
 }
 aside {
     flex: 1;
