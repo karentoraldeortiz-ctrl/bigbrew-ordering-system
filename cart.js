@@ -1,5 +1,8 @@
 
+
 // =======
+
+//>>>>>>> 1dc54d8ef20f5b17a091195a2de53637fd5237ec
 document.addEventListener('DOMContentLoaded', () => {
     // 1. DOM Elements
     const itemsContainer = document.getElementById('cart-items-container');
@@ -105,13 +108,14 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Order submitted:", finalOrder);
             alert(`Order Placed Successfully!\nTotal: ${finalOrder.total}\nPayment: ${paymentMethod}`);
             
-            // Opsyonal: Linisin ang cart pagkatapos mag-checkout
-            // localStorage.removeItem('bigBrewCart');
-            // location.reload();
+
+            localStorage.removeItem('bigBrewCart');
+            
+            window.location.href ="index.html";
+            
         });
     }
 
     // Initial Run
     displayCart();
 });
->>>>>>> 75519981cc38781bcbb1c42a35bd02290b172b3b
