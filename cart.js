@@ -1,5 +1,5 @@
 
-=======
+// =======
 document.addEventListener('DOMContentLoaded', () => {
     // 1. DOM Elements
     const itemsContainer = document.getElementById('cart-items-container');

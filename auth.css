@@ -2,9 +2,11 @@ body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
     background: var(--dark-color);
-    padding: 2rem;
+    /* padding: 2rem; */
     display: flex;
     justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 .login-box {
     background-color: var(--light-color);
@@ -15,12 +17,9 @@ body {
     justify-content: center;
 }
 .login-content {
-    /* background-color: red; */
     width: 100%;
     padding: 0;
-    margin: 1rem;
-    border: red 1px solid;
-
+    margin: 1rem 2rem;
 }
 .header {
     text-align: center;
@@ -30,13 +29,138 @@ body {
 }
 .input-text input{
     width: 100%;
-    padding: 9px;
+    padding: 12px;
     border: #2D1E17 solid 1px;
     border-radius: 10px;
     margin: 0;
 }
 form div {
     width: 100%;
-    margin: 5px 0;
+    margin: 15px 0;
     /* border: green 1px solid; */
+}
+.login-btn {
+    display: flex;
+    justify-content: center;
+}
+.login-btn button{
+    width: 80%;
+    cursor: pointer;
+    border-radius: 20px;
+    padding: 7px;
+    background-color: var(--dark-color);
+    text-decoration: none;
+    color: var(--light-color);
+}
+.login-btn button:hover {
+    background-color: #2d1e17f3;
+}
+.forgot-pass {
+    display: flex;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+.forgot-pass a {
+    text-decoration: none;
+    color: var(--dark-color);
+}
+.forgot-pass:hover {
+    text-decoration: underline;
+}
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+    color:  var(--dark-color);
+}
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid var(--dark-color);
+}
+.divider span {
+    padding: 0 10px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.create-acc-btn {
+    display: flex;
+    justify-content: center;
+}
+.create-acc-btn button{
+    width: 80%;
+    cursor: pointer;
+    border-radius: 20px;
+    padding: 7px;
+    background-color: var(--light-color);
+    margin-bottom: 10px;
+}
+.create-acc-btn button:hover {
+    background-color: #f9f2dc;
+}
+.create-acc-btn a {
+    text-decoration: none;
+    color: var(--dark-color);
+}
+.login-content h4 {
+    font-size: 1.1rem;
+}
+/* ERROR TEXT */
+.error-text {
+    color: red;
+    font-size: 12px;
+    display: none;
+    margin-top: 5px;
+}
+input.error {
+    border: 2px solid red !important;
+}
+.input-text.has-error .error-text {
+    display: block;
+}
+/* SIGN UP */
+.signup-box {
+    background-color: var(--light-color);
+    max-width: 700px;
+    width: 60%;
+    border-radius: 20px;
+    color: var(--dark-color);
+    display: flex;
+    justify-content: center;
+}
+#signForm {
+    /* background-color: white; */
+}
+.first {
+    margin-bottom: 1rem;
+}
+.outer-prac1 {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.outer-prac1 .prac {
+    margin: 0;
+}
+.outer-prac1 input {
+    border: var(--dark-color) 1px solid;
+    width: 100%;
+    height: 35px;
+    border-radius: 10px;
+}
+.last .prac input, .partner input{
+    border: var(--dark-color) solid 1px;
+    width: 100%;
+    height: 35px;
+    border-radius: 10px;
+}
+/* .last .prac {
+    border: red;
+} */
+.bday {
+    color: var(--light-color);
+    margin-bottom: 0;
 }
