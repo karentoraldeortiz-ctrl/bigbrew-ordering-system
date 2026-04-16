@@ -44,203 +44,109 @@ filterButtons.forEach(button => {
     });
 });
 
-// =========================
-// ELEMENTS
-// =========================
-const modal = document.getElementById("productModal");
-const closeModal = document.querySelector(".close-btn");
+const modal = document.getElementById('productModal');
+const addBtns = document.querySelectorAll('.add-btn');
+const closeBtn = document.querySelector('.close-modal');
 
-const addButtons = document.querySelectorAll(".add-btn");
+// dito b-base natin ung price sa selected size ng user
+let currentBasePrice = 0;
+let selectedSize = "";
 
-const modalImg = document.getElementById("modalImg");
-const modalTitle = document.getElementById("modalTitle");
+// pag nagclick si user sa certain product, kukunin nya infoo
+addBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const card = e.target.closest('.card-front');
+        const img = card.querySelector('img').src;
+        const name = card.querySelector('h3').innerText;
 
-const sizeOptions = document.querySelectorAll("input[name='size']");
-const addonOptions = document.querySelectorAll(".addon-card input");
+     // ditooo, i-update nya yung content
+        document.getElementById('modalProductImg').src = img;
+        document.getElementById('modalProductName').innerText = name;
 
-const totalPriceDisplay = document.getElementById("totalPriceDisplay");
-const selectionSummary = document.getElementById("selectionSummary");
-
-const qtyCount = document.getElementById("qtyCount");
-const minusQty = document.getElementById("minusQty");
-const plusQty = document.getElementById("plusQty");
-
-const addToCartBtn = document.getElementById("addToCartFinal");
-
-const notif = document.getElementById("cart-notification");
-const notifMessage = document.getElementById("notif-message");
-
-// =========================
-// STATE
-// =========================
-let selectedBasePrice = 0;
-let quantity = 1;
-let currentProduct = {};
-
-// =========================
-// OPEN MODAL
-// =========================
-addButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-
-    const card = btn.closest(".card");
-    const title = card.querySelector("h3")?.innerText;
-    const img = card.querySelector("img")?.src;
-
-    currentProduct = { title, img };
-
-    modalTitle.innerText = title;
-    modalImg.src = img;
-
-    resetModal();
-    modal.style.display = "flex";
-  });
+       //dito naman, i-reset na nya everything
+        currentBasePrice = 0;
+        selectedSize = "";
+        document.querySelectorAll('.size-opt').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.addon-check').forEach(c => c.checked = false);
+        document.getElementById('qtyVal').innerText = "1";
+        document.getElementById('btnAddToCart').disabled = true;
+        
+        modal.style.display = 'flex';
+        calculatePrice();
+    });
 });
 
-// =========================
-// CLOSE MODAL
-// =========================
-closeModal.addEventListener("click", () => {
-  modal.style.display = "none";
+// eto, once na mag click si user ng size, kukunin yung "data-price" 
+document.querySelectorAll('.size-opt').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.size-opt').forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        
+        currentBasePrice = parseInt(e.currentTarget.getAttribute('data-price'));
+        selectedSize = e.currentTarget.value;
+        // eto, di sha pwede mag add to cart without selecting sizw
+        document.getElementById('btnAddToCart').disabled = false;
+        calculatePrice();
+    });
 });
 
-window.addEventListener("click", (e) => {
-  if (e.target === modal) {
-    modal.style.display = "none";
-  }
-});
+// dito calculation na lang, nagpaturo ako ke gpt dito kasi ang hirap HHAHAHAHA
+function calculatePrice() {
+    let addonsTotal = 0;
+    let names = [];
 
-// =========================
-// RESET
-// =========================
-function resetModal() {
-  selectedBasePrice = 0;
-  quantity = 1;
+    document.querySelectorAll('.addon-check:checked').forEach(check => {
+        addonsTotal += parseInt(check.getAttribute('data-price'));
+        names.push(check.value);
+    });
 
-  qtyCount.innerText = quantity;
+    const qty = parseInt(document.getElementById('qtyVal').innerText);
+    const total = (currentBasePrice + addonsTotal) * qty;
 
-  sizeOptions.forEach(opt => opt.checked = false);
-  addonOptions.forEach(opt => opt.checked = false);
-
-  totalPriceDisplay.innerText = "₱0";
-  selectionSummary.innerText = "Please select a size";
-
-  addToCartBtn.disabled = true;
-}
-
-// =========================
-// SIZE SELECT
-// =========================
-sizeOptions.forEach(option => {
-  option.addEventListener("change", () => {
-    selectedBasePrice = Number(option.value);
-
-    updateTotal();
-    updateSummary();
-    checkReady();
-  });
-});
-
-// =========================
-// ADDONS
-// =========================
-addonOptions.forEach(option => {
-  option.addEventListener("change", () => {
-    updateTotal();
-    updateSummary();
-  });
-});
-
-// =========================
-// QTY
-// =========================
-plusQty.addEventListener("click", () => {
-  quantity++;
-  qtyCount.innerText = quantity;
-  updateTotal();
-});
-
-minusQty.addEventListener("click", () => {
-  if (quantity > 1) {
-    quantity--;
-    qtyCount.innerText = quantity;
-    updateTotal();
-  }
-});
-
-// =========================
-// TOTAL CALCULATION
-// =========================
-function updateTotal() {
-
-  let addonTotal = 0;
-
-  addonOptions.forEach(opt => {
-    if (opt.checked) {
-      addonTotal += Number(opt.value);
+    document.getElementById('displayPrice').innerText = currentBasePrice > 0 ? total : "0";
+    
+   
+    if (selectedSize === "") {
+        document.getElementById('selectionText').innerText = "Please select a size";
+    } else {
+        document.getElementById('selectionText').innerText = `${selectedSize}${names.length > 0 ? ', ' + names.join(', ') : ''}`;
     }
-  });
-
-  let total = (selectedBasePrice + addonTotal) * quantity;
-
-  totalPriceDisplay.innerText = `₱${total}`;
 }
 
-// =========================
-// SUMMARY
-// =========================
-function updateSummary() {
 
-  let size = document.querySelector("input[name='size']:checked");
-  let sizeName = size ? size.dataset.name : null;
-
-  if (!sizeName) {
-    selectionSummary.innerText = "Please select a size";
-    return;
-  }
-
-  let addons = [];
-
-  addonOptions.forEach(opt => {
-    if (opt.checked) {
-      addons.push(opt.dataset.name);
-    }
-  });
-
-  selectionSummary.innerText =
-    `Size: ${sizeName}` +
-    (addons.length ? ` | Add-ons: ${addons.join(", ")}` : "");
-}
-
-// =========================
-// ENABLE BUTTON
-// =========================
-function checkReady() {
-  let sizeSelected = document.querySelector("input[name='size']:checked");
-  addToCartBtn.disabled = !sizeSelected;
-}
-
-// =========================
-// ADD TO CART
-// =========================
-addToCartBtn.addEventListener("click", () => {
-
-  const item = {
-    name: currentProduct.title,
-    image: currentProduct.img,
-    price: totalPriceDisplay.innerText
-  };
-
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  cart.push(item);
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  notif.style.display = "block";
-  notifMessage.innerText = "Item added to cart!";
-
-  setTimeout(() => {
-    notif.style.display = "none";
-  }, 2000);
-
-  modal.style.display = "none";
+document.querySelectorAll('.addon-check').forEach(c => c.addEventListener('change', calculatePrice));
+document.getElementById('btnPlus').addEventListener('click', () => {
+    let q = parseInt(document.getElementById('qtyVal').innerText);
+    document.getElementById('qtyVal').innerText = ++q;
+    calculatePrice();
 });
+document.getElementById('btnMinus').addEventListener('click', () => {
+    let q = parseInt(document.getElementById('qtyVal').innerText);
+    if (q > 1) {
+        document.getElementById('qtyVal').innerText = --q;
+        calculatePrice();
+    }
+});
+
+                   
+document.getElementById('btnAddToCart').addEventListener('click', () => {
+    const item = {
+        name: document.getElementById('modalProductName').innerText,
+        size: selectedSize,
+        addons: Array.from(document.querySelectorAll('.addon-check:checked')).map(c => c.value),
+        price: parseInt(document.getElementById('displayPrice').innerText),
+        qty: parseInt(document.getElementById('qtyVal').innerText),
+        img: document.getElementById('modalProductImg').src
+    };
+    // ETO NASA LOCAL STORAGE LANG SHA FOR NOW, DI PA SHA MA-SHOW SA CART PAGE
+    let cart = JSON.parse(localStorage.getItem('bigBrewCart')) || [];
+    cart.push(item);
+    localStorage.setItem('bigBrewCart', JSON.stringify(cart));
+
+    modal.style.display = 'none';
+    alert("Item added to cart!");
+});
+
+// Close modal
+closeBtn.onclick = () => modal.style.display = 'none';
+window.onclick = (e) => { if (e.target == modal) modal.style.display = 'none'; };

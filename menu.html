@@ -347,85 +347,54 @@
       </div>
     </div>
 
-    <!-- Cart Page -->
-   <!-- PRODUCT MODAL -->
-<div id="productModal" class="modal">
+    <!-- Cart PopUp Window -->
+   <div id="productModal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <span class="close-modal">&times;</span>
+        
+        <div class="modal-content-wrapper">
+            <div class="modal-left">
+                <img id="modalProductImg" src="" alt="Selected Product">
+            </div>
 
-  <div class="modal-content">
+            <div class="modal-right">
+                <h2 id="modalProductName">Product Name</h2>
+                
+                <p class="option-label">choose size</p>
+                <div class="size-container">
+                    <button class="size-opt" data-price="29" value="medio">medio <span>P 29</span></button>
+                    <button class="size-opt" data-price="39" value="grande">grande <span>P 39</span></button>
+                </div>
 
-    <!-- CLOSE -->
-    <span class="close-btn">&times;</span>
+                <p class="option-label">add ons</p>
+                <div class="addons-grid">
+                    <label><input type="checkbox" class="addon-check" data-price="9" value="pearl"> pearl <span>P 9</span></label>
+                    <label><input type="checkbox" class="addon-check" data-price="9" value="cream cheese"> cream cheese <span>P 9</span></label>
+                    <label><input type="checkbox" class="addon-check" data-price="9" value="cream puff"> cream puff <span>P 9</span></label>
+                    <label><input type="checkbox" class="addon-check" data-price="9" value="crystal"> crystal <span>P 9</span></label>
+                    <label><input type="checkbox" class="addon-check" data-price="9" value="whipped cream"> whipped cream <span>P 9</span></label>
+                    <label><input type="checkbox" class="addon-check" data-price="9" value="cheesecake"> cheesecake <span>P 9</span></label>
+                </div>
 
-    <div class="modal-body">
+                <div class="modal-footer">
+                    <div class="price-summary">
+                        <span class="total-display">P <span id="displayPrice">0</span></span>
+                        <p id="selectionText">Please select a size</p>
+                    </div>
+                    <div class="qty-stepper">
+                        <button id="btnMinus">-</button>
+                        <span id="qtyVal">1</span>
+                        <button id="btnPlus">+</button>
+                    </div>
+                </div>
 
-      <!-- LEFT (IMAGE) -->
-      <div class="modal-left">
-        <img id="modalImg" src="">
-      </div>
-
-      <!-- RIGHT (DETAILS) -->
-      <div class="modal-right">
-
-        <h2 id="modalTitle">Product Name</h2>
-
-
-
-        <!-- SIZE -->
-        <h4>Choose Size</h4>
-
-        <label class="size-card">
-          <input type="radio" name="size" value="29" data-name="Medium">
-          <span>Medium ₱29</span>
-        </label>
-
-        <label class="size-card">
-          <input type="radio" name="size" value="39" data-name="Grande">
-          <span>Grande ₱39</span>
-        </label>
-
-        <!-- ADD ONS -->
-        <h4>Add Ons</h4>
-
-        <div class="addons">
-
-          <label class="addon-card">
-            <input type="checkbox" value="9" data-name="Pearl">
-            <span>Pearl ₱9</span>
-          </label>
-
-          <label class="addon-card">
-            <input type="checkbox" value="9" data-name="Cream Cheese">
-            <span>Cream Cheese ₱9</span>
-          </label>
-
-          <label class="addon-card">
-            <input type="checkbox" value="9" data-name="Crystal">
-            <span>Crystal ₱9</span>
-          </label>
-
+                <button id="btnAddToCart" class="main-add-btn" disabled>add to cart</button>
+            </div>
         </div>
-
-        <!-- QUANTITY -->
-        <div class="qty">
-          <button id="minusQty">-</button>
-          <span id="qtyCount">1</span>
-          <button id="plusQty">+</button>
-        </div>
-
-        <!-- TOTAL -->
-        <h3 id="totalPriceDisplay">P 0</h3>
-
-        <!-- ADD BUTTON -->
-        <button id="addToCartFinal" disabled>Add to Cart</button>
-
-      </div>
     </div>
-  </div>
 </div>
-<!-- Notification -->
-  <div id="cart-notification" class="cart-notification">
-    <i class="fas fa-check-circle"></i> <span id="notif-message">Item added to cart!</span>
-  </div>
+
+
 
   <!-- FOOTER -->
     <div class="footer-column">

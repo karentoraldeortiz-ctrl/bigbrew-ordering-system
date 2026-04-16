@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: var(--dark-color);
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+.login-box {
+    background-color: var(--light-color);
+    width: 400px;
+    border-radius: 20px;
+    color: var(--dark-color);
+    display: flex;
+    justify-content: center;
+}
+.login-content {
+    /* background-color: red; */
+    width: 100%;
+    padding: 0;
+    margin: 1rem;
+    border: red 1px solid;
+
+}
+.header {
+    text-align: center;
+}
+.header img {
+    width: 75px;
+}
+.input-text input{
+    width: 100%;
+    padding: 9px;
+    border: #2D1E17 solid 1px;
+    border-radius: 10px;
+    margin: 0;
+}
+form div {
+    width: 100%;
+    margin: 5px 0;
+    /* border: green 1px solid; */
+}

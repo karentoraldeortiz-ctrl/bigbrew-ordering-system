@@ -43,19 +43,76 @@
 
     <div class="cart-container">
         <main>
+          <div class="cart-header">
+            <div>
+              <h1>Bigbrew Maysan</h1>
+              <div class="store-status">
+                <span>open</span>
+              </div>
+              <p>094 Maysan Rd, Valenzuela, 1442 Metro Manila</p>
+            </div>
+            <div>
+              <img src="assets/pictures/store-pic.jpg" alt="">
+            </div>
+          </div>
+            
+          <!-- IF EMPTY  -->
+           <div class="empty-cart">
             <h3>Your Cart</h3>
             <p>Your cart is empty.</p>
+           </div>
+
+
         </main>
         <aside>
-            <h3>Order Summary</h3>
-        </aside>
+            <div class="order-summary-content">
+              <h4>Order Summary</h4>
+              <div>
+                <i class="fa-solid fa-clock"></i>
+                Pickup Time
+              </div>
+              <select name="pickup-time" id="pick-up-time" class="summary-input">
+                <option value="asap">ASAP</option>
+                <option value="in-15-min">In 15 minutes</option>
+                <option value="in-30-min">In 30 minutes</option>
+                <option value="in-45-min">In 45 minutes</option>
+                <option value="in-1-hour">In 1 hour</option>
+                <option value="in-1-5-hour">In 1 hour 30 minutes</option>
+              </select>
+              
+              <div class="summary-label">Payment Method</div>
+                <div class="payment-options">
+                    <label class="radio-container">
+                      <input type="radio" name="payment" value="Cash on Pickup" checked> 
+                      <span>Pay upon Pickup</span>
+                    </label>
+                   <label class="radio-container">
+                      <input type="radio" name="payment" value="GCash"> 
+                      <span>GCash</span>
+                   </label>
+        </div>
+
+        <div class="summary-label">Note to Barista</div>
+        <textarea id="barista-note" class="note-barista" placeholder="Let us know if you have any requests."></textarea>
+        
+        <hr>
+        
+        <div class="subtotal-container">
+            <div class="subtotal-row">
+                <span>Subtotal</span>
+                <span id="subtotal-amount">P 0</span>
+            </div>
+            <div class="subtotal-row total-bold">
+                <span>Total</span>
+                <span id="total-amount">P 0</span>
+            </div>
+        </div>
+
+        <button id="checkout-btn" class="checkout-btn">Checkout</button>
+    </div>
+</aside>
     </div>
 
-
-
-
-    <script src="order.css"></script>
-</body>
 <footer class="main-footer">
     <div class="footer-container">
       <div class="footer-brand">
@@ -104,4 +161,8 @@
     <p>&copy; 2026. BigBrew Maysan. All Rights Reserved.</p>
   </div>
   </footer>
+
+    <script src ="cart.js"></script>
+    <script src="order.css"></script>
+</body>
 </html>
