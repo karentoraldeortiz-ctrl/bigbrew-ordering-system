@@ -582,19 +582,32 @@ aside {
 .addons-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 15px;
 }
-
 .addons-grid label {
-    display: flex;
-    justify-content: space-between;
+    display: flex ;
+    justify-content: flex-start ;
+    align-items: center;
+    gap:10px ;
     padding: 10px;
     border: 1px solid #eee;
     border-radius: 8px;
     font-size: 0.9rem;
     cursor: pointer;
+    transition: 0.2s;
 }
-
+.addon-price {
+    color: #666;
+    margin-left: 5px !important;
+}
+.addons-grid label.selected-addon {
+    border-color:var(--dark-color);      
+    color: #b36b21;         
+    font-weight: bold;
+}
+.addons-grid label {
+    transition: all 0.2s ease;
+}
 .addons-grid input {
     margin-right: 10px;
 }
@@ -671,11 +684,11 @@ aside {
     }
 
     .modal-left {
-        width: 100%;
+        width: 100;
     }
 
     .modal-left img {
-        max-width: 200px;     }
+        max-width: 100px;     }
 
     .modal-right {
         width: 100%;
@@ -720,7 +733,7 @@ aside {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #fdf5e6;
+    background-color:var(--dark-color);
     padding: 100px 20px 50px 20px;
 }
 .success-container {
@@ -767,22 +780,60 @@ aside {
 .info-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
     font-size: 0.95rem;
+    padding:10px 0;
 }
-
+.line-bottom {
+    border-bottom:1px solid #e0d5c5 ;
+}
+.items-header {
+    color: #555;
+    font-size: 0.9rem;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+#display-time {
+    color: #b36b21; 
+}
+.items-header {
+    margin-top: 10px;
+    color: #555;
+    font-size: 0.9rem;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
 .info-row span {
     color: #666;
 }
-
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    /* ito lang pala prob */
+    padding: 3px 0; 
+}
 .info-row strong {
-    color: #231916;
+    color: var(--pop-color)
 }
 
+.total-label {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #231916;
+}
+.total-amount {
+    color: #b36b21 !important; 
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+.total-section {
+    border-top: 1px solid #e0d5c5;
+    margin-top: 15px;
+    padding-top: 15px;
+}
 .total-row {
     font-size: 1.2rem;
     margin-top: 10px;
-    color: #b36b21; 
+    color:var(--pop-color); 
 }
 .next-steps-box {
     background-color: #e6f2ff;

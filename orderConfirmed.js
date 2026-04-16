@@ -1,26 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
     const order = JSON.parse(localStorage.getItem('lastOrder'));
 
-    if (!order) {
-        window.location.href = "menu.html";
-        return;
+    if (order) {
+        document.getElementById('display-id').innerText = `#${order.orderId}`;
+        document.getElementById('display-time').innerText = order.time;
+        
+
+        const cleanTotal = order.total.toString().replace('P', '').trim();
+        document.getElementById('display-total').innerText = `P ${cleanTotal}`;
+
+        const container = document.getElementById('items-list-container');
+        
+        let itemsHTML = `<div class="items-header">Items</div>`;
+
+        order.items.forEach(item => {
+            itemsHTML += `
+                <div class="info-row">
+                    <span>${item.name} x ${item.qty}</span>
+                    <span>P ${item.price.toString().replace('P', '').trim()}</span>
+                </div>
+            `;
+        });
+
+        container.innerHTML = itemsHTML;
     }
-
-    // I-populate ang basic info
-    document.getElementById('display-id').innerText = `#${order.orderId}`;
-    document.getElementById('display-time').innerText = order.time;
-    document.getElementById('display-total').innerText = order.total;
-
-    // I-render ang bawat item na binili
-    const listContainer = document.getElementById('items-list-container');
-    order.items.forEach(item => {
-        listContainer.innerHTML += `
-            <div class="info-row">
-                <span>${item.name} x ${item.qty}</span>
-                <span>P ${item.price}</span>
-            </div>
-        `;
-    });
 });
 // ============== END OF ORDER CONFIRMATION BOX =====
 // ======================== RATINGS ================
