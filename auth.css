@@ -19,7 +19,7 @@ body {
 .login-content {
     width: 100%;
     padding: 0;
-    margin: 1rem 2rem;
+    margin: 1rem 2.5rem;
 }
 .header {
     text-align: center;
@@ -122,6 +122,31 @@ input.error {
     display: block;
 }
 /* SIGN UP */
+.signup-content {
+    margin: 1rem 2.5rem;
+}
+.hasAccount, p{
+    text-align: center;
+    margin-bottom: 10px;
+}
+.hasAccount a {
+    color: var(--dark-color);
+}
+.hasAccount a:hover {
+    text-decoration-color: var(--pop-color);
+}
+p {
+    color: rgba(67, 55, 55, 0.67);
+    margin: 10px;
+}
+p a {
+    color: rgba(67, 55, 55, 0.67);
+
+}
+p a:hover {
+ 
+    text-decoration-color: var(--pop-color);
+}
 .signup-box {
     background-color: var(--light-color);
     max-width: 700px;
@@ -131,18 +156,18 @@ input.error {
     display: flex;
     justify-content: center;
 }
-#signForm {
-    /* background-color: white; */
+#signForm label{
+    font-weight: 500;
 }
 .first {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 .outer-prac1 {
     display: flex;
     justify-content: center;
     gap: 10px;
 }
-.outer-prac1 .prac {
+.outer-prac1 .info-grp {
     margin: 0;
 }
 .outer-prac1 input {
@@ -151,7 +176,7 @@ input.error {
     height: 35px;
     border-radius: 10px;
 }
-.last .prac input, .partner input{
+.last .info-grp input, .partner input{
     border: var(--dark-color) solid 1px;
     width: 100%;
     height: 35px;
@@ -163,4 +188,21 @@ input.error {
 .bday {
     color: var(--light-color);
     margin-bottom: 0;
+}
+input {
+    padding: 1rem;
+}
+.signup-btn {
+    display: flex;
+    justify-content: center;
+}
+.signup-btn button {
+    width: 70%;
+    border-radius: 20px;
+    padding: 7px;
+    background-color: var(--dark-color);
+    color: var(--light-color);
+}
+.signup-content h4 {
+    font-size: 1.1rem;
 }
