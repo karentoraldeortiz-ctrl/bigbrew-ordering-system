@@ -1,168 +1,207 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-        <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Big Brew Maysan - Big in Taste, Bit in Price. ">
-    <meta name="keywords" content="BigBrew Maysan, Maysan, Online Order, Milktea">
-    <meta name="author" content="Allyana Flores, Karen Ortiz">
-    <title>BigBrew | Your Cart</title>    
-    <link rel="stylesheet" href="global.css">
-    <link rel="stylesheet" href="order.css">
-    <link rel="shortcut icon" href="assets/logo/logo-black.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Big Brew Maysan - Big in Taste, Bit in Price. "
+    />
+    <meta
+      name="keywords"
+      content="BigBrew Maysan, Maysan, Online Order, Milktea"
+    />
+    <meta name="author" content="Allyana Flores, Karen Ortiz" />
+    <title>BigBrew | Your Cart</title>
+    <link rel="stylesheet" href="global.css" />
+    <link rel="stylesheet" href="order.css" />
+    <link
+      rel="shortcut icon"
+      href="assets/logo/logo-black.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
     <!-- NAV BAR -->
     <header>
-        <nav class="navbar">
-            <div class="navlogo">
-                <a href="index.html">
-                    <img src="assets/logo/bb-maysan-logo-1.png" alt="">
-                </a>
-            </div>
-            <div class="nav-links" id="navlinks">
-                <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="menu.html">Our Menu</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="#"> <img src="assets/icons/icons8-cart-24.png" alt=""></a></li>
-                <li><a href="account.html"> <img src="assets/icons/icons8-profile-24.png" alt=""></a></li>
-                </ul>
-            </div>
+      <nav class="navbar">
+        <div class="navlogo">
+          <a href="index.html">
+            <img src="assets/logo/bb-maysan-logo-1.png" alt="" />
+          </a>
+        </div>
+        <div class="nav-links" id="navlinks">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html">Our Menu</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li>
+              <a href="#">
+                <img src="assets/icons/icons8-cart-24.png" alt=""
+              /></a>
+            </li>
+            <li>
+              <a href="account.html">
+                <img src="assets/icons/icons8-profile-24.png" alt=""
+              /></a>
+            </li>
+          </ul>
+        </div>
 
-            <div class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
+        <div class="hamburger" id="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
     </header>
 
     <div class="cart-container">
-        <main>
-          <div class="cart-header">
-            <div>
-              <h1>Bigbrew Maysan</h1>
-              <div class="store-status">
-                <span>open</span>
-              </div>
-              <p>094 Maysan Rd, Valenzuela, 1442 Metro Manila</p>
+      <main>
+        <div class="cart-header">
+          <div>
+            <h1>Bigbrew Maysan</h1>
+            <div class="store-status">
+              <span>open</span>
             </div>
-            <div>
-              <img src="assets/pictures/store-pic.jpg" alt="">
-            </div>
+            <p>094 Maysan Rd, Valenzuela, 1442 Metro Manila</p>
           </div>
-            
-          <!-- IF EMPTY  -->
-           <div class="empty-cart">
-            <h3>Your Cart</h3>
-            <p>Your cart is empty.</p>
-           </div>
-
-
-        </main>
-        <aside>
-            <div class="order-summary-content">
-              <h4>Order Summary</h4>
-              <div>
-                <i class="fa-solid fa-clock"></i>
-                Pickup Time
-              </div>
-              <select name="pickup-time" id="pick-up-time" class="summary-input">
-                <option value="asap">ASAP</option>
-                <option value="in-15-min">In 15 minutes</option>
-                <option value="in-30-min">In 30 minutes</option>
-                <option value="in-45-min">In 45 minutes</option>
-                <option value="in-1-hour">In 1 hour</option>
-                <option value="in-1-5-hour">In 1 hour 30 minutes</option>
-              </select>
-              
-              <div class="summary-label">Payment Method</div>
-                <div class="payment-options">
-                    <label class="radio-container">
-                      <input type="radio" name="payment" value="Cash on Pickup" checked> 
-                      <span>Pay upon Pickup</span>
-                    </label>
-                   <label class="radio-container">
-                      <input type="radio" name="payment" value="GCash"> 
-                      <span>GCash</span>
-                   </label>
+          <div>
+            <img src="assets/pictures/store-pic.jpg" alt="" />
+          </div>
         </div>
 
-        <div class="summary-label">Note to Barista</div>
-        <textarea id="barista-note" class="note-barista" placeholder="Let us know if you have any requests."></textarea>
-        
-        <hr>
-        
-        <div class="subtotal-container">
+        <div id="cart-items-container"></div>
+        <!-- IF EMPTY  -->
+        <div class="empty-cart">
+          <h3>Your Cart</h3>
+          <p>Your cart is empty.</p>
+        </div>
+      </main>
+      <aside>
+        <div class="order-summary-content">
+          <h4>Order Summary</h4>
+          <div>
+            <i class="fa-solid fa-clock"></i>
+            Pickup Time
+          </div>
+          <select name="pickup-time" id="pick-up-time" class="summary-input">
+            <option value="asap">ASAP</option>
+            <option value="in-15-min">In 15 minutes</option>
+            <option value="in-30-min">In 30 minutes</option>
+            <option value="in-45-min">In 45 minutes</option>
+            <option value="in-1-hour">In 1 hour</option>
+            <option value="in-1-5-hour">In 1 hour 30 minutes</option>
+          </select>
+
+          <div class="summary-label">Payment Method</div>
+          <div class="payment-options">
+            <label class="radio-container">
+              <input
+                type="radio"
+                name="payment"
+                value="Cash on Pickup"
+                checked
+              />
+              <span>Pay upon Pickup</span>
+            </label>
+            <label class="radio-container">
+              <input type="radio" name="payment" value="GCash" />
+              <span>GCash</span>
+            </label>
+          </div>
+
+          <div class="summary-label">Note to Barista</div>
+          <textarea
+            id="barista-note"
+            class="note-barista"
+            placeholder="Let us know if you have any requests."
+          ></textarea>
+
+          <hr />
+
+          <div class="subtotal-container">
             <div class="subtotal-row">
-                <span>Subtotal</span>
-                <span id="subtotal-amount">P 0</span>
+              <span>Subtotal</span>
+              <span id="subtotal-amount">P 0</span>
             </div>
             <div class="subtotal-row total-bold">
-                <span>Total</span>
-                <span id="total-amount">P 0</span>
+              <span>Total</span>
+              <span id="total-amount">P 0</span>
             </div>
+          </div>
+
+          <button id="checkout-btn" class="checkout-btn">Checkout</button>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="main-footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img
+              src="assets/logo/bb-maysan-logo-1.png"
+              alt="Big Brew Maysan Logo"
+            />
+          </div>
+          <p>BIGBREW - Maysan, Valenzuela City</p>
         </div>
 
-        <button id="checkout-btn" class="checkout-btn">Checkout</button>
-    </div>
-</aside>
-    </div>
+        <div class="footer-column">
+          <h3>Contact</h3>
+          <ul>
+            <li>0929 563 4350</li>
+            <li>info@bigbrew.com</li>
+            <li>094 Maysan Rd, Valenzuela, 1442 Metro Manila</li>
+          </ul>
+        </div>
 
-<footer class="main-footer">
-    <div class="footer-container">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <img src="assets/logo/bb-maysan-logo-1.png" alt="Big Brew Maysan Logo">
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <div class="links-grid">
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="menu.html">Menu</a></li>
+              <li><a href="about.html">About</a></li>
+            </ul>
+            <ul>
+              <li><a href="reviews.html">Reviews</a></li>
+              <li><a href="terms.html">Terms & Conditions</a></li>
+              <li><a href="privacy.html">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h3>Follow us on</h3>
+          <div class="social-icons">
+            <a
+              href="https://www.facebook.com/p/BigBrew-Maysan-Rd-Valenzuela-100085267776562/"
+            >
+              <i class="fab fa-facebook"></i
+            ></a>
+            <a href="https://www.instagram.com/bigbrew.maysan/"
+              ><i class="fab fa-instagram"></i
+            ></a>
+          </div>
+        </div>
       </div>
-      <p>BIGBREW - Maysan, Valenzuela City</p>
-    </div>
 
-    <div class="footer-column">
-      <h3>Contact</h3>
-      <ul>
-        <li>0929 563 4350</li>
-        <li>info@bigbrew.com</li>
-        <li>094 Maysan Rd, Valenzuela, 1442 Metro Manila</li>
-      </ul>
-    </div>
-
-    <div class="footer-column">
-      <h3>Quick Links</h3>
-      <div class="links-grid">
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="menu.html">Menu</a></li>
-          <li><a href="about.html">About</a></li>
-        </ul>
-        <ul>
-          <li><a href="reviews.html">Reviews</a></li>
-          <li><a href="terms.html">Terms & Conditions</a></li>
-          <li><a href="privacy.html">Privacy Policy</a></li>
-        </ul>
+      <div class="footer-bottom">
+        <p>&copy; 2026. BigBrew Maysan. All Rights Reserved.</p>
       </div>
-    </div>
+    </footer>
 
-    <div class="footer-column">
-      <h3>Follow us on</h3>
-      <div class="social-icons">
-        <a href="https://www.facebook.com/p/BigBrew-Maysan-Rd-Valenzuela-100085267776562/">
-          <i class="fab fa-facebook"></i></a>
-        <a href="https://www.instagram.com/bigbrew.maysan/"><i class="fab fa-instagram"></i></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>&copy; 2026. BigBrew Maysan. All Rights Reserved.</p>
-  </div>
-  </footer>
-
-    <script src ="cart.js"></script>
-    <script src="order.css"></script>
-</body>
+    <script src="cart.js"></script>
+    <script src="global.js"></script>
+  </body>
 </html>
