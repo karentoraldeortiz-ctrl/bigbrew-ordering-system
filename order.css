@@ -413,20 +413,40 @@ aside {
 .subtotal-container {
     margin-top: 1.5rem;
     padding-top: 1rem;
-    border-top: 1px solid #eee
+    border-top: 1px solid #eee;
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
 }
 
 .subtotal-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+    width: 100%;
 }
-
+#subtotal-amount {
+    color:#666;
+    font-weight:500;
+}
+#totalSub {
+    color:#8d8d8d;
+    font-weight:500;
+}
+#totalPrice {
+    font-weight: bold;
+    font-size:larger;
+    color:var(--dark-color);
+}
+#total-amount {
+    font-weight: bold;
+    font-size:larger;
+}
 .total-bold {
     font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--dark-color);
+    font-size: 2.0rem;
+    color: var(--pop-color);
     border-top: 1px solid #eee;
     margin-top: 10px;
 }
@@ -545,14 +565,15 @@ aside {
     display: flex;
     justify-content: space-between;
     transition: 0.2s;
+    color:var(--dark-color);
 }
 
 .size-opt span {
     font-weight: bold;
 }
 .size-opt.active {
-    background: var(--dark-colors); 
-    color: var(--dark-color);
+    background: var(--dark-color); 
+    color: white;;
     border-color: var(--dark-color);
 }
 /* --- ADDONS GRID --- */
@@ -575,6 +596,7 @@ aside {
 .addons-grid input {
     margin-right: 10px;
 }
+
 
 /* --- FOOTER & CALCULATION --- */
 .modal-footer {
@@ -664,6 +686,9 @@ aside {
 
     .option-label {
         text-align: center;
+    }
+    .modal-footer {
+        text-align: left;
     }
 
       @media (max-width: 480px) {
