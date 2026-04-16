@@ -44,6 +44,7 @@ filterButtons.forEach(button => {
     });
 });
 
+
 const modal = document.getElementById('productModal');
 const addBtns = document.querySelectorAll('.add-btn');
 const closeBtn = document.querySelector('.close-modal');
