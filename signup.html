@@ -22,37 +22,40 @@
         <form id="signForm">
           <div class="first">
                 <div class="outer-prac1">
-                        <div class="info-grp">
+                        <!-- <div class="info-grp">
                             <label>First Name*</label> <br>
                             <input type="text">
-                        </div>
+                        </div> -->
                         <div class="info-grp">
-                            <label>Last Name*</label> <br>
-                            <input type="text">
+                            <label>Name*</label> <br>
+                            <input type="text" id="name" minlength="3">
+                            <span class="error-text" id="emailError">This field is required.</span>
                         </div>
                 </div>
                 
                 <div class="outer-prac1">
-                        <div class="info-grp"><label>Birthday</label><input type="text"></div>
-                        <div class="info-grp"><label class="bday">Birthday</label><input type="text"></div>
+                        <div class="info-grp"><label>Birthday</label><input type="date"></div>
                 </div>
                 <div class="prac partner">
                     <label>Partner No.</label> <br>
-                    <input type="text" placeholder="If you are a BigBrew Maysan Partner (employee), enter your Partner No.">
+                    <input type="text" class="partner-no" placeholder="If you are a BigBrew Maysan Partner (employee), enter your Partner No.">
                 </div>
           </div>
           <div class="last">
             <div class="info-grp">
                 <label>Email Address*</label> <br>
-                <input type="text">
+                <input type="email" id="email">
+                <span class="error-text" id="emailError">This field is required.</span>
             </div>
             <div class="info-grp">
                 <label>Password*</label> <br>
-                <input type="text">
+                <input type="password" id="password" minlength="6">
+                <span class="error-text" id="passwordError">This field is required</span>
             </div>
             <div class="info-grp">
                 <label>Confirm Password*</label> <br>
-                <input type="text">
+                <input type="password" id="confirmPassword">
+                <span class="error-text" id="confirmError">This field is required</span>
             </div>
           </div>
           <div class="signup-btn">

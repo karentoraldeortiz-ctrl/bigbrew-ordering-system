@@ -121,6 +121,9 @@ input.error {
 .input-text.has-error .error-text {
     display: block;
 }
+.info-grp.has-error .error-text {
+    display: block;
+}
 /* SIGN UP */
 .signup-content {
     margin: 1rem 2.5rem;
@@ -155,6 +158,7 @@ p a:hover {
     color: var(--dark-color);
     display: flex;
     justify-content: center;
+    margin: 2rem;
 }
 #signForm label{
     font-weight: 500;
@@ -182,13 +186,6 @@ p a:hover {
     height: 35px;
     border-radius: 10px;
 }
-/* .last .prac {
-    border: red;
-} */
-.bday {
-    color: var(--light-color);
-    margin-bottom: 0;
-}
 input {
     padding: 1rem;
 }
@@ -203,6 +200,16 @@ input {
     background-color: var(--dark-color);
     color: var(--light-color);
 }
+.signup-btn button:hover {
+    background-color: #2d1e17e9;
+    cursor: pointer;
+}
 .signup-content h4 {
     font-size: 1.1rem;
+}
+@media (max-width: 700px) {
+    .outer-prac1 {
+        flex-direction: column;
+        align-items: center;
+    }
 }
