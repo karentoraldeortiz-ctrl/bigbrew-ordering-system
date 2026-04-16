@@ -538,7 +538,7 @@ aside {
 
 #modalProductName {
     font-size: 2rem;
-    color: #231916;
+    color:var(--dark-color);
     margin-bottom: 20px;
 }
 
@@ -566,11 +566,13 @@ aside {
     justify-content: space-between;
     transition: 0.2s;
     color:var(--dark-color);
+    font-size: 0.9rem;
 }
 
 .size-opt span {
     font-weight: bold;
 }
+
 .size-opt.active {
     background: var(--dark-color); 
     color: white;;
@@ -685,7 +687,7 @@ aside {
     }
 
     .option-label {
-        text-align: center;
+        text-align: left;
     }
     .modal-footer {
         text-align: left;
@@ -711,3 +713,227 @@ aside {
 
 /* ======== end of cart popup window ======== */
 
+/* * ======== ORDER CONFIRMATION PAGE ========= */
+.success-page-body {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #fdf5e6;
+    padding: 100px 20px 50px 20px;
+}
+.success-container {
+    width: 100%;
+    max-width: 450px;
+    display:flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.receipt-card {
+    background-color: white;
+    width: 90%;
+    max-width: 450px;
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.check-icon {
+    font-size: 50px;
+    color: #90EE90; 
+    margin-bottom: 20px;
+}
+
+.receipt-card h1 {
+    font-size: 1.8rem;
+    color: #231916;
+    margin-bottom: 10px;
+}
+
+.receipt-card p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+}
+.order-info-box {
+    background-color: #FFF8EE; 
+    border-radius: 15px;
+    padding: 20px;
+    margin: 30px 0;
+    text-align: left;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.info-row span {
+    color: #666;
+}
+
+.info-row strong {
+    color: #231916;
+}
+
+.total-row {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: #b36b21; 
+}
+.next-steps-box {
+    background-color: #e6f2ff;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+    text-align: left;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+.next-steps-box h4 {
+    color: var(--dark-color);
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+.next-steps-box ol {
+    padding-left: 20px;
+    margin: 0;
+}
+.next-steps-box li {
+    color: var(--dark-color);
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+.btn-order-again {
+    width: 100%;
+    background: transparent;
+    border: 2px solid var(--pop-color);
+    color: #b36b21;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.btn-history {
+    width: 100%;
+    background-color: var(--pop-color);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-history:hover {
+    background-color: #8e551a;
+
+}
+.feedback-card {
+    background-color: #e8f9e9; 
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    margin-top: 20px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.feedback-card h3 {
+    font-size: 1.1rem;
+    color: #231916;
+    margin-bottom: 5px;
+}
+
+.feedback-card p {
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Stars Styling */
+.star-rating {
+    font-size: 2rem;
+    cursor: pointer;
+    display:flex;
+    justify-content: center;
+    gap:5px;
+    color: var(--pop-color); 
+    margin-bottom: 15px;
+}
+.star {
+    color: #ccc;
+    transition: color 0.2s;
+}
+.star:hover,
+.star.selected {
+    color:var(--pop-color);
+}
+.star:hover ~ .star {
+    color: #ccc;
+}
+.feedback-input {
+    width: 100%;
+    height: 80px;
+    border: 1px solid #d4edda;
+    border-radius: 10px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: none; 
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    background-color: #fafffa;
+}
+
+/* Submit Button */
+.btn-submit-feedback {
+    background-color:var(--pop-color);
+    color: white;
+    border: none;
+    padding: 10px 40px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-submit-feedback:hover {
+    background-color: #8e551a;
+}
+
+@media (max-width: 780px) {
+    .feedback-card {
+        padding: 20px;
+    }
+    
+    .star-rating {
+        font-size: 1.5rem;
+    }
+}
+@media (max-width:780px) {
+    .success-page-body {
+        padding-top: 80px; 
+    }
+    .success-container {
+        padding: 80px;
+    }
+
+    .receipt-card {
+        padding: 20px; 
+    }
+
+    .success-container {
+        max-width: 100%; 
+    }
+
+    h1 {
+        font-size: 1.5rem; 
+    }
+}
+/* ========== END OF CONFIRMATION PAGE ======== */

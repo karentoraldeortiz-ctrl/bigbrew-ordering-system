@@ -1,8 +1,3 @@
-
-
-// =======
-
-//>>>>>>> 1dc54d8ef20f5b17a091195a2de53637fd5237ec
 document.addEventListener('DOMContentLoaded', () => {
     // 1. DOM Elements
     const itemsContainer = document.getElementById('cart-items-container');
@@ -90,28 +85,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. Checkout Logic
     if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', () => {
-            const cart = JSON.parse(localStorage.getItem('bigBrewCart')) || [];
-            const pickupTime = document.getElementById('pick-up-time').value;
-            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-            const note = document.querySelector('.note-barista').value;
+    checkoutBtn.addEventListener('click', () => {
+        const cart = JSON.parse(localStorage.getItem('bigBrewCart')) || [];
+        
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+            return;
+        }
 
-            // Dito ini-imbak ang final order details
-            const finalOrder = {
-                items: cart,
-                time: pickupTime,
-                payment: paymentMethod,
-                note: note,
-                total: totalDisplay.innerText
-            };
+        const pickupTime = document.getElementById('pick-up-time').value;
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+        const note = document.querySelector('.note-barista').value;
 
-            console.log("Order submitted:", finalOrder);
-            alert(`Order Placed Successfully!\nTotal: ${finalOrder.total}\nPayment: ${paymentMethod}`);
-            
+        const finalOrder = {
+            orderId: Math.floor(100000000 + Math.random() * 900000000), // Random ID gaya ng sa screenshot
+            items: cart,
+            time: pickupTime,
+            payment: paymentMethod,
+            note: note,
+            total: document.getElementById('total-amount').innerText
+        };
 
-            localStorage.removeItem('bigBrewCart');
-            
-            window.location.href ="index.html";
+        // I-save ang order para mabasa ng confirmatio page
+        localStorage.setItem('lastOrder', JSON.stringify(finalOrder));
+
+        // Linisin ang cart
+        localStorage.removeItem('bigBrewCart');
+        
+        // Pumunta sa confirmation page
+        window.location.href = "orderConfirmed.html";
             
         });
     }
