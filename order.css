@@ -86,7 +86,7 @@ body {
     padding: 50px;
     font-size: 1.2rem;
     color: var(--dark-color);
-    grid-column: 1 / -1; /* Ensures it spans the whole grid */
+    grid-column: 1 / -1; 
 }
 
 .menu-item {
@@ -582,36 +582,41 @@ aside {
 .addons-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 12px;
 }
+
 .addons-grid label {
-    display: flex ;
-    justify-content: flex-start ;
-    align-items: center;
-    gap:10px ;
+    display: flex !important;
+    justify-content: flex-start !important; 
+    align-items: center !important;
+    gap: 10px !important; 
     padding: 10px;
     border: 1px solid #eee;
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: 0.85rem; 
     cursor: pointer;
-    transition: 0.2s;
-}
-.addon-price {
-    color: #666;
-    margin-left: 5px !important;
-}
-.addons-grid label.selected-addon {
-    border-color:var(--dark-color);      
-    color: #b36b21;         
-    font-weight: bold;
-}
-.addons-grid label {
     transition: all 0.2s ease;
-}
-.addons-grid input {
-    margin-right: 10px;
+    white-space: nowrap; 
+    overflow: hidden;    
 }
 
+.addons-grid input[type="checkbox"] {
+    margin: 0 !important;
+    flex-shrink: 0;
+}
+
+
+.addons-grid label span:first-of-type {
+    flex-shrink: 0; 
+}
+
+/* Para sa Addon Price */
+.addon-price {
+    color: #888;
+    font-size: 0.8rem;
+    margin-left: 2px !important;
+    flex-shrink: 0;
+}
 
 /* --- FOOTER & CALCULATION --- */
 .modal-footer {
