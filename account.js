@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (history.length === 0) {
                 historyList.innerHTML = `
                     <div class="empty-history">
-                        <p>No orders yet. Start brewing! ☕</p>
+                        <p>No orders yet. Start brewing!</p>
                         <a href="menu.html" class="btn-order-now">Order Now</a>
                     </div>`;
                 return;
@@ -66,39 +66,50 @@ if (editBtn) {
     });
 }
 
-// CLOSE MODAL (Cancel button)
+// CLOSE MODAL 
 if (closeBtn) {
     closeBtn.addEventListener('click', () => {
         modal.style.display = 'none';
     });
 }
 
-// CLOSE MODAL (X icon)
+// CLOSE MODAL
 if (closeIcon) {
     closeIcon.addEventListener('click', () => {
         modal.style.display = 'none';
     });
 }
 
-// CLOSE when clicking outside
+// CLOSE 
 modal.addEventListener('click', (e) => {
     if (e.target === modal) {
         modal.style.display = 'none';
     }
 });
+if (form) {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-// HANDLE FORM SUBMIT
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
+        const newName = document.getElementById('editName').value;
+        const newEmail = document.getElementById('editEmail').value;
+        const newPhone = document.getElementById('editPhone').value;
+        const newBirthday = document.getElementById('editBirthday').value;
 
-    const newName = document.getElementById('editName').value;
+        if (newName) document.getElementById('user-name').innerText = newName;
+        if (newEmail) document.getElementById('user-email').innerText = newEmail;
 
-    // Update profile display
-    const userNameDisplay = document.getElementById('user-name');
-    if (userNameDisplay && newName) {
-        userNameDisplay.innerText = newName;
-    }
+        if (newPhone) {
+            const formattedPhone = newPhone.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3');
+            document.getElementById('user-phone').innerText = formattedPhone;
+        }
 
-    modal.style.display = 'none';
-    alert("Profile updated successfully!");
-});
+        if (newBirthday) {
+            const date = new Date(newBirthday);
+            const formatted = date.toLocaleDateString('en-GB');
+            document.getElementById('user-birthday').innerText = formatted;
+        }
+
+        modal.style.display = 'none';
+        alert("Profile updated successfully!");
+    });
+}
