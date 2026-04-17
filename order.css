@@ -467,11 +467,45 @@ aside {
 .checkout-btn:hover {
     background-color: #8e551a;
 }
-@media (max-width: 768px) {
-    .cart-container { flex-direction: column; padding: 1rem; }
-    aside { width: 100%; position: static; }
-}
+@media (max-width: 768px){
 
+    .cart-container{
+        flex-direction:column;
+        padding:15px;
+        gap:18px;
+    }
+
+    main{
+        width:100%;
+        padding:0;
+    }
+
+    aside{
+        display:block;        
+        width:100%;
+        position:static;
+        padding:20px;
+        border-radius:18px;
+        box-sizing:border-box;
+    }
+
+    .cart-header,
+    .cart-card{
+        width:100%;
+        box-sizing:border-box;
+    }
+
+    .cart-card{
+        padding:18px;
+    }
+
+    .summary-input,
+    .note-barista,
+    .checkout-btn{
+        width:100%;
+        box-sizing:border-box;
+    }
+}
 /* ======= END OF CART PAGE ========= */
 
 /* ============ cart popup window ========= */
@@ -558,9 +592,9 @@ aside {
 .size-opt {
     flex: 1;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #eee;
     background: #fff;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -586,36 +620,35 @@ aside {
 }
 
 .addons-grid label {
-    display: flex !important;
-    justify-content: flex-start !important; 
-    align-items: center !important;
-    gap: 10px !important; 
+    display: flex;
+    align-items: center;
     padding: 10px;
     border: 1px solid #eee;
     border-radius: 8px;
-    font-size: 0.85rem; 
+    font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    white-space: nowrap; 
-    overflow: hidden;    
 }
-
-.addons-grid input[type="checkbox"] {
-    margin: 0 !important;
-    flex-shrink: 0;
-}
-
-
+/* dito pinu-push pa right. Dito lang pala problem m jusq */
 .addons-grid label span:first-of-type {
-    flex-shrink: 0; 
+    margin-left: 6px;
+    text-align: left;       
 }
 
-/* Para sa Addon Price */
 .addon-price {
-    color: #888;
-    font-size: 0.8rem;
-    margin-left: 2px !important;
-    flex-shrink: 0;
+    font-weight: bold;
+    margin-left: auto;    
+}
+.addons-grid label:hover{
+    border-color:var(--pop-color);
+}
+
+/* checkbox hahha */
+.addons-grid input[type="checkbox"]{
+    width:16px;
+    height:16px;
+    margin:0;
+    accent-color: var(--pop-color);
 }
 
 /* --- FOOTER & CALCULATION --- */
@@ -797,8 +830,8 @@ aside {
     margin-top: 15px;
     margin-bottom: 5px;
 }
-#display-time {
-    color: #b36b21; 
+.display-time {
+    color: var(--pop-color); 
 }
 .items-header {
     margin-top: 10px;
@@ -963,33 +996,24 @@ aside {
     background-color: #8e551a;
 }
 
-@media (max-width: 780px) {
-    .feedback-card {
-        padding: 20px;
-    }
-    
-    .star-rating {
-        font-size: 1.5rem;
-    }
-}
-@media (max-width:780px) {
-    .success-page-body {
-        padding-top: 80px; 
-    }
-    .success-container {
-        padding: 80px;
-    }
-
-    .receipt-card {
+@media (max-width: 780px) { 
+    .feedback-card { 
         padding: 20px; 
-    }
-
-    .success-container {
-        max-width: 100%; 
-    }
-
-    h1 {
+    } 
+    .star-rating { 
         font-size: 1.5rem; 
-    }
-}
+    } 
+    .success-page-body 
+    { padding-top: 80px; 
+    } 
+    .success-container { 
+        padding: 80px; 
+    } .receipt-card { 
+        padding: 20px; 
+    } 
+    .success-container { 
+        max-width: 100%; 
+    } h1 { 
+        font-size: 1.5rem; 
+    } }
 /* ========== END OF CONFIRMATION PAGE ======== */
