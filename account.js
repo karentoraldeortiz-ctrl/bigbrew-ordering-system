@@ -53,63 +53,132 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Get elements
-const modal = document.getElementById('editProfileModal');
-const editBtn = document.querySelector('.edit-profile');
-const closeBtn = document.getElementById('closeBtn');
-const closeIcon = document.querySelector('.close-profile-modal');
-const form = document.getElementById('editProfileForm');
+document.addEventListener('DOMContentLoaded', () => {
 
-// OPEN MODAL
-if (editBtn) {
-    editBtn.addEventListener('click', () => {
+    const modal = document.getElementById('editProfileModal');
+    const editBtn = document.querySelector('.edit-profile');
+    const closeBtn = document.getElementById('closeBtn');
+    const closeIcon = document.querySelector('.close-profile-modal');
+    const form = document.getElementById('editProfileForm');
+
+    function openModal() {
+        if (!modal) return;
         modal.style.display = 'flex';
-    });
-}
 
-// CLOSE MODAL 
-if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-}
+        document.getElementById('editName').value = '';
+        document.getElementById('editEmail').value = '';
+        document.getElementById('editPhone').value = '';
+        document.getElementById('editBirthday').value = '';
+    }
 
-// CLOSE MODAL
-if (closeIcon) {
-    closeIcon.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-}
-
-// CLOSE 
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
+    function closeModal() {
+        if (!modal) return;
         modal.style.display = 'none';
     }
+
+    // LOAD SAVED DATA ON PAGE LOAD
+    const savedName = localStorage.getItem('userName');
+    const savedEmail = localStorage.getItem('userEmail');
+    const savedPhone = localStorage.getItem('userPhone');
+    const savedBirthday = localStorage.getItem('userBirthday');
+
+    if (savedName) {
+        const el = document.getElementById('user-name');
+        if (el) el.innerText = savedName;
+
+        const input = document.getElementById('editName');
+        if (input) input.value = savedName;
+    }
+
+    if (savedEmail) {
+        const el = document.getElementById('user-email');
+        if (el) el.innerText = savedEmail;
+
+        const input = document.getElementById('editEmail');
+        if (input) input.value = savedEmail;
+    }
+
+    if (savedPhone) {
+        const el = document.getElementById('user-phone');
+        if (el) el.innerText = savedPhone;
+
+        const input = document.getElementById('editPhone');
+        if (input) input.value = savedPhone;
+    }
+
+    if (savedBirthday) {
+        const el = document.getElementById('user-birthday');
+        if (el) el.innerText = savedBirthday;
+    }
+
+    // OPEN MODAL
+    if (editBtn) {
+        editBtn.addEventListener('click', openModal);
+    }
+
+    // CLOSE MODAL BUTTON
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+    }
+
+    // CLOSE ICON
+    if (closeIcon) {
+        closeIcon.addEventListener('click', closeModal);
+    }
+
+    // CLOSE WHEN CLICK OUTSIDE
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    }
+
+    // SAVE FORM
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const newName = document.getElementById('editName').value;
+            const newEmail = document.getElementById('editEmail').value;
+            const newPhone = document.getElementById('editPhone').value;
+            const newBirthday = document.getElementById('editBirthday').value;
+
+            // FIXED PHONE FORMAT
+            let formattedPhone = newPhone ? newPhone.replace(/\D/g, '') : '';
+            if (formattedPhone.length === 11) {
+                formattedPhone = formattedPhone.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3');
+            }
+
+            // BIRTHDAY FORMAT
+            let formattedBirthday = "";
+            if (newBirthday) {
+                const date = new Date(newBirthday);
+                formattedBirthday = date.toLocaleDateString('en-GB');
+            }
+
+            // SAVE TO LOCALSTORAGE
+            localStorage.setItem('userName', newName);
+            localStorage.setItem('userEmail', newEmail);
+            localStorage.setItem('userPhone', formattedPhone);
+            localStorage.setItem('userBirthday', formattedBirthday);
+
+            // UPDATE UI
+            const nameDisplay = document.getElementById('user-name');
+            const emailDisplay = document.getElementById('user-email');
+            const phoneDisplay = document.getElementById('user-phone');
+            const bdayDisplay = document.getElementById('user-birthday');
+
+            if (nameDisplay) nameDisplay.innerText = newName;
+            if (emailDisplay) emailDisplay.innerText = newEmail;
+            if (phoneDisplay) phoneDisplay.innerText = formattedPhone;
+            if (bdayDisplay) bdayDisplay.innerText = formattedBirthday;
+
+            closeModal();
+
+            alert("Profile updated successfully!");
+        });
+    }
+
 });
-if (form) {
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const newName = document.getElementById('editName').value;
-        const newEmail = document.getElementById('editEmail').value;
-        const newPhone = document.getElementById('editPhone').value;
-        const newBirthday = document.getElementById('editBirthday').value;
-
-        if (newName) document.getElementById('user-name').innerText = newName;
-        if (newEmail) document.getElementById('user-email').innerText = newEmail;
-
-        if (newPhone) {
-            const formattedPhone = newPhone.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3');
-            document.getElementById('user-phone').innerText = formattedPhone;
-        }
-
-        if (newBirthday) {
-            const date = new Date(newBirthday);
-            const formatted = date.toLocaleDateString('en-GB');
-            document.getElementById('user-birthday').innerText = formatted;
-        }
-
-        modal.style.display = 'none';
-        alert("Profile updated successfully!");
-    });
-}
