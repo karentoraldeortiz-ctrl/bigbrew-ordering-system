@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Kuhanin ang data mula sa LocalStorage
         let cart = JSON.parse(localStorage.getItem('bigBrewCart')) || [];
 
-        // Check kung empty ang cart
+        // Check kung empty ung cart
         if (cart.length === 0) {
             emptyMsg.style.display = 'block';
             asideSummary.style.display = 'none'; // Tago ang sidebar kung walang order
@@ -109,10 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // I-save ang order para mabasa ng confirmatio page
         localStorage.setItem('lastOrder', JSON.stringify(finalOrder));
 
-        // Linisin ang cart
+        // c-clear nya ung cart
         localStorage.removeItem('bigBrewCart');
         
-        // Pumunta sa confirmation page
+        // di-direct sa confirmation page
         window.location.href = "orderConfirmed.html";
             
         });

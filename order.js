@@ -43,8 +43,9 @@ filterButtons.forEach(button => {
         }
     });
 });
+// ========== END OF MENU PAGE JS =============
 
-
+// ================ POP UP WINDOW
 const modal = document.getElementById('productModal');
 const addBtns = document.querySelectorAll('.add-btn');
 const closeBtn = document.querySelector('.close-modal');
@@ -139,7 +140,7 @@ document.getElementById('btnAddToCart').addEventListener('click', () => {
         qty: parseInt(document.getElementById('qtyVal').innerText),
         img: document.getElementById('modalProductImg').src
     };
-    // ETO NASA LOCAL STORAGE LANG SHA FOR NOW, DI PA SHA MA-SHOW SA CART PAGE
+    // ETO NASA LOCAL STORAGE LANG SHA FOR NOW
     let cart = JSON.parse(localStorage.getItem('bigBrewCart')) || [];
     cart.push(item);
     localStorage.setItem('bigBrewCart', JSON.stringify(cart));
