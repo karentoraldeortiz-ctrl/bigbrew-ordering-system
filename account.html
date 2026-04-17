@@ -77,7 +77,9 @@
               <i class="fa-solid fa-user"></i>
               <div>
                 <h2>Allyana Flores</h2>
-                <p>Edit Profile <i class="fa-solid fa-pen"></i></p>
+                <p class="edit-profile">
+                  Edit Profile <i class="fa-solid fa-pen"></i>
+                </p>
               </div>
             </div>
             <div class="acc-info-body">
@@ -108,6 +110,50 @@
           <div id="order-history-list">
             <p class="loading-msg">Loading your orders...</p>
           </div>
+        </div>
+      </div>
+
+      <!-- EDIT PROFILE POP UP WINDOW  -->
+      <div id="editProfileModal" class="modal-overlay" style="display: none">
+        <div class="modal-card profile-modal">
+          <span class="close-profile-modal">&times;</span>
+          <h2>Edit Profile</h2>
+
+          <form id="editProfileForm">
+            <div class="input-group">
+              <label>Name</label>
+              <input type="text" id="editName" required />
+            </div>
+
+            <div class="input-group">
+              <label>Email</label>
+              <input type="email" id="editEmail" required />
+            </div>
+
+            <div class="input-group">
+              <label>Phone Number</label>
+              <input
+                type="text"
+                id="editPhone"
+                minlength="11"
+                maxlength="11"
+                pattern="[0-9]{11}"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>Birthday</label>
+              <input type="date" id="editBirthday" required />
+            </div>
+
+            <div class="profile-modal-footer">
+              <button type="button" class="btn-cancel" id="closeBtn">
+                Cancel
+              </button>
+              <button type="submit" class="btn-save">Save Changes</button>
+            </div>
+          </form>
         </div>
       </div>
     </section>
