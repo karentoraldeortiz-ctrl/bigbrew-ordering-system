@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 cart[index].qty = 1; // Ibalik sa 1 kung nag-cancel
             }
         } else {
-            // Update ang total price ng specific item na ito
+            // Update ang total price ng specific item na to
             cart[index].price = unitPrice * cart[index].qty;
         }
 
