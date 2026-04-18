@@ -22,6 +22,29 @@
 //     }
 // }
 
+function login() {
+    const email = document.getElementById("email").value;
+    
+    localStorage.setItem("user", email);
+
+    alert("Login successful");
+    window.location.href = "index.html";
+
+}
+
+function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "index.html";
+}
+
+function signup() {
+    const email = document.getElementById("email").value;
+    localStorage.setItem("user", email);
+
+    alert("Account created successfully.");
+    window.location.href = "login.html";
+}
+
 const loginForm = document.getElementById('loginForm');
 
 if (loginForm) {
@@ -44,8 +67,12 @@ if (loginForm) {
                 errorText.textContent = "Password must be at least 6 characters";
             }
         }
+        else if (passwordInput.value.length >= 6) {
+            login();
+        }
     });
 }
+
 
 const signForm = document.getElementById('signForm');
 
@@ -63,15 +90,22 @@ if (signForm) {
         validateField(confirmInput);
         validateField(nameInput);
 
-        if (passwordInput.value !== confirmInput.value) {
+        if (passwordInput.value === "" ||confirmInput.value === "") {
+            validateField(passwordInput);
+            validateField(confirmInput);
+        }
+        else if (passwordInput.value !== confirmInput.value) {
             confirmInput.classList.add('error');
             confirmInput.parentElement.classList.add('has-error');
 
             const errorText = confirmInput.parentElement.querySelector('.error-text');
             if (errorText) {
-                errorText.textContent = "Passwords do not match";
+                errorText.textContent = "Password do not match";
             }
+        } else {
+            signup();
         }
+        
     });
 }
 
@@ -88,8 +122,8 @@ function validateField(input) {
     }
 }
 
-let confirmPass = document.getElementById('confirmPassword');
-let pass = document.getElementById('password');
-    if (pass !== confirmPass) {
-        validateField(confirmInput)
-    }
+// let confirmPass = document.getElementById('confirmPassword');
+// let pass = document.getElementById('password');
+//     if (pass !== confirmPass) {
+//         validateField(confirmInput)
+//     }

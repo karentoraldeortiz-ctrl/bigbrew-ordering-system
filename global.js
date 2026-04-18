@@ -10,4 +10,13 @@ const navLinks = document.getElementById("navlinks");
         //     navLinks.classList.toggle("active");
         // }       
 
+// check if logged in
+function isLoggedIn() {
+  return localStorage.getItem("user") !== null;
+}
+
+if (!isLoggedIn()) {
+  alert("Please login first");
+  window.location.href = "login.html";
+}
 
