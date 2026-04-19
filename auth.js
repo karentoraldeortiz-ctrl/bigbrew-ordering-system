@@ -70,6 +70,7 @@ if (loginForm) {
         else if (passwordInput.value.length >= 6) {
             login();
         }
+        localStorage.setItem("currentUser", "Karen"); 
     });
 }
 

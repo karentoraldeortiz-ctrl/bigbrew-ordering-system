@@ -55,51 +55,41 @@
 
     <!-- IF EMPTY STATE -->
     <div class="no-review">
-        <h4>No reviews yet.</h4>
-        <p>Be the first to review!</p>
+        <p>No reviews yet.</p>
     </div>
     <!-- HAS REVIEW -->
     <section class="review-content">
-        <!-- <div class="overall-rev">
-            <div class="overall-box">
-                <h1>HOTDOG</h1>
-            </div>
-        </div>
-
-        <div class="review-list">
-            <div class="rev-box">
-                <h1>HOTDOG</h1>
-            </div>
-            <div class="rev-box">
-                <h1>HOTDOG</h1>
-            </div>
-            <div class="rev-box">
-                <h1>HOTDOG</h1>
-            </div>
-        </div> -->
     </section>
 
-    <!-- <div class="overall-rev">
-            <h1 class="average-rate">0</h1>
-            <div class="star-rating">
-              <span class="star" data-value="1">★</span>
-              <span class="star" data-value="2">★</span>
-              <span class="star" data-value="3">★</span>
-              <span class="star" data-value="4">★</span>
-              <span class="star" data-value="5">★</span>
-            </div>
-            <h4>1 reviews</h4>
-            <p>Based on customer feedback</p>
-    </div> -->
 
-    <div class="write-review">
+    <div class="write-box">
+            <div class="write-review">
         <h3>Love BigBrew? Share Your Experience!</h3>
         <p>Your feedback helps us serve you better and helps other find great drinks.</p>
-        <button>Write a Review</button>
+        <button id="openBtn">Write a Review</button>
     </div>
 
+    </div>
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Enjoyed our service? Let us know!</h3>
+            <p>Your feedback helps us improve our service.</p>
+                <div class="star-rating-large">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+                </div>
+                <p id="error-msg"></p>
+            <input type="text" placeholder="Write your feedback here."> <br>
+            <button class="submitBtn" id="submitBtn">Submit</button>
+        </div>
+    </div>
 </main>
     <script src="global.js"></script>
+    <script src="main.js"></script>
 </body>
 
     <footer class="main-footer">
