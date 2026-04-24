@@ -562,6 +562,56 @@ body {
     padding: 10px;
     background-color: white;
 }
+.rcpt-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000; /* Mas mataas para laging nasa ibabaw */
+}
+
+.rcpt-modal-card {
+    background: #fff;
+    width: 320px;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.rcpt-close-x {
+    position: absolute;
+    right: 15px; top: 10px;
+    font-size: 22px; cursor: pointer;
+    color: #888;
+}
+
+.rcpt-title { color: #b36b21; margin: 0; font-size: 1.2rem; text-align: center; }
+.rcpt-subtitle { text-align: center; margin-top: 5px; font-size: 0.8rem; color: #666; }
+
+.rcpt-divider {
+    border-top: 1px dashed #bbb;
+    margin: 15px 0;
+}
+
+.rcpt-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    font-size: 0.9rem;
+}
+
+.rcpt-print-btn {
+    width: 100%;
+    padding: 10px;
+    background: #b36b21;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+}
 @media (max-width: 900px) {
     .account-content {
         flex-direction: column;

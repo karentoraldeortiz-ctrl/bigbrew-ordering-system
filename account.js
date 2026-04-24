@@ -182,3 +182,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
+// receipt
+// 1. Function para i-trigger ang Receipt
+function openReceipt(orderId) {
+    // Kunin ang history mula sa localStorage
+    const history = JSON.parse(localStorage.getItem('orderHistory')) || [];
+    const order = history.find(o => o.orderId == orderId);
+
+    if (order) {
+        const infoDiv = document.getElementById('rcpt-dynamic-info');
+        
+        infoDiv.innerHTML = `
+            <div class="rcpt-row"><span>Order ID:</span> <strong>#${order.orderId}</strong></div>
+            <div class="rcpt-row"><span>Date:</span> <span>${order.date}</span></div>
+            <div class="rcpt-divider"></div>
+            <div class="rcpt-row"><span>${order.items}</span> <span>₱${order.total}</span></div>
+            <div class="rcpt-row" style="font-weight: bold; font-size: 1.1rem; margin-top: 10px;">
+                <span>TOTAL</span> <span>₱${order.total}</span>
+            </div>
+        `;
+
+        document.getElementById('viewReceiptOverlay').style.display = 'flex';
+    }
+}
+
+// 2. Close Logic
+document.querySelector('.rcpt-close-x').addEventListener('click', () => {
+    document.getElementById('viewReceiptOverlay').style.display = 'none';
+});
+
+// 3. I-update ang Order History rendering mo
+// Siguraduhin na ang loop mo ay may onclick="openReceipt('${order.orderId}')"
