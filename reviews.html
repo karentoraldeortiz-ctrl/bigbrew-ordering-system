@@ -1,20 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Big Brew Maysan - Big in Taste, Bit in Price. ">
-    <meta name="keywords" content="BigBrew Maysan, Maysan, Online Order, Milktea">
-    <meta name="author" content="Allyana Flores, Karen Ortiz">
-    <title>BigBrew | Reviews</title>    
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="shortcut icon" href="assets/logo/logo-black.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-        <!-- NAV BAR -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Big Brew Maysan - Big in Taste, Bit in Price. "
+    />
+    <meta
+      name="keywords"
+      content="BigBrew Maysan, Maysan, Online Order, Milktea"
+    />
+    <meta name="author" content="Allyana Flores, Karen Ortiz" />
+    <title>BigBrew | Reviews</title>
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link
+      rel="shortcut icon"
+      href="assets/logo/logo-black.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- NAV BAR -->
     <header>
       <nav class="navbar">
         <div class="navlogo">
@@ -47,106 +63,108 @@
         </div>
       </nav>
     </header>
-<main class="review-page">
-    <div class="rev-header">
+    <main class="review-page">
+      <div class="rev-header">
         <h1>Customer Feedback</h1>
-        <p>We value every sip and every story. Share your thoughts and be part of our growing BigBrew family!</p>
-    </div>
+        <p>
+          We value every sip and every story. Share your thoughts and be part of
+          our growing BigBrew family!
+        </p>
+      </div>
 
-    <!-- IF EMPTY STATE -->
-    <div class="no-review">
+      <!-- IF EMPTY STATE -->
+      <div class="no-review">
         <p>No reviews yet.</p>
-    </div>
-    <!-- HAS REVIEW -->
-    <section class="review-content">
-    </section>
+      </div>
+      <!-- HAS REVIEW -->
+      <section class="review-content"></section>
 
-
-    <div class="write-box">
-            <div class="write-review">
-        <h3>Love BigBrew? Share Your Experience!</h3>
-        <p>Your feedback helps us serve you better and helps other find great drinks.</p>
-        <button id="openBtn">Write a Review</button>
-    </div>
-
-    </div>
-    <div class="modal" id="modal">
+      <div class="write-box">
+        <div class="write-review">
+          <h3>Love BigBrew? Share Your Experience!</h3>
+          <p>
+            Your feedback helps us serve you better and helps other find great
+            drinks.
+          </p>
+          <button id="openBtn">Write a Review</button>
+        </div>
+      </div>
+      <div class="modal" id="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Enjoyed our service? Let us know!</h3>
-            <p>Your feedback helps us improve our service.</p>
-                <div class="star-rating-large">
-                <span class="star" data-value="1">★</span>
-                <span class="star" data-value="2">★</span>
-                <span class="star" data-value="3">★</span>
-                <span class="star" data-value="4">★</span>
-                <span class="star" data-value="5">★</span>
-                </div>
-                <p id="error-msg"></p>
-            <input type="text" placeholder="Write your feedback here."> <br>
-            <button class="submitBtn" id="submitBtn">Submit</button>
-        </div>
-    </div>
-</main>
-    <script src="global.js"></script>
-    <script src="main.js"></script>
-</body>
-
-    <footer class="main-footer">
-      <div class="footer-container">
-        <div class="footer-brand">
-          <div class="footer-logo">
-            <img
-              src="assets/logo/bb-maysan-logo-1.png"
-              alt="Big Brew Maysan Logo"
-            />
+          <span class="close">&times;</span>
+          <h3>Enjoyed our service? Let us know!</h3>
+          <p>Your feedback helps us improve our service.</p>
+          <div class="star-rating-large">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
           </div>
-          <p>BIGBREW - Maysan, Valenzuela City</p>
+          <p id="error-msg"></p>
+          <input type="text" placeholder="Write your feedback here." /> <br />
+          <button class="submitBtn" id="submitBtn">Submit</button>
         </div>
+      </div>
+    </main>
+    <script src="js/global.js"></script>
+    <script src="js/main.js"></script>
+  </body>
 
-        <div class="footer-column">
-          <h3>Contact</h3>
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <img
+            src="assets/logo/bb-maysan-logo-1.png"
+            alt="Big Brew Maysan Logo"
+          />
+        </div>
+        <p>BIGBREW - Maysan, Valenzuela City</p>
+      </div>
+
+      <div class="footer-column">
+        <h3>Contact</h3>
+        <ul>
+          <li>0929 563 4350</li>
+          <li>info@bigbrew.com</li>
+          <li>094 Maysan Rd, Valenzuela, 1442 Metro Manila</li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <div class="links-grid">
           <ul>
-            <li>0929 563 4350</li>
-            <li>info@bigbrew.com</li>
-            <li>094 Maysan Rd, Valenzuela, 1442 Metro Manila</li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+          <ul>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="terms.html">Terms & Conditions</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
           </ul>
         </div>
-
-        <div class="footer-column">
-          <h3>Quick Links</h3>
-          <div class="links-grid">
-            <ul>
-              <li><a href="index.html">Home</a></li>
-              <li><a href="menu.html">Menu</a></li>
-              <li><a href="about.html">About</a></li>
-            </ul>
-            <ul>
-              <li><a href="reviews.html">Reviews</a></li>
-              <li><a href="terms.html">Terms & Conditions</a></li>
-              <li><a href="privacy.html">Privacy Policy</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="footer-column">
-          <h3>Follow us on</h3>
-          <div class="social-icons">
-            <a
-              href="https://www.facebook.com/p/BigBrew-Maysan-Rd-Valenzuela-100085267776562/"
-            >
-              <i class="fab fa-facebook"></i
-            ></a>
-            <a href="https://www.instagram.com/bigbrew.maysan/"
-              ><i class="fab fa-instagram"></i
-            ></a>
-          </div>
-        </div>
       </div>
 
-      <div class="footer-bottom">
-        <p>&copy; 2026. BigBrew Maysan. All Rights Reserved.</p>
+      <div class="footer-column">
+        <h3>Follow us on</h3>
+        <div class="social-icons">
+          <a
+            href="https://www.facebook.com/p/BigBrew-Maysan-Rd-Valenzuela-100085267776562/"
+          >
+            <i class="fab fa-facebook"></i
+          ></a>
+          <a href="https://www.instagram.com/bigbrew.maysan/"
+            ><i class="fab fa-instagram"></i
+          ></a>
+        </div>
       </div>
-    </footer>
+    </div>
 
+    <div class="footer-bottom">
+      <p>&copy; 2026. BigBrew Maysan. All Rights Reserved.</p>
+    </div>
+  </footer>
 </html>
