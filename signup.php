@@ -1,3 +1,35 @@
+<?php
+include "db.php";
+
+$message = "";
+
+if(isset($_POST['signup'])){
+
+$name = $_POST['name' ];
+$email = $_POST['email'];
+$password = $_POST['password' ];
+$phone = $_POST['phone'];
+
+$check = mysqli_query($conn,"SELECT * FROM users WHERE email='$email'");
+
+if(mysqli_num_rows($check) > 0){
+$message = "Email already exists!";
+}
+
+else if(!preg_match('/^(?=.*[A-Za-z])(?=.*\d)<?=.*[@$!%*#?&]).{8, }$/',$password)){
+$message = "Weak password!";
+}
+else{mysqli_query($conn,
+"INSERT INTO users(full_name, email, password, phone_num)
+VALUES('$name','$email','$password', '$phone')");
+
+$message = "Registered successfully!";
+
+
+}
+}
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -35,17 +67,18 @@
         <div class="header">
           <img src="assets/logo/logo-black.png" alt="" />
         </div>
-        <form id="signForm">
+        <?php if($message!="") echo "<p class='error'>$message</p>" ?>
+        <form id="signForm" method="POST">
           <div class="first">
             <div class="outer-prac1">
               <!-- <div class="info-grp">
                             <label>First Name*</label> <br>
                             <input type="text">
                         </div> -->
-<<<<<<< HEAD
+
               <div class="info-grp">
                 <label>Name*</label> <br />
-                <input type="text" id="name" minlength="3" />
+                <input type="text" id="name" minlength="3" name="name" />
                 <span class="error-text" id="emailError"
                   >This field is required.</span
                 >
@@ -58,42 +91,29 @@
               </div>
             </div>
             <div class="prac partner">
-              <label>Partner No.</label> <br />
+              <label>Phone No.</label> <br />
               <input
                 type="text"
                 class="partner-no"
-                placeholder="If you are a BigBrew Maysan Partner (employee), enter your Partner No."
+                name="phone"
               />
             </div>
-=======
-                        <div class="info-grp">
-                            <label>Name*</label> <br>
-                            <input type="text" id="name" minlength="3">
-                            <span class="error-text" id="emailError">This field is required.</span>
-                        </div>
-                </div>
+
+                <!-- </div> -->
                 
-                <div class="outer-prac1">
-                        <div class="info-grp"><label>Birthday</label><input type="date"></div>
-                </div>
-                <div class="prac partner">
-                    <label>Phone No.</label> <br>
-                    <input type="text" class="partner-no">
-                </div>
->>>>>>> 25710a9466681f27ee84e61e8f659228cfe3a51a
          <!--hhaha  -->
 </div>
           <div class="last">
             <div class="info-grp">
               <label>Email Address*</label> <br />
-              <input type="email" id="email" />
+              <input type="email" id="email" name="email" />
               <span class="error-text" id="emailError"
                 >This field is required.</span
               >
             </div>
             <div class="info-grp">
               <label>Password*</label> <br />
-              <input type="password" id="password" minlength="6" />
+              <input type="password" name="password" id="password" minlength="6" />
               <span class="error-text" id="passwordError"
                 >This field is required</span
               >
@@ -106,8 +126,8 @@
               >
             </div>
           </div>
-          <div class="signup-btn">
-            <button type="submit"><h4>Sign up</h4></button>
+          <div class="signup-btn" >
+            <button type="submit" name="signup"><h4>Sign up</h4></button>
           </div>
         </form>
         <div class="hasAccount">
