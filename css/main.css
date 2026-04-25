@@ -20,7 +20,7 @@ body {
     color: white;
     padding: 0 1rem;
     /* background-color: var(--dark-color); */
-    background-image: url('..assets/pictures/gradient11.jpg');
+    background-image: url('../assets/pictures/gradient11.jpg');
     background-size: cover;
 
     -webkit-mask-image: linear-gradient(
