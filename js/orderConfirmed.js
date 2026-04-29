@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('display-id').innerText = `#${order.orderId}`;
         document.getElementById('display-time').innerText = order.time;
 
+        
+
         const cleanTotal = order.total.toString().replace('P', '').trim();
         document.getElementById('display-total').innerText = `P ${cleanTotal}`;
 

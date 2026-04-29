@@ -183,34 +183,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-// receipt
-// 1. Function para i-trigger ang Receipt
-function openReceipt(orderId) {
-    // Kunin ang history mula sa localStorage
-    const history = JSON.parse(localStorage.getItem('orderHistory')) || [];
-    const order = history.find(o => o.orderId == orderId);
-
-    if (order) {
-        const infoDiv = document.getElementById('rcpt-dynamic-info');
-        
-        infoDiv.innerHTML = `
-            <div class="rcpt-row"><span>Order ID:</span> <strong>#${order.orderId}</strong></div>
-            <div class="rcpt-row"><span>Date:</span> <span>${order.date}</span></div>
-            <div class="rcpt-divider"></div>
-            <div class="rcpt-row"><span>${order.items}</span> <span>₱${order.total}</span></div>
-            <div class="rcpt-row" style="font-weight: bold; font-size: 1.1rem; margin-top: 10px;">
-                <span>TOTAL</span> <span>₱${order.total}</span>
-            </div>
-        `;
-
-        document.getElementById('viewReceiptOverlay').style.display = 'flex';
+// GLOBAL orders (important para ma-access sa openReceipt)
+let orders = [
+    {
+        orderId: "204057448",
+        status: "Completed",
+        items: "Strawberry x200",
+        date: "4/25/2026",
+        total: "14800",
+        time: "in 1-5 hour"
+    },
+    {
+        orderId: "735438815",
+        status: "Completed",
+        items: "Cheesecake x3",
+        date: "4/25/2026",
+        total: "168",
+        time: "asap"
     }
+];
+
+// RENDER FUNCTION
+function renderOrders(ordersData) {
+    const historyContainer = document.getElementById('order-history-list');
+
+    historyContainer.innerHTML = ordersData.map(order => `
+        <div class="order-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3>#${order.orderId}</h3>
+                <span class="status-completed">${order.status}</span>
+                <span style="font-size:12px; color:#888;">
+                    <i class="fa-regular fa-clock"></i> ${order.time}
+                </span>
+            </div>
+
+            <p style="color:#666; margin:10px 0;">${order.items}</p>
+            <hr>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="color:#888;">${order.date}</span>
+
+                <span class="receipt-link" onclick="openReceipt('${order.orderId}')">
+                    View Order Receipt
+                </span>
+
+                <strong style="color:#b36b21;">₱${order.total}</strong>
+            </div>
+        </div>
+    `).join('');
 }
 
-// 2. Close Logic
-document.querySelector('.rcpt-close-x').addEventListener('click', () => {
-    document.getElementById('viewReceiptOverlay').style.display = 'none';
-});
+// OPEN RECEIPT
+function openReceipt(orderId) {
+    const order = orders.find(o => o.orderId == orderId);
+    if (!order) return;
 
-// 3. I-update ang Order History rendering mo
-// Siguraduhin na ang loop mo ay may onclick="openReceipt('${order.orderId}')"
+    document.getElementById('receiptDetails').innerHTML = `
+        <p><strong>Order ID:</strong> ${order.orderId}</p>
+        <p><strong>Items:</strong> ${order.items}</p>
+        <p><strong>Date:</strong> ${order.date}</p>
+        <p><strong>Total:</strong> ₱${order.total}</p>
+        <p><strong>Status:</strong> ${order.status}</p>
+    `;
+
+    document.getElementById('receiptModal').style.display = 'block';
+}
+
+// CLOSE MODAL
+function closeReceipt() {
+    document.getElementById('receiptModal').style.display = 'none';
+}
+
+// AUTO LOAD
+renderOrders(orders);
