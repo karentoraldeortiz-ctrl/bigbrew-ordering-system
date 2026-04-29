@@ -44,215 +44,196 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div><h4>Total: ₱${order.total}</h4></div>   
                     </div>
                 </div>
+
+                 <div class="order-actions">
+
+            <button onclick="viewReceipt(${order.orderId})" class="view-btn">
+                View Receipt
+            </button>
+
+            ${
+              order.review
+                ? `<button class="reviewed-btn" disabled>Reviewed </button>`
+                : `<button onclick="openReview(${order.orderId})" class="review-btn">
+                      Add Review
+                   </button>`
+            }
+
+        </div>
+
+    </div>
                 
             `).join(''); 
         });
 
-        // .join('');  ends the .map() loop
-        // cino-convert all orders html strings into one big string
+// view order receipt
+    function viewReceipt(orderId) {
+    const history = JSON.parse(localStorage.getItem("orderHistory")) || [];
+    const order = history.find(o => o.orderId == orderId);
 
-
-// Get elements
-document.addEventListener('DOMContentLoaded', () => {
-
-    const modal = document.getElementById('editProfileModal');
-    const editBtn = document.querySelector('.edit-profile');
-    const closeBtn = document.getElementById('closeBtn');
-    const closeIcon = document.querySelector('.close-profile-modal');
-    const form = document.getElementById('editProfileForm');
-
-    function openModal() {
-        if (!modal) return;
-        modal.style.display = 'flex';
-
-        document.getElementById('editName').value = '';
-        document.getElementById('editEmail').value = '';
-        document.getElementById('editPhone').value = '';
-        document.getElementById('editBirthday').value = '';
+    if (!order) {
+        console.error("Order not found!");
+        return;
     }
 
-    function closeModal() {
-        if (!modal) return;
-        modal.style.display = 'none';
-    }
+    const modal = document.getElementById("receiptModal");
+    const content = document.getElementById("receipt-content-area");
 
-    // LOAD SAVED DATA ON PAGE LOAD
-    const savedName = localStorage.getItem('userName');
-    const savedEmail = localStorage.getItem('userEmail');
-    const savedPhone = localStorage.getItem('userPhone');
-    const savedBirthday = localStorage.getItem('userBirthday');
+    content.innerHTML = `
+        <div class="check-icon">
+            <i class="fa-regular fa-circle-check"></i>
+        </div>
+        <h1>Order Confirmed!</h1>
+        <p>Thank you for your order, Brew! Your beverages are being prepared.</p>
 
-    if (savedName) {
-        const el = document.getElementById('user-name');
-        if (el) el.innerText = savedName;
-
-        const input = document.getElementById('editName');
-        if (input) input.value = savedName;
-    }
-
-    if (savedEmail) {
-        const el = document.getElementById('user-email');
-        if (el) el.innerText = savedEmail;
-
-        const input = document.getElementById('editEmail');
-        if (input) input.value = savedEmail;
-    }
-
-    if (savedPhone) {
-        const el = document.getElementById('user-phone');
-        if (el) el.innerText = savedPhone;
-
-        const input = document.getElementById('editPhone');
-        if (input) input.value = savedPhone;
-    }
-
-    if (savedBirthday) {
-        const el = document.getElementById('user-birthday');
-        if (el) el.innerText = savedBirthday;
-    }
-
-    // OPEN MODAL
-    if (editBtn) {
-        editBtn.addEventListener('click', openModal);
-    }
-
-    // CLOSE MODAL BUTTON
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeModal);
-    }
-
-    // CLOSE ICON
-    if (closeIcon) {
-        closeIcon.addEventListener('click', closeModal);
-    }
-
-    // CLOSE WHEN CLICK OUTSIDE
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-    }
-
-    // SAVE FORM
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const newName = document.getElementById('editName').value;
-            const newEmail = document.getElementById('editEmail').value;
-            const newPhone = document.getElementById('editPhone').value;
-            const newBirthday = document.getElementById('editBirthday').value;
-
-            // FIXED PHONE FORMAT
-            let formattedPhone = newPhone ? newPhone.replace(/\D/g, '') : '';
-            if (formattedPhone.length === 11) {
-                formattedPhone = formattedPhone.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3');
-            }
-
-            // BIRTHDAY FORMAT
-            let formattedBirthday = "";
-            if (newBirthday) {
-                const date = new Date(newBirthday);
-                formattedBirthday = date.toLocaleDateString('en-GB');
-            }
-
-            // SAVE TO LOCALSTORAGE
-            localStorage.setItem('userName', newName);
-            localStorage.setItem('userEmail', newEmail);
-            localStorage.setItem('userPhone', formattedPhone);
-            localStorage.setItem('userBirthday', formattedBirthday);
-
-            // UPDATE UI
-            const nameDisplay = document.getElementById('user-name');
-            const emailDisplay = document.getElementById('user-email');
-            const phoneDisplay = document.getElementById('user-phone');
-            const bdayDisplay = document.getElementById('user-birthday');
-
-            if (nameDisplay) nameDisplay.innerText = newName;
-            if (emailDisplay) emailDisplay.innerText = newEmail;
-            if (phoneDisplay) phoneDisplay.innerText = formattedPhone;
-            if (bdayDisplay) bdayDisplay.innerText = formattedBirthday;
-
-            closeModal();
-
-            alert("Profile updated successfully!");
-        });
-    }
-
-});
-
-// GLOBAL orders (important para ma-access sa openReceipt)
-let orders = [
-    {
-        orderId: "204057448",
-        status: "Completed",
-        items: "Strawberry x200",
-        date: "4/25/2026",
-        total: "14800",
-        time: "in 1-5 hour"
-    },
-    {
-        orderId: "735438815",
-        status: "Completed",
-        items: "Cheesecake x3",
-        date: "4/25/2026",
-        total: "168",
-        time: "asap"
-    }
-];
-
-// RENDER FUNCTION
-function renderOrders(ordersData) {
-    const historyContainer = document.getElementById('order-history-list');
-
-    historyContainer.innerHTML = ordersData.map(order => `
-        <div class="order-box">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h3>#${order.orderId}</h3>
-                <span class="status-completed">${order.status}</span>
-                <span style="font-size:12px; color:#888;">
-                    <i class="fa-regular fa-clock"></i> ${order.time}
-                </span>
+        <div class="order-info-box">
+            <div class="info-row line-bottom">
+                <span>Order ID</span>
+                <strong style="color: black">#${order.orderId}</strong>
             </div>
 
-            <p style="color:#666; margin:10px 0;">${order.items}</p>
-            <hr>
+            <div class="info-row line-bottom">
+                <span>Pickup Time</span>
+                <strong class="display-time">asap</strong>
+            </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span style="color:#888;">${order.date}</span>
+            <div id="items-list-container">
+                ${order.items ? order.items.map(item => { 
+                    const quantity = item.quantity || item.qty || 0;
+                    const price = item.price || 0;
+                    const name = item.name || "Item";
 
-                <span class="receipt-link" onclick="openReceipt('${order.orderId}')">
-                    View Order Receipt
-                </span>
+                    return `
+                        <div class="info-row">
+                            <span>${name} x${quantity}</span>
+                            <strong>P${(price * quantity).toLocaleString()}</strong>
+                        </div>
+                    `;
+                }).join('') : '<p>No items found</p>'}
+            </div>
 
-                <strong style="color:#b36b21;">₱${order.total}</strong>
+            <div class="info-row total-section">
+                <span class="total-label" style="color: black">Total</span>
+                <span class="total-amount">P ${order.total || 0}</span>
             </div>
         </div>
-    `).join('');
-}
 
-// OPEN RECEIPT
-function openReceipt(orderId) {
-    const order = orders.find(o => o.orderId == orderId);
-    if (!order) return;
-
-    document.getElementById('receiptDetails').innerHTML = `
-        <p><strong>Order ID:</strong> ${order.orderId}</p>
-        <p><strong>Items:</strong> ${order.items}</p>
-        <p><strong>Date:</strong> ${order.date}</p>
-        <p><strong>Total:</strong> ₱${order.total}</p>
-        <p><strong>Status:</strong> ${order.status}</p>
+        <div class="review-display-section">
+            ${order.review 
+                ? `<p><strong>Rating:</strong> ${order.review.rating}/5 ⭐</p>
+                   <p>"${order.review.comment}"</p>`
+                : `<p style="color: #888; font-size: 0.8rem;">No review yet.</p>`
+            }
+        </div>
     `;
 
-    document.getElementById('receiptModal').style.display = 'block';
+    modal.style.display = "flex";
 }
 
-// CLOSE MODAL
-function closeReceipt() {
-    document.getElementById('receiptModal').style.display = 'none';
+// OPEN REVIEW FORM
+
+function openReview(orderId) {
+    const history = JSON.parse(localStorage.getItem("orderHistory")) || [];
+    const order = history.find(o => o.orderId === orderId);
+
+    const modal = document.getElementById("receiptModal");
+    const content = document.getElementById("receipt-content-area");
+
+    content.innerHTML = `
+        <h2 style="margin-bottom: 20px;">Rate Order #${order.orderId}</h2>
+        
+        <div class="star-rating">
+            <input type="number" id="rating-${orderId}" min="1" max="5" class="feedback-input" placeholder="Rating (1-5)" style="height: auto;"/>
+        </div>
+
+        <textarea id="comment-${orderId}" class="feedback-input" placeholder="Write your review..."></textarea>
+
+        <button class="btn-submit-feedback" onclick="submitReview('${orderId}')">
+            Submit Review
+        </button>
+    `;
+
+    modal.style.display = "flex";
 }
 
-// AUTO LOAD
-renderOrders(orders);
+//  SUBMIT REVIEW
+
+window.openReview = function(orderId) {
+    const modal = document.getElementById("receiptModal");
+    const content = document.getElementById("receipt-content-area");
+
+    content.innerHTML = `
+        <h2>Rate Order #${orderId}</h2>
+        <input type="number" id="rating-${orderId}" min="1" max="5" class="feedback-input" placeholder="Rating (1-5)" />
+        <textarea id="comment-${orderId}" class="feedback-input" placeholder="How was your drink?"></textarea>
+        <button class="btn-submit-feedback" onclick="submitReview('${orderId}')">Submit Review</button>
+    `;
+    modal.style.display = "flex";
+};
+
+window.submitReview = function(orderId) {
+    let history = JSON.parse(localStorage.getItem("orderHistory")) || [];
+    const index = history.findIndex(o => o.orderId == orderId);
+
+    const rating = document.getElementById(`rating-${orderId}`).value;
+    const comment = document.getElementById(`comment-${orderId}`).value;
+
+    if (!rating || rating < 1 || rating > 5) {
+        alert("Please rate 1 to 5");
+        return;
+    }
+
+    if (index !== -1) {
+        history[index].review = { rating, comment };
+        localStorage.setItem("orderHistory", JSON.stringify(history));
+        alert("Thank you for your review!");
+        
+        document.getElementById("receiptModal").style.display = "none";
+        renderOrders(); // Refresh para maging disabled ang button
+    }
+
+
+    const hasReviewed = order.review !== undefined && order.review !== null;
+
+
+let actionButton = "";
+
+if (hasReviewed) {
+    
+    actionButton = `<button class="reviewed-btn" disabled>Reviewed</button>`;
+} else {
+   
+    actionButton = `<button class="review-btn" onclick="openReview('${order.orderId}')">Add Review</button>`;
+}
+
+// 3. display
+return `
+    <div class="order-card">
+        <!-- ... ibang details ... -->
+        <div class="order-actions">
+            <button class="view-btn" onclick="viewReceipt('${order.orderId}')">View Receipt</button>
+            ${actionButton}
+        </div>
+    </div>
+`;s
+};
+function setupModalClose() {
+    const modal = document.getElementById("receiptModal");
+    const closeBtn = document.getElementById("closeReceipt");
+
+    if (closeBtn) {
+        closeBtn.onclick = () => modal.style.display = "none";
+    }
+
+    window.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+}
+
+// Initialize on Load
+document.addEventListener('DOMContentLoaded', () => {
+    setupModalClose();
+    // ... (rest of your profile code)
+});

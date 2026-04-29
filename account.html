@@ -156,16 +156,27 @@
           </form>
         </div>
       </div>
+      <div id="receiptModal" class="modal-overlay" style="display: none">
+        <div class="modal-card receipt-card">
+          <span
+            class="close-modal"
+            id="closeReceipt"
+            style="
+              position: absolute;
+              right: 20px;
+              top: 15px;
+              cursor: pointer;
+              font-size: 24px;
+            "
+            >&times;</span
+          >
+          <div id="receipt-content-area">
+            <!-- Dito papasok ang HTML galing sa JS -->
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- RECEIPT MODAL -->
-    <div id="receiptModal" class="modal">
-      <div class="modal-content">
-        <h3>Order Receipt</h3>
-        <div id="receiptDetails"></div>
-        <button class="close-btn" onclick="closeReceipt()">Close</button>
-      </div>
-    </div>
     <footer class="main-footer">
       <div class="footer-container">
         <div class="footer-brand">
@@ -223,6 +234,5 @@
     </footer>
     <script src="js/account.js"></script>
     <script src="js/global.js"></script>
-    <script src="js/orderConfirmed.js"></script>
   </body>
 </html>

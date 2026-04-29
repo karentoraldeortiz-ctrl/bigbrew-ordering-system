@@ -3,10 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (order) {
         // --- 1. DISPLAY LOGIC ---
-        document.getElementById('display-id').innerText = `#${order.orderId}`;
+       document.getElementById('display-id').innerText = `#${order.orderId}`;
         document.getElementById('display-time').innerText = order.time;
-
-        
 
         const cleanTotal = order.total.toString().replace('P', '').trim();
         document.getElementById('display-total').innerText = `P ${cleanTotal}`;
