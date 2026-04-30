@@ -1,10 +1,8 @@
 <?php
 session_start();
-<<<<<<< HEAD
-// var_dump($_POST);
-=======
 
->>>>>>> 35078229b366d0bcd653ee5b361a4c0a78493bad
+// var_dump($_POST);
+
 // if(isset($_SESSION['user_id'])){
 //   header("Location: index.php");
 //   exit;
@@ -14,7 +12,7 @@ include "db.php";
 $message = "";
 
 if(isset($_POST['signup'])){
-var_dump($_POST);
+// var_dump($_POST);
 $name = $_POST['name'];
 $birthday = $_POST['birthday'];
 $phone = $_POST['phone'];
@@ -76,7 +74,7 @@ else{
 
         <?php if($message != ""): ?>
           <p><?php echo $message; ?></p>
-        <?php endif; ?> -
+        <?php endif; ?> 
 
         <form id="signForm" method="POST" action="">
 
