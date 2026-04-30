@@ -57,7 +57,7 @@ session_start();
             <li><a href="menu.html">Our Menu</a></li>
             <li><a href="about.html">About Us</a></li>
             <li>
-              <a href="cart.php">
+              <a href="cart.html">
                 <img src="assets/icons/icons8-cart-24.png" alt=""
               /></a>
             </li>
