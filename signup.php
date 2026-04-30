@@ -1,12 +1,9 @@
 <?php
 session_start();
-<<<<<<< HEAD
 // var_dump($_POST);
-=======
 
 // var_dump($_POST);
 
->>>>>>> 9cf07277fef7f6169f2ac89f7876d7d530991c96
 // if(isset($_SESSION['user_id'])){
 //   header("Location: index.php");
 //   exit;
