@@ -1,9 +1,29 @@
 <?php
 session_start();
+include "db.php";
 
-if(isset($_SESSION['user_id'])){
+$message = "";
+
+if(isset($_POST['login'])){
+
+  $email = $_POST['email'];
+  $password = $_POST['password'];
+
+  $result = mysqli_query($conn,
+  "SELECT * FROM users WHERE email='$email' AND password='$password'");
+
+  if(mysqli_num_rows($result) > 0) {
+
+  $user = mysqli_fetch_assoc($result);
+
+  $_SESSION['user_id'] = $user['user_id'];
+  $_SESSION['name'] = $user['full_name'];
+
   header("Location: index.php");
   exit;
+  } else {
+    $message = "Invalid email or password!";
+  }
 }
 ?>
 <!doctype html>
@@ -44,21 +64,21 @@ if(isset($_SESSION['user_id'])){
           <img src="assets/logo/logo-black.png" alt="" />
           <div><h2>Welcome back, Brew!</h2></div>
         </div>
-        <form id="loginForm">
+        <form id="loginForm" method="POST" action="">
           <div class="input-text">
-            <input type="email" placeholder="email" id="email" />
-            <span class="error-text" id="emailError">Email is required.</span>
+            <input type="email" placeholder="email" id="email" name="email" />
+            <span class="error-text" id="emailError" name="password">Email is required.</span>
           </div>
 
           <div class="input-text">
-            <input type="password" placeholder="password" id="password" />
+            <input type="password" placeholder="password" id="password" name="password" />
             <span class="error-text" id="passwordError"
               >Password is required</span
             >
           </div>
 
           <div class="login-btn">
-            <button type="submit"><h4>Login</h4></button>
+            <button type="submit" name="login"><h4>Login</h4></button>
           </div>
         </form>
         <div class="forgot-pass"><a href="#">Forgot password?</a></div>
@@ -71,6 +91,6 @@ if(isset($_SESSION['user_id'])){
       </div>
     </div>
 
-    <script src="js/auth.js"></script>
+    <!-- <script src="js/auth.js"></script> -->
   </body>
 </html>
