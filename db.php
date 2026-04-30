@@ -1,9 +1,9 @@
-<? php
+<?php
 
-$conn = mysqli_connect("localhost", "root", "", "bigbrew_db")
+$conn = mysqli_connect("localhost", "root", "", "bigbrew_db");
 
 if(!$conn) {
-    die("Connectin failed");
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 ?>

@@ -1,49 +1,19 @@
-// const form = document.getElementById('loginForm');
-
-// form.addEventListener('submit', (e) => {
-//     e.preventDefault();
-    
-//     const emailInput = document.getElementById('email');
-//     const passwordInput = document.getElementById('password');
-
-//     validateField(emailInput);
-//     validateField(passwordInput);
-// });
-
-// function validateField(input) {
-//     const parent = input.parentElement;
-
-//     if (input.value.trim() === "") {
-//         input.classList.add('error');
-//         parent.classList.add('has-error');
-//     } else {
-//         input.classList.remove('error');
-//         parent.classList.remove('has-error');
-//     }
-// }
-
 function login() {
-    const email = document.getElementById("email").value;
-    
-    localStorage.setItem("user", email);
-
     alert("Login successful");
-    window.location.href = "index.html";
-
+    window.location.href = "/bigbrew-ordering-system/index.php";
 }
 
 function logout() {
-  localStorage.removeItem("user");
-  window.location.href = "index.html";
+  window.location.href = "/bigbrew-ordering-system/index.php";
 }
 
-function signup() {
-    const email = document.getElementById("email").value;
-    localStorage.setItem("user", email);
+// function signup() {
+//     const email = document.getElementById("email").value;
+//     localStorage.setItem("user", email);
 
-    alert("Account created successfully.");
-    window.location.href = "login.html";
-}
+//     alert("Account created successfully.");
+//     window.location.href = "login.html";
+// }
 
 const loginForm = document.getElementById('loginForm');
 
@@ -68,50 +38,63 @@ if (loginForm) {
             }
         }
         else if (passwordInput.value.length >= 6) {
-            login();
+            loginForm.submit();
         }
-        localStorage.setItem("currentUser", "Karen"); 
     });
 }
 
+// const signForm = document.getElementById('signForm');
 
-const signForm = document.getElementById('signForm');
+// if (signForm) {
+//     signForm.addEventListener('submit', (e) => {
 
-if (signForm) {
-    signForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+//         const passwordInput = document.getElementById('password');
+//         const confirmInput = document.getElementById('confirmPassword');
 
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const confirmInput = document.getElementById('confirmPassword');
-        const nameInput = document.getElementById('name');
+//         if (passwordInput.value !== confirmInput.value) {
+//             e.preventDefault();
+//             alert("Password do not match");
+//         }
 
-        validateField(emailInput);
-        validateField(passwordInput);
-        validateField(confirmInput);
-        validateField(nameInput);
+//     });
+// }
+// const signForm = document.getElementById('signForm');
 
-        if (passwordInput.value === "" ||confirmInput.value === "") {
-            validateField(passwordInput);
-            validateField(confirmInput);
-        }
-        else if (passwordInput.value !== confirmInput.value) {
-            confirmInput.classList.add('error');
-            confirmInput.parentElement.classList.add('has-error');
+// if (signForm) {
+//     signForm.addEventListener('submit', (e) => {
+//         // e.preventDefault();
 
-            const errorText = confirmInput.parentElement.querySelector('.error-text');
-            if (errorText) {
-                errorText.textContent = "Password do not match";
-            }
-        } else {
-            signup();
-        }
-        
-    });
-}
+//         const emailInput = document.getElementById('email');
+//         const passwordInput = document.getElementById('password');
+//         const confirmInput = document.getElementById('confirmPassword');
+//         const nameInput = document.getElementById('name');
+
+//         validateField(emailInput);
+//         validateField(passwordInput);
+//         validateField(confirmInput);
+//         validateField(nameInput);
+
+//         if (passwordInput.value === "" ||confirmInput.value === "") {
+//             e.preventDefault();
+//             validateField(passwordInput);
+//             validateField(confirmInput);
+//         }
+//         else if (passwordInput.value !== confirmInput.value) {
+//             e.preventDefault();
+//             confirmInput.classList.add('error');
+//             confirmInput.parentElement.classList.add('has-error');
+
+//             const errorText = confirmInput.parentElement.querySelector('.error-text');
+//             if (errorText) {
+//                 errorText.textContent = "Password do not match";
+//             }
+//         }
+//         // signForm.submit(); // only if valid
+//     });
+// }
 
 function validateField(input) {
-    if (!input) return; // safety
+    if (!input) return; 
     const parent = input.parentElement;
 
     if (input.value.trim() === "") {
@@ -123,8 +106,3 @@ function validateField(input) {
     }
 }
 
-// let confirmPass = document.getElementById('confirmPassword');
-// let pass = document.getElementById('password');
-//     if (pass !== confirmPass) {
-//         validateField(confirmInput)
-//     }

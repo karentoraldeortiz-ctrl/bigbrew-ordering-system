@@ -1,11 +1,9 @@
-<? php
+<?php
 session_start();
-if(isset($_SESSION['user_id']) ){
-  header("Location: dashboard. php");
-  exit;
-
-}
-
+// if(isset($_SESSION['user_id']) ){
+//   header("Location: index.php");
+//   exit;
+// }
 ?>
 
 
@@ -46,6 +44,9 @@ if(isset($_SESSION['user_id']) ){
     
   </head>
   <body>
+    <?php
+      echo "Hello";
+    ?>
     <header>
       <nav class="navbar">
         <div class="navlogo">
@@ -81,7 +82,7 @@ if(isset($_SESSION['user_id']) ){
 
     <div class="hero1" class="hero">
       <div class="hero1-text">
-        <h1>Sip Your Favorites Without the Wait</h1>
+        <h1>Sip Your Favorites Without the Wait. HAAAaaaaaa</h1>
         <p>
           Discover your favorite BigBrew drinks and order online for quick and
           easy pickup.
