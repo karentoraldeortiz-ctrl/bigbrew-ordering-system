@@ -1,10 +1,10 @@
 <?php
 session_start();
-var_dump($_POST);
-if(isset($_SESSION['user_id'])){
-  header("Location: index.php");
-  exit;
-}
+// var_dump($_POST);
+// if(isset($_SESSION['user_id'])){
+//   header("Location: index.php");
+//   exit;
+// }
 
 include "db.php";
 $message = "";
