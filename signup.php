@@ -1,6 +1,12 @@
 <?php
 session_start();
+<<<<<<< HEAD
 // var_dump($_POST);
+=======
+
+// var_dump($_POST);
+
+>>>>>>> 9cf07277fef7f6169f2ac89f7876d7d530991c96
 // if(isset($_SESSION['user_id'])){
 //   header("Location: index.php");
 //   exit;
@@ -10,7 +16,7 @@ include "db.php";
 $message = "";
 
 if(isset($_POST['signup'])){
-
+// var_dump($_POST);
 $name = $_POST['name'];
 $birthday = $_POST['birthday'];
 $phone = $_POST['phone'];
@@ -24,12 +30,15 @@ $check = mysqli_query($conn,"SELECT * FROM users WHERE email='$email'");
 if(mysqli_num_rows($check) > 0){
 $message = "Email already exists!";
 }
-
-else if(!preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,}$/',$password)){
-$message = "Weak password!";
+else if(strlen($password) < 6){
+    $message = "Weak password!";
 }
+// else if(!preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,}$/',$password)){
+// $message = "Weak password!";
+// }
 else{
-
+//   echo "REACHED INSERT PART";
+// exit;
     $result = mysqli_query($conn,
     "INSERT INTO users(full_name, email, password, phone_num, birthday)
     VALUES('$name', '$email', '$password', '$phone', '$birthday')");
@@ -37,7 +46,9 @@ else{
     if(!$result){
         die("Database Error: " . mysqli_error($conn));
     } else {
-        $message = "Registered successfully!";
+        // $message = "Registered successfully!";
+        header("Location: login.php");
+        exit;
     }
 
 }
@@ -67,7 +78,7 @@ else{
 
         <?php if($message != ""): ?>
           <p><?php echo $message; ?></p>
-        <?php endif; ?> -
+        <?php endif; ?> 
 
         <form id="signForm" method="POST" action="">
 
