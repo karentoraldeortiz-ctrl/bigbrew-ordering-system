@@ -1,0 +1,112 @@
+:root {
+ --dark-color: #2D1E17;
+ --light-color: #FFF8E4;
+ --pop-color: #B86D25;
+ /* we also use black and white */
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    display: flex;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: var(--dark-color);
+    color: white;
+    overflow: hidden;
+}
+.sidebar .logo {
+    padding: 1.5rem 1rem;
+    display: flex;
+    justify-content: center;
+}
+.sidebar img {
+    width: 70%;
+}
+.dash-main-content {
+    flex: 1;
+    min-width: 0;
+}
+hr {
+    background-color: rgba(241, 241, 241, 0.235);
+    border: none;
+    height: 1px;
+    margin: 0;
+}
+.sidebar h6 {
+    color: rgba(241, 241, 241, 0.717);
+    margin: 13px 0 0 0;
+    /* border: red 1px solid; */
+    font-weight: 500;
+}
+.main-menu, .acc {
+    padding: 0rem 1rem;
+}
+.main-menu div {
+    border-radius: 5px;
+}
+.main-menu a {
+    text-decoration: none;
+    color: white;
+}
+.sidebar h3 {
+    font-size: 0.9rem;
+    padding: 7px 10px;
+    font-weight: 600;
+    /* border: red 1px solid; */
+}
+.dash-tab {
+    background-color: var(--pop-color);
+    margin: 0;
+    /* border: red 1px solid; */
+    padding: 0;
+}
+.acc {
+    height: 48%;
+}
+.staff-acc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 1rem;
+    /* border: red 1px solid; */
+}
+.staff-acc div {
+    align-items: center;
+    padding-top: 5px;
+}
+.fa-user {
+    border: white 1px solid;
+    border-radius: 50px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center; 
+    align-items: center;  
+    margin-right: 10px;
+}
+.staff-acc p {
+    margin: 0;
+    font-size: 0.65rem;
+}
+.staff-acc h5 {
+    font-weight: 500;
+    margin: 0;
+}
+.logout {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: white;
+  cursor: pointer;
+}
+.dash-tab:hover, .orders-tab:hover, .menu-tab:hover {
+    background-color: #ffffff05;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
