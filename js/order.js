@@ -136,7 +136,7 @@ document.getElementById('btnAddToCart').addEventListener('click', () => {
 
     let addonsTotal = 0;
 
-document.querySelectorAll('.addon-check:checked').forEach(check => {
+    document.querySelectorAll('.addon-check:checked').forEach(check => {
     addonsTotal += parseInt(check.getAttribute('data-price'));
 });
 
