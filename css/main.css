@@ -1015,8 +1015,8 @@ body {
     margin-top: 1rem;
   border: none;
   height: 0.7px;
-  background-color: #4a2c1f6b;  /* Solid color */
-  border-radius: 5px;         /* Rounded ends */
+  background-color: #4a2c1f6b;  
+  border-radius: 5px;       
 }
 .review-card .stars {
     color: gold;
@@ -1099,15 +1099,16 @@ body {
 /* end of review page */
 
 
-/* receipt account page */
+/* =========================receipt account page */
 .order-actions {
     margin-top: 12px;
+    margin-bottom: 12px;
     display: flex;
     gap: 10px;
-    justify-content: flex-start; /* Naka-align sa kaliwa */
+    justify-content: flex-start; 
 }
 
-/* Optional: Para pantay na pantay sa text sa taas */
+
 .order-actions button {
     font-size: 0.85rem;
     padding: 8px 16px;
@@ -1162,19 +1163,43 @@ body {
     border-radius: 10px;
     width: 400px;
     max-height: 80vh;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     overflow-y: auto;
 }
+
+.modal-card h2 {
+    font-size: 1.5rem;
+    color: #231916;
+    margin-bottom: 1px;
+    font-weight: 800;
+}
+.modal-card p {
+    font-size: 0.1rem;
+    color: #666;
+    margin-bottom: 24px;
+}
+input[type="number"], 
 textarea {
     width: 100%;
-    height: 80px;
-    margin-top: 10px;
-    padding: 8px;
+    padding: 12px 16px;
+    margin-top: 5px;
+    margin-bottom: 1px;
+    border: 1.5px solid #e0d5c5; 
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    box-sizing: border-box; 
 }
-
-input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    margin-top: 10px;
+input[type="number"]:focus, 
+textarea:focus {
+    border-color: var(--pop-color);
+    box-shadow: 0 0 0 3px rgba(179, 107, 33, 0.1); 
+}
+textarea {
+    height: 100px; 
+    resize: none; 
 }
 .success-page-body {
     display:flex;
@@ -1200,6 +1225,26 @@ input[type="number"] {
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    
+}
+.btn-submit-feedback {
+    background: var(--pop-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    width: 100%;
+    transition: transform 0.1s, background 0.2s;
+}
+.btn-submit-feedback:hover {
+    background: #8e5318; 
+    transform: translateY(-1px);
+}
+
+.btn-submit-feedback:active {
+    transform: translateY(0);
 }
 .check-icon {
     font-size: 50px;
@@ -1283,4 +1328,42 @@ input[type="number"] {
     font-size: 1.2rem;
     margin-top: 10px;
     color:var(--pop-color); 
+}
+@media (max-width: 768px) {
+
+    .order-actions {
+        justify-content: center;
+    }
+
+    .order-actions button {
+        width: 40%;
+    }
+
+    .receipt-card {
+        padding: 25px 20px;
+        border-radius: 15px;
+    }
+
+    .receipt-card h1 {
+        font-size: 1.4rem;
+    }
+
+    .check-icon {
+        font-size: 40px;
+    }
+    .total-row {
+        font-size: 1rem;
+    }
+    .modal-card {
+        padding: 24px 16px; 
+    }
+
+    .modal-card h2 {
+        font-size: 1.25rem; 
+    }
+    
+    .btn-submit-feedback {
+        padding: 16px 20px; 
+    }
+
 }

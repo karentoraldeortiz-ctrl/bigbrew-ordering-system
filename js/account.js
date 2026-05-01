@@ -73,9 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ==========================
+
 // VIEW RECEIPT
-// ==========================
+
 function viewReceipt(orderId) {
     const history = JSON.parse(localStorage.getItem("orderHistory")) || [];
     const order = history.find(o => o.orderId == orderId);
@@ -113,11 +113,12 @@ function viewReceipt(orderId) {
                     const quantity = cleanNumber(item.quantity || item.qty);
                     const price = cleanNumber(item.price);
                     const name = item.name || "Item";
+                    const itemTotal = Number(price) * Number(quantity);
 
                     return `
                         <div class="info-row">
                             <span>${name} x${quantity}</span>
-                            <strong>₱${(price * quantity).toLocaleString()}</strong>
+                            <strong>₱${itemTotal.toLocaleString()}</strong>
                         </div>
                     `;
                 }).join('') : '<p>No items found</p>'}
@@ -142,15 +143,16 @@ function viewReceipt(orderId) {
 }
 
 
-// ==========================
+
 // REVIEW
-// ==========================
+
 window.openReview = function(orderId) {
     const modal = document.getElementById("receiptModal");
     const content = document.getElementById("receipt-content-area");
 
     content.innerHTML = `
         <h2>Rate Order #${orderId}</h2>
+        <p>Your feedback helps us improve our service</p>
         <input type="number" id="rating-${orderId}" min="1" max="5" class="feedback-input" placeholder="Rating (1-5)" />
         <textarea id="comment-${orderId}" class="feedback-input" placeholder="How was your drink?"></textarea>
         <button class="btn-submit-feedback" onclick="submitReview('${orderId}')">Submit Review</button>
@@ -182,10 +184,7 @@ window.submitReview = function(orderId) {
     }
 };
 
-
-// ==========================
 // MODAL CLOSE
-// ==========================
 function setupModalClose() {
     const modal = document.getElementById("receiptModal");
     const closeBtn = document.getElementById("closeReceipt");

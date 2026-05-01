@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 session_start();
 // var_dump($_POST);
 
@@ -50,21 +50,37 @@ else{
 
 }
 }
-?>
+?> -->
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Big Brew Maysan - Big in Taste, Big in Price." />
-    <meta name="keywords" content="BigBrew Maysan, Maysan, Online Order, Milktea" />
+    <meta
+      name="description"
+      content="Big Brew Maysan - Big in Taste, Big in Price."
+    />
+    <meta
+      name="keywords"
+      content="BigBrew Maysan, Maysan, Online Order, Milktea"
+    />
     <meta name="author" content="Allyana Flores, Karen Ortiz" />
     <title>BigBrew | Signup</title>
     <link rel="stylesheet" href="css/global.css" />
     <link rel="stylesheet" href="css/auth.css" />
-    <link rel="shortcut icon" href="assets/logo/logo-black.png" type="image/x-icon" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link
+      rel="shortcut icon"
+      href="assets/logo/logo-black.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
   </head>
   <body>
     <div class="signup-box">
@@ -74,75 +90,76 @@ else{
         </div>
 
         <?php if($message != ""): ?>
-          <p><?php echo $message; ?></p>
-        <?php endif; ?> 
+        <p><?php echo $message; ?></p>
+        <?php endif; ?>
 
         <form id="signForm" method="POST" action="">
-
           <div class="first">
             <div class="outer-prac1">
               <div class="info-grp">
                 <label>Name*</label><br />
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  minlength="3"
-                />
-                <span class="error-text" id="nameError">This field is required.</span>
+                <input type="text" id="name" name="name" minlength="3" />
+                <span class="error-text" id="nameError"
+                  >This field is required.</span
+                >
               </div>
             </div>
 
             <div class="outer-prac1">
               <div class="info-grp">
                 <label>Birthday</label><br />
-                <input type="date" name="birthday"
-                />
+                <input type="date" name="birthday" />
               </div>
             </div>
 
             <div class="prac partner">
               <label>Phone No.</label><br />
-              <input
-                type="text"
-                class="partner-no"
-                name="phone"
-              />
+              <input type="text" class="partner-no" name="phone" />
             </div>
           </div>
 
           <div class="last">
             <div class="info-grp">
               <label>Email Address*</label><br />
-              <input
-                type="email"
-                id="email"
-                name="email"
-              />
-              <span class="error-text" id="emailError">This field is required.</span>
+              <input type="email" id="email" name="email" />
+              <span class="error-text" id="emailError"
+                >This field is required.</span
+              >
             </div>
 
             <div class="info-grp">
               <label>Password*</label><br />
-              <input type="password" name="password" id="password" minlength="6" />
-              <span class="error-text" id="passwordError">This field is required.</span>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                minlength="6"
+              />
+              <span class="error-text" id="passwordError"
+                >This field is required.</span
+              >
             </div>
 
             <div class="info-grp">
               <label>Confirm Password*</label><br />
-              <input type="password" id="confirmPassword" name="confirm_password" />
-              <span class="error-text" id="confirmError">This field is required.</span>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirm_password"
+              />
+              <span class="error-text" id="confirmError"
+                >This field is required.</span
+              >
             </div>
           </div>
 
           <div class="signup-btn">
             <button type="submit" name="signup"><h4>Sign up</h4></button>
           </div>
-
         </form>
 
         <div class="hasAccount">
-          Already has account? <a href="login.php">Login here.</a>
+          Already has account? <a href="login.html">Login here.</a>
         </div>
         <hr />
         <p>

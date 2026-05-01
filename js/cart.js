@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let grandTotal = 0;
 
             cart.forEach((item, index) => {
-                grandTotal += item.price;
+                grandTotal += item.price * item.qty;
                 
                 // I-render ang bawat item card
              itemsContainer.innerHTML += `
@@ -63,9 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let cart = JSON.parse(localStorage.getItem('bigBrewCart'));
         
         // Hanapin ang base price per unit
-        let unitPrice = cart[index].price / cart[index].qty;
+        // let unitPrice = cart[index].price / cart[index].qty;
         
-        cart[index].qty += change;
+        // cart[index].qty += change;
 
         if (cart[index].qty <= 0) {
             // Tanggalin ang item kung ang quantity ay naging zero
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             // Update ang total price ng specific item na to
-            cart[index].price = unitPrice * cart[index].qty;
+             cart[index].qty = 1;
         }
 
         localStorage.setItem('bigBrewCart', JSON.stringify(cart));

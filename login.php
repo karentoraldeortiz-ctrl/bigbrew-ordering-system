@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 session_start();
 include "db.php";
 
@@ -29,7 +29,7 @@ if(isset($_POST['login'])){
     $message = "Invalid email or password!";
   }
 }
-?>
+?> -->
 <!doctype html>
 <html lang="en">
   <head>
@@ -67,18 +67,25 @@ if(isset($_POST['login'])){
         <div class="header">
           <img src="assets/logo/logo-black.png" alt="" />
           <div><h2>Welcome back, Brew!</h2></div>
-          <?php if($message != ""): ?>
+          <!-- <?php if($message != ""): ?>
           <p><?php echo $message; ?></p>
-        <?php endif; ?> 
+        <?php endif; ?>  -->
         </div>
         <form id="loginForm" method="POST" action="">
           <div class="input-text">
             <input type="email" placeholder="email" id="email" name="email" />
-            <span class="error-text" id="emailError" name="password">Email is required.</span>
+            <span class="error-text" id="emailError" name="password"
+              >Email is required.</span
+            >
           </div>
 
           <div class="input-text">
-            <input type="password" placeholder="password" id="password" name="password" />
+            <input
+              type="password"
+              placeholder="password"
+              id="password"
+              name="password"
+            />
             <span class="error-text" id="passwordError"
               >Password is required</span
             >
@@ -92,7 +99,7 @@ if(isset($_POST['login'])){
         <div class="divider"><span>or</span></div>
         <div class="create-acc-btn">
           <button>
-            <a href="signup.php"><h4>Create Account</h4></a>
+            <a href="signup.html"><h4>Create Account</h4></a>
           </button>
         </div>
       </div>

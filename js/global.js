@@ -15,8 +15,8 @@ function isLoggedIn() {
   return localStorage.getItem("user") !== null;
 }
 
-if (!isLoggedIn()) {
-  alert("Please login first");
-  window.location.href = "login.html";
-}
+// if (!isLoggedIn()) {
+//   alert("Please login first");
+//   window.location.href = "login.html";
+// }
 
