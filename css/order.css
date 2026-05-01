@@ -385,7 +385,7 @@ aside {
 .payment-options {
     display: flex;
     flex-direction: column;
-    flex-items:flext-start;
+    flex-items: flex-start;
     gap: 10px;
     margin-bottom: 1.5rem;
    
