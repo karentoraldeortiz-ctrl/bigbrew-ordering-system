@@ -79,7 +79,7 @@ session_start();
 
     <div class="hero1" class="hero">
       <div class="hero1-text">
-        <h1>Sip Your Favorites Without the Wait. HAAAaaaaaa</h1>
+        <h1>Sip Your Favorites Without the Wait.</h1>
         <p>
           Discover your favorite BigBrew drinks and order online for quick and
           easy pickup.
