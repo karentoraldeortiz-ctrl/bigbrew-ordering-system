@@ -250,6 +250,89 @@ body {
         font-size: 2.8rem;
     }
 }
+@media (max-width: 600px) {
+
+    /* HERO */
+    .hero {
+        flex-direction: column;
+        padding: 3rem 20px;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .hero-text {
+        text-align: center;
+        max-width: 100%;
+    }
+
+    .hero-text h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+    }
+
+    .hero-img {
+        justify-content: center;
+    }
+
+    .hero-img img {
+        width: 100%;
+        max-width: 320px;
+    }
+
+    /* PRODUCTS GRID → 2 PER ROW */
+    .products {
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .card {
+        flex: 0 0 calc(50% - 15px);
+        min-width: unset;
+    }
+
+    .card-inner {
+        height: 280px;
+    }
+
+    /* CARD IMAGE FIX */
+    .card-front img {
+        max-height: 160px;
+    }
+
+    /* BUTTON POSITION FIX (important for small cards) */
+    .flip-btn {
+        top: 15px;
+        right: 15px;
+        width: 26px;
+        height: 26px;
+    }
+
+    .add-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+        bottom: -15px;
+    }
+
+    /* SCALLOP */
+    .scallop {
+        height: 35px;
+        background-size: 30px 30px;
+    }
+
+    /* MENU TEXT */
+    .menu-section {
+        padding: 25px 15px;
+    }
+
+    .tab {
+        padding: 6px 14px;
+        font-size: 0.85rem;
+    }
+}
  
 /* ======== FOR CART PAGE =========*/
 .cart-container {
@@ -363,8 +446,7 @@ aside {
     margin-bottom: 1.5rem;
     color: var(--dark-color);
 }
-.summary-label, 
-.order-summary-content div {
+.summary-label {
     font-size: 0.9rem;
     font-weight: 500;
     margin-bottom: 0.5rem;
@@ -382,15 +464,21 @@ aside {
     margin-bottom: 1.5rem;
     font-family: inherit;
 }
-.payment-options {
+.payment-fixed {
+  margin-bottom: 10px;
+  color:#666;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+/* .payment-options {
     display: flex;
     flex-direction: column;
     flex-items:flext-start;
     gap: 10px;
     margin-bottom: 1.5rem;
    
-}
-
+} */
+/* 
 .radio-container {
     display: flex;
     align-items: center;
@@ -399,8 +487,9 @@ aside {
     font-size: 0.9rem;
     justify-content: flex-start;
     width:100%;
-}
+} */
 .note-barista {
+    margin-top: 5px;
     width: 100%;
     border: 1px solid #eee;
     border-radius: 10px;
@@ -504,6 +593,115 @@ aside {
     .checkout-btn{
         width:100%;
         box-sizing:border-box;
+    }
+}
+@media (max-width: 600px) {
+
+    /* MAIN LAYOUT → STACK */
+    .cart-container {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 15px;
+    }
+
+    main {
+        padding: 0;
+    }
+
+    aside {
+        width: 100%;
+        position: relative;
+        top: 0;
+        padding: 1rem;
+    }
+
+    /* CART HEADER */
+    .cart-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+        gap: 10px;
+    }
+
+    .cart-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .cart-header img {
+        width: 60px;
+    }
+
+    .cart-header p {
+        font-size: 0.75rem;
+    }
+
+    /* CART CARD → STACK CONTENT */
+    .cart-card {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+        gap: 10px;
+    }
+
+    .cart-card img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .item-price {
+        margin-left: 0;
+        font-size: 1rem;
+    }
+
+    .item-info h4 {
+        font-size: 1rem;
+    }
+
+    .item-info p {
+        font-size: 0.8rem;
+    }
+
+    /* STORE STATUS */
+    .store-status {
+        font-size: 0.65rem;
+        width: auto;
+        padding: 4px 10px;
+    }
+
+    /* SUMMARY TEXT */
+    .order-summary-content h4 {
+        font-size: 1.2rem;
+    }
+
+    .summary-label {
+        font-size: 0.85rem;
+    }
+
+    .summary-input,
+    #pick-up-time,
+    .note-barista {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    /* TOTALS */
+    .total-bold {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+
+    .subtotal-container {
+        gap: 8px;
+    }
+
+    .subtotal-row {
+        font-size: 0.9rem;
+    }
+
+    /* CHECKOUT BUTTON */
+    .checkout-btn {
+        font-size: 0.95rem;
+        padding: 0.9rem;
     }
 }
 /* ======= END OF CART PAGE ========= */
@@ -708,7 +906,96 @@ aside {
     background: #ccc;
     cursor: not-allowed;
 }
+/* MOVILE lAYOUT */
+@media (max-width: 600px) {
 
+    /* MODAL CARD */
+    .modal-card {
+        width: 92%;
+        max-width: 420px;
+        padding: 20px;
+        border-radius: 18px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .close-modal {
+        top: 12px;
+        right: 15px;
+        font-size: 24px;
+    }
+
+    /* STACK LEFT + RIGHT */
+    .modal-content-wrapper {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* IMAGE */
+    .modal-left img {
+        max-width: 200px;
+    }
+
+    /* TITLE */
+    #modalProductName {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    .modal-right {
+        flex: 1;
+    }
+
+    /* SIZE BUTTONS */
+    .size-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .size-opt {
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+
+    /* ADDONS → SINGLE COLUMN */
+    .addons-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .addons-grid label {
+        font-size: 0.8rem;
+        padding: 10px;
+    }
+
+    /* FOOTER */
+    .modal-footer {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .total-display {
+        font-size: 1.3rem;
+    }
+
+    #selectionText {
+        font-size: 0.75rem;
+    }
+
+    /* QUANTITY */
+    .qty-stepper {
+        justify-content: flex-start;
+        align-items: left;
+        margin: 10px auto;
+    }
+
+    /* BUTTON */
+    .main-add-btn {
+        font-size: 1rem;
+        padding: 12px;
+    }
+}
 @media (max-width: 768px) {
     .modal-card {
         padding: 20px;
@@ -743,24 +1030,9 @@ aside {
     .modal-footer {
         text-align: left;
     }
-
-      @media (max-width: 480px) {
-        .addons-grid {
-            grid-template-columns: 1fr; 
-        }
-        
-        .modal-footer {
-            flex-direction: column;
-            gap: 15px;
-            text-align: center;
-        }
-
-        .qty-stepper {
-            width: 100%;
-            justify-content: center;
-        }
-    }
 }
+
+
 
 /* ======== end of cart popup window ======== */
 
@@ -995,7 +1267,100 @@ aside {
 .btn-submit-feedback:hover {
     background-color: #8e551a;
 }
+/* Mobile Layout */
+@media (max-width: 600px) {
 
+    .success-page-body {
+        padding: 80px 15px 30px 15px;
+    }
+
+    .success-container {
+        max-width: 100%;
+        gap: 15px;
+    }
+
+    .receipt-card {
+        width: 100%;
+        max-width: 100%;
+        padding: 25px 18px;
+        border-radius: 15px;
+    }
+
+    .receipt-card h1 {
+        font-size: 1.4rem;
+    }
+
+    .receipt-card p {
+        font-size: 0.85rem;
+    }
+
+    .check-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+    }
+
+    .order-info-box {
+        padding: 15px;
+        margin: 20px 0;
+    }
+
+    .info-row {
+        font-size: 0.85rem;
+        flex-direction: row;
+    }
+
+    .total-row {
+        font-size: 1rem;
+    }
+
+    .total-amount {
+        font-size: 1.1rem;
+    }
+
+    .next-steps-box {
+        padding: 15px;
+    }
+
+    .next-steps-box h4 {
+        font-size: 0.95rem;
+    }
+
+    .next-steps-box li {
+        font-size: 0.8rem;
+    }
+
+    .btn-order-again,
+    .btn-history {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .feedback-card {
+        padding: 18px;
+    }
+
+    .feedback-card h3 {
+        font-size: 1rem;
+    }
+
+    .feedback-card p {
+        font-size: 0.8rem;
+    }
+
+    .star-rating {
+        font-size: 1.6rem;
+    }
+
+    .feedback-input {
+        height: 70px;
+        font-size: 0.85rem;
+    }
+
+    .btn-submit-feedback {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+}
 @media (max-width: 780px) { 
     .feedback-card { 
         padding: 20px; 

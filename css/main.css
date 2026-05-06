@@ -588,7 +588,7 @@ body {
     color: #888;
 }
 
-.rcpt-title { color: #b36b21; margin: 0; font-size: 1.2rem; text-align: center; }
+.rcpt-title { color: var(--pop-color); margin: 0; font-size: 1.2rem; text-align: center; }
 .rcpt-subtitle { text-align: center; margin-top: 5px; font-size: 0.8rem; color: #666; }
 
 .rcpt-divider {
@@ -606,7 +606,7 @@ body {
 .rcpt-print-btn {
     width: 100%;
     padding: 10px;
-    background: #b36b21;
+    background: var(--pop-color);
     color: white;
     border: none;
     border-radius: 5px;
@@ -620,6 +620,101 @@ body {
     }
     .account-container1, .account-container2 {
         width: 100%;
+    }
+}
+/* MOBILE LAYOUT */
+@media (max-width: 600px) {
+
+    .account-hero header {
+        padding: 1.2rem;
+        border-radius: 0 0 60% 60%;
+    }
+
+    .account-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .account-container1,
+    .account-container2 {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .account-container1 {
+        order: 1;
+    }
+
+    .account-container2 {
+        order: 2;
+    }
+
+    .orderbox {
+        padding: 1.2rem;
+        border-radius: 15px;
+    }
+
+    .order-box-header,
+    .OB-header1,
+    .OB-header2 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .order-total {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .acc-info-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .fa-user {
+        width: 60px;
+        height: 60px;
+        font-size: 32px;
+        margin: 0 0 10px 0;
+    }
+
+    .acc-info-body {
+        padding: 5px 10px;
+    }
+
+    .acc-info-footer {
+        flex-direction: column;
+    }
+
+    .acc-info-footer button {
+        width: 100%;
+    }
+
+    .rcpt-modal-card {
+        width: 90%;
+        max-width: 320px;
+        padding: 20px;
+    }
+
+    .rcpt-row {
+        font-size: 0.85rem;
+    }
+
+    .rcpt-title {
+        font-size: 1rem;
+    }
+
+    .rcpt-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .rcpt-print-btn {
+        font-size: 0.9rem;
     }
 }
 /* ===== END of ACCOUNT PAGE =====     */
@@ -697,6 +792,49 @@ body {
   top: 10px;
   font-size: 20px;
   cursor: pointer;
+}
+@media (max-width: 600px) {
+
+    .modal-overlay {
+        padding: 15px; /* para may space sa gilid */
+    }
+
+    .profile-modal {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    /* Inputs slightly smaller */
+    .input-group input {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    /* Labels */
+    .input-group label {
+        font-size: 0.8rem;
+    }
+
+   
+    .profile-modal-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-cancel,
+    .btn-save {
+        width: 100%;
+        padding: 12px;
+    }
+
+    /* Close button adjustment */
+    .close-profile-modal {
+        top: 8px;
+        right: 12px;
+        font-size: 18px;
+    }
 }
 
 /*-------------------------------ABOUT PAGE-----------------------*/
@@ -954,6 +1092,86 @@ body {
 
     .visit-map {
         margin-left: 0;
+        height: 300px;
+    }
+}
+@media (max-width: 600px) {
+
+    /* HERO */
+    .about-hero {
+        flex-direction: column;
+        padding: 50px 20px 80px 20px;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .about-text h1 {
+        font-size: 2.2rem;
+    }
+
+    .about-img {
+        margin-top: 0;
+    }
+
+    .about-img img {
+        width: 100%;
+        max-width: 350px;
+        margin-top: 0;
+        top: 0;
+        transform: rotate(-2deg);
+    }
+
+    .hero-wave {
+        height: 180px;
+        bottom: -60px;
+        width: 200%;
+        left: -50%;
+    }
+
+    /* DARK CONTENT */
+    .about-intro {
+        padding: 40px 20px;
+    }
+
+    .our-story {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+    }
+
+    .story-img img {
+        max-width: 100%;
+    }
+
+    /* VALUES */
+    .values-grid {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .value-card {
+        padding: 30px 20px;
+    }
+
+    /* VISIT SECTION */
+    .visit-card {
+        flex-direction: column;
+        border-radius: 25px;
+        min-height: auto;
+    }
+
+    .visit-info {
+        clip-path: none;
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    .visit-map {
+        margin-left: 0;
+        height: 300px;
+    }
+
+    .visit-map iframe {
         height: 300px;
     }
 }
@@ -1366,4 +1584,98 @@ textarea {
         padding: 16px 20px; 
     }
 
+}
+/* mobile layout */
+@media (max-width: 600px) {
+
+    /* ORDER ACTION BUTTONS */
+    .order-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .order-actions button {
+        width: 100%;
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+
+    /* MODAL */
+    .modal-card {
+        width: 92%;
+        max-width: 360px;
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .modal-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .modal-card p {
+        font-size: 0.8rem;
+    }
+
+    input[type="number"],
+    textarea {
+        font-size: 0.85rem;
+        padding: 10px 12px;
+    }
+
+    textarea {
+        height: 90px;
+    }
+
+    /* RECEIPT PAGE */
+    .success-page-body {
+        padding: 80px 15px 30px;
+    }
+
+    .success-container {
+        max-width: 100%;
+    }
+
+    .receipt-card {
+        width: 100%;
+        padding: 25px 18px;
+        border-radius: 15px;
+    }
+
+    .receipt-card h1 {
+        font-size: 1.4rem;
+    }
+
+    .receipt-card p {
+        font-size: 0.85rem;
+    }
+
+    .check-icon {
+        font-size: 40px;
+    }
+
+    /* ORDER INFO */
+    .order-info-box {
+        padding: 15px;
+        margin: 20px 0;
+    }
+
+    .info-row {
+        font-size: 0.85rem;
+        padding: 4px 0;
+    }
+
+    .total-row {
+        font-size: 1rem;
+    }
+
+    .total-amount {
+        font-size: 1.1rem;
+    }
+
+    /* BUTTON */
+    .btn-submit-feedback {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
 }

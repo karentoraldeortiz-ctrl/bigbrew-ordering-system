@@ -129,21 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-});s
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});
 
 // helper para safe lahat ng numbers
 function cleanNumber(value) {

@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // cart[index].qty += change;
 
-        if (cart[index].qty <= 0) {
+        if (cart[index].qty + change <= 0) {
             // Tanggalin ang item kung ang quantity ay naging zero
             if (confirm("Remove this item from cart?")) {
                 cart.splice(index, 1);
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             // Update ang total price ng specific item na to
-             cart[index].qty = 1;
+             cart[index].qty += change;
         }
 
         localStorage.setItem('bigBrewCart', JSON.stringify(cart));
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const pickupTime = document.getElementById('pick-up-time').value;
-        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+        const paymentMethod = "Pay upon Pickup";
         const note = document.querySelector('.note-barista').value;
 
         const finalOrder = {
