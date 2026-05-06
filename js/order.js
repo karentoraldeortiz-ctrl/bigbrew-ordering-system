@@ -46,14 +46,20 @@ filterButtons.forEach(button => {
 const modal = document.getElementById('productModal');
 const addBtns = document.querySelectorAll('.add-btn');
 const closeBtn = document.querySelector('.close-modal');
+let selectedProductId = null;   
 
 // dito b-base natin ung price sa selected size ng user
 let currentBasePrice = 0;
 let selectedSize = "";
+let selectedSizeId = null;
 
 // pag nagclick si user sa certain product, kukunin nya infoo
 addBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
+
+        // let selectedProductId = null;
+        selectedProductId = btn.getAttribute('data-id');
+
         const card = e.target.closest('.card-front');
         const img = card.querySelector('img').src;
         const name = card.querySelector('h3').innerText;
@@ -65,6 +71,8 @@ addBtns.forEach(btn => {
         // dito naman, i-reset na nya everything
         currentBasePrice = 0;
         selectedSize = "";
+        selectedSizeId = null;
+
         document.querySelectorAll('.size-opt').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.addon-check').forEach(c => c.checked = false);
         document.getElementById('qtyVal').innerText = "1";
@@ -83,6 +91,7 @@ document.querySelectorAll('.size-opt').forEach(btn => {
 
         currentBasePrice = parseInt(e.currentTarget.getAttribute('data-price'));
         selectedSize = e.currentTarget.value;
+        selectedSizeId = e.currentTarget.getAttribute('data-size-id');
 
         document.getElementById('btnAddToCart').disabled = false;
         calculatePrice();
@@ -138,23 +147,48 @@ document.getElementById('btnAddToCart').addEventListener('click', () => {
 
     document.querySelectorAll('.addon-check:checked').forEach(check => {
     addonsTotal += parseInt(check.getAttribute('data-price'));
+    
 });
 
-    const item = {
-        name: document.getElementById('modalProductName').innerText,
-        size: selectedSize,
-        addons: Array.from(document.querySelectorAll('.addon-check:checked')).map(c => c.value),
-        price: currentBasePrice + addonsTotal,
-        qty: parseInt(document.getElementById('qtyVal').innerText),
-        img: document.getElementById('modalProductImg').src
-    };
+if (!selectedProductId || !selectedSizeId) {
+    alert("Please select product and size");
+    return;
+}
 
-    let cart = JSON.parse(localStorage.getItem('bigBrewCart')) || [];
-    cart.push(item);
-    localStorage.setItem('bigBrewCart', JSON.stringify(cart));
+    // const item = {
+    //     name: document.getElementById('modalProductName').innerText,
+    //     size: selectedSize,
+    //     addons: Array.from(document.querySelectorAll('.addon-check:checked')).map(c => c.value),
+    //     price: currentBasePrice + addonsTotal,
+    //     qty: parseInt(document.getElementById('qtyVal').innerText),
+    //     img: document.getElementById('modalProductImg').src
+    // };
 
-    modal.style.display = 'none';
-    alert("Item added to cart!");
+        fetch('add_to_cart.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+            product_id: selectedProductId,
+            size_id: selectedSizeId,
+            quantity: document.getElementById('qtyVal').innerText,
+            unit_price: currentBasePrice + addonsTotal,
+            addons: JSON.stringify(
+                Array.from(document.querySelectorAll('.addon-check:checked')).map(c => c.value)
+            )
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Added to cart!");
+            modal.style.display = 'none';
+        } else {
+            alert(data.message);
+        }
+    });
+
 });
 
 // close modal

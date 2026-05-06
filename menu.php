@@ -76,7 +76,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                 <li><a href="index.php">Home</a></li>
                 <li><a href="#">Our Menu</a></li>
                 <li><a href="about.html">About Us</a></li>
-                <li><a href="cart.html"> <img src="assets/icons/icons8-cart-24.png" alt=""></a></li>
+                <li><a href="cart.php"> <img src="assets/icons/icons8-cart-24.png" alt=""></a></li>
                 <li><a href="account.html"> <img src="assets/icons/icons8-profile-24.png" alt=""></a></li>
                 </ul>
             </div>
@@ -127,14 +127,11 @@ while($row = mysqli_fetch_assoc($addons_result)) {
       <div class="products">
 
   <?php if(empty($products)): ?>
-            <!-- Fallback: Kung walang products sa DB pa, ipakita ang static cards -->
-            <!-- TANGGALIN ITO pagkatapos mong i-populate ang products table -->
             <p style="text-align:center; padding:40px;">
                 No products yet. Please add products to the database.
             </p>
  
         <?php else: ?>
-            <!-- Dynamic: galing sa database -->
             <?php foreach($products as $product): ?>
             <div class="card <?php echo htmlspecialchars($product['category']); ?>">
                 <div class="card-inner">
@@ -217,9 +214,8 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                 
                 <p class="option-label">choose size</p>
                 <div class="size-container">
-                    <button class="size-opt" data-price="29" value="medio">medio <span>P 29</span></button>
-                    <button class="size-opt" data-price="39" value="grande">grande <span>P 39</span></button>
-                </div>
+                  <button class="size-opt" data-size-id="1" data-price="29" value="medio">
+                  <button class="size-opt" data-size-id="2" data-price="39" value="grande">                </div>
 
                 <p class="option-label">add ons</p>
                 <div class="addons-grid">

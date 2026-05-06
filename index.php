@@ -54,10 +54,10 @@ session_start();
         <div class="nav-links" id="navlinks">
           <ul>
             <li><a href="#">Home</a></li>
-            <li><a href="menu.html">Our Menu</a></li>
+            <li><a href="menu.php">Our Menu</a></li>
             <li><a href="about.html">About Us</a></li>
             <li>
-              <a href="cart.html">
+              <a href="cart.php">
                 <img src="assets/icons/icons8-cart-24.png" alt=""
               /></a>
             </li>
