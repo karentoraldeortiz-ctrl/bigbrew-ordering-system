@@ -79,7 +79,7 @@ session_start();
           <div>
             <h1>Bigbrew Maysan</h1>
             <div class="store-status">
-              <span>open</span>
+              <span>open OPEENN</span>
             </div>
             <p>094 Maysan Rd, Valenzuela, 1442 Metro Manila</p>
           </div>

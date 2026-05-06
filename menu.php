@@ -1,4 +1,51 @@
-<!DOCTYPE html>
+<?php
+
+session_start();
+include "db.php";
+
+if(!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+$products_result = mysqli_query($conn,
+    "SELECT p.product_id, p.product_name, p.description, p.category, p.image,
+            ps.size_id, ps.size_name, ps.price
+     FROM products p
+     JOIN product_sizes ps ON p.product_id = ps.product_id
+     ORDER BY p.category, p.product_name, ps.price ASC"
+);
+
+$products = [];
+while($row = mysqli_fetch_assoc($products_result)) {
+    $pid = $row['product_id'];
+    if(!isset($products[$pid])) {
+        $products[$pid] = [
+            'product_id'   => $pid,
+            'product_name' => $row['product_name'],
+            'description'  => $row['description'],
+            'category'     => $row['category'],
+            'image'        => $row['image'],
+            'sizes'        => []
+        ];
+    }
+    
+    $products[$pid]['sizes'][] = [
+        'size_id'   => $row['size_id'],
+        'size_name' => $row['size_name'],
+        'price'     => $row['price']
+    ];
+}
+
+$addons_result = mysqli_query($conn, "SELECT * FROM addons ORDER BY addon_name");
+$addons = [];
+while($row = mysqli_fetch_assoc($addons_result)) {
+    $addons[] = $row;
+}
+?>
+
+
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -79,235 +126,43 @@
 
       <div class="products">
 
-  <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/dark-choco.jpg">
-        <h3>Dark Choco</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Dark Choco</h4>
-        <p>Bold and indulgent, this rich dark chocolate blend meets smooth milk tea for a decadent sip in every cup.</p>
-      </div>
-
-    </div>
-  </div>
-
-   <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/cheesecake.jpg">
-        <h3>Cheesecake</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Cheesecake</h4>
-        <p>Velvety milk tea infused with rich cheesecake flavor for a smooth, dessert-like treat.</p>
-      </div>
-
-    </div>
-  </div>
-
-   <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/choco-kisses.jpg">
-        <h3>Choco Kisses</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Choco Kisses</h4>
-        <p>Sweet milk tea infused with the nostalgic taste of chocolate kisses.</p>
-      </div>
-
-    </div>
-  </div>
-
-   <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/taro.jpg">
-        <h3>Taro</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Taro</h4>
-        <p>Creamy, nutty taro flavor blended with milk tea for a pastel-hued favorite.</p>
-      </div>
-
-    </div>
-  </div>
-
-   <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/okinawa.jpg">
-        <h3>Okinawa</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Okinawa</h4>
-        <p>Buttery caramel notes infused in classic milk tea, inspired by Okinawa’s signature brown sugar.</p>
-      </div>
-
-    </div>
-  </div>
-  
-   <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/chocolate.jpg">
-        <h3>Chocolate</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Chocolate</h4>
-        <p>Smooth and comforting, with the perfect harmony of chocolate richness and milk tea creaminess.</p>
-      </div>
-
-    </div>
-  </div>
-
-   <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/match.jpg">
-        <h3>Matcha</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Matcha</h4>
-        <p>Earthy and aromatic matcha blended with silky milk tea for a balanced, energizing sip.</p>
-      </div>
-
-    </div>
-  </div>
-
-   <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/red-velvet.jpg">
-        <h3>Red Velvet</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Red Velvet</h4>
-        <p>Sweet, cocoa-kissed milk tea with a hint of cream cheese flavor, inspired by the classic cake.</p>
-      </div>
-
-    </div>
-  </div>
-
-   <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/salted-caramel.jpg">
-        <h3>Salted Caramel</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Salted Caramel</h4>
-        <p>Buttery caramel sweetness balanced with a touch of salt, perfectly paired with milk tea.</p>
-      </div>
-
-    </div>
-  </div>
-
-   <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/strawberry.jpg">
-        <h3>Strawberry</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Strawberry</h4>
-        <p>Sweet and fruity strawberry goodness swirled into smooth milk tea for a refreshing twist.</p>
-      </div>
-
-    </div>
-  </div>
-
-   <div class="card milk-tea">
-    <div class="card-inner">
-
-      <!-- FRONT -->
-      <div class="card-front">
-        <button class="flip-btn">↻</button>
-        <img src="assets/products/wintermelon.jpg">
-        <h3>Winter Melon</h3>
-        <button class="add-btn">+</button>
-      </div>
-
-      <!-- BACK -->
-      <div class="card-back">
-        <button class="flip-btn">↻</button>
-        <h4>Winter Melon</h4>
-        <p>Light, sweet, and refreshing with the signature mellow flavor of wintermelon.</p>
-      </div>
-
-    </div>
+  <?php if(empty($products)): ?>
+            <!-- Fallback: Kung walang products sa DB pa, ipakita ang static cards -->
+            <!-- TANGGALIN ITO pagkatapos mong i-populate ang products table -->
+            <p style="text-align:center; padding:40px;">
+                No products yet. Please add products to the database.
+            </p>
+ 
+        <?php else: ?>
+            <!-- Dynamic: galing sa database -->
+            <?php foreach($products as $product): ?>
+            <div class="card <?php echo htmlspecialchars($product['category']); ?>">
+                <div class="card-inner">
+                    <!-- FRONT -->
+                    <div class="card-front">
+                        <button class="flip-btn">↻</button>
+                        <img src="<?php echo htmlspecialchars($product['image']); ?>"
+                             alt="<?php echo htmlspecialchars($product['product_name']); ?>">
+                        <h3><?php echo htmlspecialchars($product['product_name']); ?></h3>
+                        <!-- ADD BUTTON: nagpapadala ng product info sa modal -->
+                        <button class="add-btn"
+                            data-id="<?php echo $product['product_id']; ?>"
+                            data-name="<?php echo htmlspecialchars($product['product_name']); ?>"
+                            data-img="<?php echo htmlspecialchars($product['image']); ?>"
+                            data-sizes='<?php echo json_encode($product["sizes"]); ?>'>
+                            +
+                        </button>
+                    </div>
+                    <!-- BACK -->
+                    <div class="card-back">
+                        <button class="flip-btn">↻</button>
+                        <h4><?php echo htmlspecialchars($product['product_name']); ?></h4>
+                        <p><?php echo htmlspecialchars($product['description']); ?></p>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
   </div>
   
     </section>
@@ -347,7 +202,7 @@
       </div>
     </div>
 
-    <!-- Cart PopUp Window -->
+    <!-- ========= Cart PopUp Window ===========-->
    <div id="productModal" class="modal-overlay" style="display: none;">
     <div class="modal-card">
         <span class="close-modal">&times;</span>

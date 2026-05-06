@@ -1,6 +1,11 @@
-<!-- <?php
+<?php
 session_start();
 include "db.php";
+
+if(isset($_SESSION['user_id'])){
+  header("Location: index.php");
+  exit;
+}
 
 $message = "";
 
@@ -19,17 +24,14 @@ if(isset($_POST['login'])){
   $_SESSION['user_id'] = $user['user_id'];
   $_SESSION['name'] = $user['full_name'];
 
-// if(isset($_SESSION['user_id'])){
-//   header("Location: index.php");
-//   exit;
-// }
+
   header("Location: index.php");
   exit;
   } else {
     $message = "Invalid email or password!";
   }
 }
-?> -->
+?> 
 <!doctype html>
 <html lang="en">
   <head>
@@ -67,9 +69,9 @@ if(isset($_POST['login'])){
         <div class="header">
           <img src="assets/logo/logo-black.png" alt="" />
           <div><h2>Welcome back, Brew!</h2></div>
-          <!-- <?php if($message != ""): ?>
-          <p><?php echo $message; ?></p>
-        <?php endif; ?>  -->
+          <?php if($message != ""): ?>
+          <p class="error-msg"><?php echo $message; ?></p>
+        <?php endif; ?>
         </div>
         <form id="loginForm" method="POST" action="">
           <div class="input-text">
