@@ -719,7 +719,106 @@ body {
 }
 /* ===== END of ACCOUNT PAGE =====     */
 
+/* ===== ORDER HISTORY ITEMS ===== */
+.order-history-item {
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s;
+}
 
+.order-history-item:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.order-history-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.order-history-id {
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-right: 8px;
+}
+
+.order-history-date {
+    font-size: 0.82rem;
+    color: #999;
+}
+
+.order-status-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 50px;
+}
+
+.status-pending {
+    background-color: #FEF9C2;
+    color: #A84B00;
+}
+
+.status-completed {
+    background-color: #DCFCE7;
+    color: #166534;
+}
+
+.status-cancelled {
+    background-color: #FEE2E2;
+    color: #991B1B;
+}
+
+.order-history-items {
+    font-size: 0.88rem;
+    color: #888;
+    margin: 0 0 12px 0;
+}
+
+.order-history-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    padding-top: 10px;
+}
+
+.order-history-total {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--pop-color);
+}
+
+.btn-view-receipt {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--pop-color);
+    border: 1.5px solid var(--pop-color);
+    padding: 5px 14px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-view-receipt:hover {
+    background-color: var(--pop-color);
+    color: white;
+}
+
+.empty-history {
+    text-align: center;
+    color: #aaa;
+    padding: 30px 0;
+}
+
+.empty-history a {
+    color: var(--pop-color);
+    font-weight: 600;
+    text-decoration: none;
+}
 /* =====POPUP WINDOW */
 /* Modal Background */
 .modal-overlay {

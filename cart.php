@@ -16,8 +16,7 @@ if(isset($_POST['place_order'])) {
     $pickup_time = $_POST['pickup_time'];
     $notes       = mysqli_real_escape_string($conn, $_POST['notes']);
 
-    // 1: Kunin cart_id ng user
-    $cart_q  = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id='$user_id'");
+    $cart_q = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id='$user_id'");
 
     if(mysqli_num_rows($cart_q) === 0) {
         $message = "Your cart is empty!";
@@ -25,11 +24,10 @@ if(isset($_POST['place_order'])) {
         $cart    = mysqli_fetch_assoc($cart_q);
         $cart_id = $cart['cart_id'];
 
-        // 2: Kunin ang lahat ng cart items ng user
         $items_q = mysqli_query($conn,
             "SELECT ci.*, p.product_name, ps.size_name, ps.price as size_price
              FROM cart_items ci
-             JOIN products p      ON ci.product_id = p.product_id
+             JOIN products p       ON ci.product_id = p.product_id
              JOIN product_sizes ps ON ci.size_id    = ps.size_id
              WHERE ci.cart_id = '$cart_id'"
         );
@@ -37,7 +35,6 @@ if(isset($_POST['place_order'])) {
         if(mysqli_num_rows($items_q) === 0) {
             $message = "Your cart is empty!";
         } else {
-            // 3: computation ang total
             $total = 0;
             $items_array = [];
             while($item = mysqli_fetch_assoc($items_q)) {
@@ -45,14 +42,12 @@ if(isset($_POST['place_order'])) {
                 $items_array[] = $item;
             }
 
-            // 4: I-insert ang order sa orders table
             mysqli_query($conn,
                 "INSERT INTO orders (user_id, total_amount, pickup_time, notes, order_status, created_at)
                  VALUES ('$user_id', '$total', '$pickup_time', '$notes', 'pending', NOW())"
             );
             $order_id = mysqli_insert_id($conn);
 
-            // 5: I-insert ang bawat item sa order_items table
             foreach($items_array as $item) {
                 $prod_id    = $item['product_id'];
                 $sz_id      = $item['size_id'];
@@ -66,19 +61,14 @@ if(isset($_POST['place_order'])) {
                 );
             }
 
-            // 6: Linisin ang cart pagkatapos mag-order
             mysqli_query($conn, "DELETE FROM cart_items WHERE cart_id='$cart_id'");
-            // Hindi burahin ang cart mismo — mananatili para sa susunod na order
-
             $order_success = true;
         }
     }
 }
 
-// ============================================================
 // LOAD CART ITEMS
-// ============================================================
-$cart_q = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id='$user_id'");
+$cart_q     = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id='$user_id'");
 $cart_items = [];
 $subtotal   = 0;
 
@@ -154,79 +144,61 @@ if(mysqli_num_rows($cart_q) > 0) {
             <p class="error-msg"><?php echo $message; ?></p>
         <?php endif; ?>
 
-        <!-- ============================================================
-             SUCCESS STATE: Ipakita kapag na-place na ang order
-             ============================================================ -->
-        <?php if($order_success): ?>
-            <div class="order-success">
-                <h2>🎉 Order Placed!</h2>
-                <p>Your order <strong>#<?php echo $order_id; ?></strong> has been received.</p>
-                <p>We'll prepare it for pickup. Thank you, <?php echo $_SESSION['name']; ?>!</p>
-                <a href="menu.php" class="back-to-menu-btn">Order Again</a>
-            </div>
-
-        <?php else: ?>
-            <!-- CART ITEMS — galing sa database -->
-            <div id="cart-items-container">
-                <h3 id="cart-title">Your Cart</h3>
-
-                    <div class="empty-cart" style="<?php echo empty($cart_items) ? 'display:block;' : 'display:none;'; ?>">
+        <?php if(!$order_success): ?>
+            <?php if(empty($cart_items)): ?>
+                <!-- EMPTY CART STATE -->
+                <div class="empty-cart">
                     <h3>Your Cart</h3>
                     <p>Your cart is empty.</p>
                     <a href="menu.php">Browse Menu</a>
-                    </div>
+                </div>
+            <?php else: ?>
+                <!-- CART ITEMS -->
+                <div id="cart-items-container">
+                    <h3 id="cart-title">Your Cart</h3>
+                    <?php foreach($cart_items as $item): ?>
+                    <div class="cart-item"
+                         id="cart-card-<?php echo $item['cart_item_id']; ?>"
+                         data-cart-item-id="<?php echo $item['cart_item_id']; ?>"
+                         data-unit-price="<?php echo $item['unit_price']; ?>">
 
-                <?php foreach($cart_items as $item): ?>
-                    
-                <div class="cart-item" 
-                        id="cart-card-<?php echo $item['cart_item_id']; ?>"
-                        data-cart-item-id="<?php echo $item['cart_item_id']; ?>"
-                        data-unit-price="<?php echo $item['unit_price']; ?>">
+                        <img src="assets/products/<?php echo htmlspecialchars($item['image']); ?>"
+                             alt="<?php echo htmlspecialchars($item['product_name']); ?>">
 
-                        
-
-                    <img src="assets/products/<?php echo htmlspecialchars($item['image']); ?>"
-                         alt="<?php echo htmlspecialchars($item['product_name']); ?>">
-
-                    <div class="cart-item-details">
-                        <h4><?php echo htmlspecialchars($item['product_name']); ?></h4>
-                        <p><?php echo htmlspecialchars($item['size_name']); ?>
-                            <?php if(!empty($item['addons'])): ?>
-                                · <?php echo htmlspecialchars($item['addons']); ?>
-                            <?php endif; ?>
-                        </p>
-
-                        <div class="qty-stepper">
-                            <button onclick="updateQty(<?php echo $item['cart_item_id']; ?>, -1)">-</button>
-                            <span id="qty-<?php echo $item['cart_item_id']; ?>">
-                                <?php echo $item['quantity']; ?>
-                            </span>
-                            <button onclick="updateQty(<?php echo $item['cart_item_id']; ?>, +1)">+</button>
+                        <div class="cart-item-details">
+                            <h4><?php echo htmlspecialchars($item['product_name']); ?></h4>
+                            <p><?php echo htmlspecialchars($item['size_name']); ?>
+                                <?php if(!empty($item['addons'])): ?>
+                                    · <?php echo htmlspecialchars($item['addons']); ?>
+                                <?php endif; ?>
+                            </p>
+                            <div class="qty-stepper">
+                                <button onclick="updateQty(<?php echo $item['cart_item_id']; ?>, -1)">-</button>
+                                <span id="qty-<?php echo $item['cart_item_id']; ?>">
+                                    <?php echo $item['quantity']; ?>
+                                </span>
+                                <button onclick="updateQty(<?php echo $item['cart_item_id']; ?>, +1)">+</button>
+                            </div>
+                        </div>
+                        <div class="cart-item-price">
+                            <p id="item-price-<?php echo $item['cart_item_id']; ?>">
+                                P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?>
+                            </p>
                         </div>
                     </div>
-                    <div class="cart-item-price">
-                        <p id="item-price-<?php echo $item['cart_item_id']; ?>">
-                            P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?>
-                        </p>
-                        <!-- Remove button — nagpapadala ng cart_item_id sa remove_item.php -->
-                        <!-- <a onclick="removeItem(<?php echo $item['cart_item_id']; ?>)"
-                        class="remove-btn" style="cursor:pointer;">Remove</a> -->
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
-            </div>
+            <?php endif; ?>
         <?php endif; ?>
+
     </main>
 
-    <!-- ============================================================
-         ORDER SUMMARY SIDEBAR
-         ============================================================ -->
+    <!-- ORDER SUMMARY SIDEBAR -->
     <?php if(!$order_success && !empty($cart_items)): ?>
     <aside>
         <form method="POST" action="">
             <div class="order-summary-content">
                 <h4>Order Summary</h4>
-
                 <div class="display-time">
                     <i class="fa-solid fa-clock"></i> Pickup Time
                 </div>
@@ -259,7 +231,6 @@ if(mysqli_num_rows($cart_q) > 0) {
                     </div>
                 </div>
 
-                <!-- Submit button — ito ang mag-trigger ng place_order logic sa taas -->
                 <button type="submit" name="place_order" class="checkout-btn">
                     Checkout
                 </button>
@@ -268,6 +239,27 @@ if(mysqli_num_rows($cart_q) > 0) {
     </aside>
     <?php endif; ?>
 </div>
+
+<!-- ORDER PLACED MODAL — lalabas lang kapag nag-success ang order -->
+<?php if($order_success): ?>
+<div class="order-modal-overlay active" id="orderModal">
+    <div class="order-modal-card">
+
+      <div class="order-modal-body">
+            <h2>🎉 Order Placed!</h2>
+            <p>Your order <strong>#<?php echo $order_id; ?></strong> has been received.</p>
+            <p>We'll prepare it for pickup. Thank you, <?php echo htmlspecialchars($_SESSION['name']); ?>!</p>
+            <div class="order-modal-actions">
+                <a href="receipt.php?order_id=<?php echo $order_id; ?>" class="btn-open-receipt">
+                    🧾 View Receipt
+                </a>
+                <a href="menu.php" class="btn-order-again-modal">Order Again</a>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- REMOVE CONFIRMATION MODAL -->
 <div id="remove-modal" class="modal-overlay">
     <div class="modal-card">
@@ -279,10 +271,10 @@ if(mysqli_num_rows($cart_q) > 0) {
     </div>
 </div>
 
-<!-- HINDI NA KAILANGAN ng cart.js para sa totals — galing na sa PHP/DB -->
 <script src="js/global.js"></script>
 <script src="js/cart.js"></script>
 </body>
+
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-brand">
@@ -328,5 +320,4 @@ if(mysqli_num_rows($cart_q) > 0) {
         <p>&copy; 2026. BigBrew Maysan. All Rights Reserved.</p>
     </div>
 </footer>
-
 </html>
