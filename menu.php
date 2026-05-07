@@ -77,7 +77,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                 <li><a href="#">Our Menu</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="cart.php"> <img src="assets/icons/icons8-cart-24.png" alt=""></a></li>
-                <li><a href="account.html"> <img src="assets/icons/icons8-profile-24.png" alt=""></a></li>
+                <li><a href="account.php"> <img src="assets/icons/icons8-profile-24.png" alt=""></a></li>
                 </ul>
             </div>
 

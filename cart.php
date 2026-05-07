@@ -1,10 +1,4 @@
 <?php
-// ============================================================
-// cart.php  (dating cart.html)
-// 1. Nagdi-display ng cart items mula sa database
-// 2. Nagha-handle ng "place order" kapag na-click ang Checkout
-// 3. Nagdi-display ng order confirmation sa same page
-// ============================================================
 session_start();
 include "db.php";
 
@@ -19,14 +13,11 @@ $order_success = false;
 $order_id      = null;
 $message       = "";
 
-// ============================================================
-// PLACE ORDER — Kapag na-click ang Checkout button
-// ============================================================
 if(isset($_POST['place_order'])) {
     $pickup_time = $_POST['pickup_time'];
     $notes       = mysqli_real_escape_string($conn, $_POST['notes']);
 
-    // STEP 1: Kunin ang cart_id ng user
+    // 1: Kunin cart_id ng user
     $cart_q  = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id='$user_id'");
 
     if(mysqli_num_rows($cart_q) === 0) {
@@ -35,7 +26,7 @@ if(isset($_POST['place_order'])) {
         $cart    = mysqli_fetch_assoc($cart_q);
         $cart_id = $cart['cart_id'];
 
-        // STEP 2: Kunin ang lahat ng cart items ng user
+        // 2: Kunin ang lahat ng cart items ng user
         $items_q = mysqli_query($conn,
             "SELECT ci.*, p.product_name, ps.size_name, ps.price as size_price
              FROM cart_items ci
@@ -47,7 +38,7 @@ if(isset($_POST['place_order'])) {
         if(mysqli_num_rows($items_q) === 0) {
             $message = "Your cart is empty!";
         } else {
-            // STEP 3: I-compute ang total
+            // 3: computation ang total
             $total = 0;
             $items_array = [];
             while($item = mysqli_fetch_assoc($items_q)) {
@@ -55,14 +46,14 @@ if(isset($_POST['place_order'])) {
                 $items_array[] = $item;
             }
 
-            // STEP 4: I-insert ang order sa orders table
+            // 4: I-insert ang order sa orders table
             mysqli_query($conn,
                 "INSERT INTO orders (user_id, total_amount, pickup_time, notes, order_status, created_at)
                  VALUES ('$user_id', '$total', '$pickup_time', '$notes', 'pending', NOW())"
             );
             $order_id = mysqli_insert_id($conn);
 
-            // STEP 5: I-insert ang bawat item sa order_items table
+            // 5: I-insert ang bawat item sa order_items table
             foreach($items_array as $item) {
                 $prod_id    = $item['product_id'];
                 $sz_id      = $item['size_id'];
@@ -76,7 +67,7 @@ if(isset($_POST['place_order'])) {
                 );
             }
 
-            // STEP 6: Linisin ang cart pagkatapos mag-order
+            // 6: Linisin ang cart pagkatapos mag-order
             mysqli_query($conn, "DELETE FROM cart_items WHERE cart_id='$cart_id'");
             // Hindi burahin ang cart mismo — mananatili para sa susunod na order
 
@@ -86,8 +77,7 @@ if(isset($_POST['place_order'])) {
 }
 
 // ============================================================
-// LOAD CART ITEMS para ipakita sa page
-// (matapos ang place_order, magiging empty na ito — okay lang)
+// LOAD CART ITEMS
 // ============================================================
 $cart_q = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id='$user_id'");
 $cart_items = [];

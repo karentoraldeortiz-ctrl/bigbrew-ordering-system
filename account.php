@@ -1,3 +1,23 @@
+<?php
+session_start();
+include "db.php";
+
+if(!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
+  exit;
+}
+
+$user_id = $_SESSION['user_id'];
+
+$query = mysqli_query($conn,
+  "SELECT full_name, email, phone_num, birthday
+  FROM users
+  WHERE user_id = '$user_id'"
+);
+
+$user = mysqli_fetch_assoc($query)
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -52,7 +72,7 @@
               /></a>
             </li>
             <li>
-              <a href="account.html">
+              <a href="account.php">
                 <img src="assets/icons/icons8-profile-24.png" alt=""
               /></a>
             </li>
@@ -77,7 +97,9 @@
             <div class="acc-info-header">
               <i class="fa-solid fa-user"></i>
               <div>
-                <h2 id="user-name">Allyana Flores</h2>
+                <h2 id="user-name">
+                  <?php echo htmlspecialchars($user['full_name']); ?>
+                </h2>
                 <p class="edit-profile">
                   Edit Profile <i class="fa-solid fa-pen"></i>
                 </p>
@@ -87,21 +109,27 @@
               <div class="info-body-list">
                 <div>
                   <i class="fa-solid fa-envelope"></i>
-                  <span id="user-email">allyana@gmail.com</span>
+                  <span id="user-email">
+                    <?php echo htmlspecialchars($user['email']); ?>
+                  </span>
                 </div>
                 <div>
                   <i class="fa-solid fa-phone"></i>
-                  <span id="user-phone">0929 563 4350</span>
+                  <span id="user-phone">
+                    <?php echo htmlspecialchars($user['phone_num']); ?>
+                  </span>
                 </div>
                 <div>
                   <i class="fa-solid fa-calendar"></i>
-                  <span id="user-birthday">01/01/2000</span>
+                  <span id="user-birthday">
+                    <?php echo htmlspecialchars($user['birthday']); ?>
+                  </span>
                 </div>
               </div>
             </div>
             <div class="acc-info-footer">
-              <a href="login.php"
-                ><button class="logout-btn">Logout</button>
+              <a href="logout.php">
+                <button class="logout-btn">Logout</button>
               </a>
             </div>
           </div>

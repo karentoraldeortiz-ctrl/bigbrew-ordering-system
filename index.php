@@ -62,7 +62,7 @@ session_start();
               /></a>
             </li>
             <li>
-              <a href="account.html">
+              <a href="account.php">
                 <img src="assets/icons/icons8-profile-24.png" alt=""
               /></a>
             </li>
