@@ -2,7 +2,6 @@
 session_start();
 include "db.php";
 
-// GUARD: kailangan naka-login
 if(!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
@@ -166,38 +165,52 @@ if(mysqli_num_rows($cart_q) > 0) {
                 <a href="menu.php" class="back-to-menu-btn">Order Again</a>
             </div>
 
-        <?php elseif(empty($cart_items)): ?>
-            <!-- EMPTY CART STATE -->
-            <div class="empty-cart">
-                <h3>Your Cart</h3>
-                <p>Your cart is empty.</p>
-                <a href="menu.php">Browse Menu</a>
-            </div>
-
         <?php else: ?>
             <!-- CART ITEMS — galing sa database -->
             <div id="cart-items-container">
-                <h3>Your Cart</h3>
+                <h3 id="cart-title">Your Cart</h3>
+
+                    <div class="empty-cart" style="<?php echo empty($cart_items) ? 'display:block;' : 'display:none;'; ?>">
+                    <h3>Your Cart</h3>
+                    <p>Your cart is empty.</p>
+                    <a href="menu.php">Browse Menu</a>
+                    </div>
 
                 <?php foreach($cart_items as $item): ?>
-                <div class="cart-item">
-                    <img src="<?php echo htmlspecialchars($item['image']); ?>"
+                    
+                <div class="cart-item" 
+                        id="cart-card-<?php echo $item['cart_item_id']; ?>"
+                        data-cart-item-id="<?php echo $item['cart_item_id']; ?>"
+                        data-unit-price="<?php echo $item['unit_price']; ?>">
+
+                        
+
+                    <img src="assets/products/<?php echo htmlspecialchars($item['image']); ?>"
                          alt="<?php echo htmlspecialchars($item['product_name']); ?>">
+
                     <div class="cart-item-details">
                         <h4><?php echo htmlspecialchars($item['product_name']); ?></h4>
-                        <p>Size: <?php echo htmlspecialchars($item['size_name']); ?></p>
+                        <p><?php echo htmlspecialchars($item['size_name']); ?>
+                            <?php if(!empty($item['addons'])): ?>
+                                · <?php echo htmlspecialchars($item['addons']); ?>
+                            <?php endif; ?>
+                        </p>
 
-                        <?php if(!empty($item['addons'])): ?>
-                            <p>Add-ons: <?php echo htmlspecialchars($item['addons']); ?></p>
-                        <?php endif; ?>
-
-                        <p>Qty: <?php echo $item['quantity']; ?></p>
+                        <div class="qty-stepper">
+                            <button onclick="updateQty(<?php echo $item['cart_item_id']; ?>, -1)">-</button>
+                            <span id="qty-<?php echo $item['cart_item_id']; ?>">
+                                <?php echo $item['quantity']; ?>
+                            </span>
+                            <button onclick="updateQty(<?php echo $item['cart_item_id']; ?>, +1)">+</button>
+                        </div>
                     </div>
                     <div class="cart-item-price">
-                        <p>P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?></p>
+                        <p id="item-price-<?php echo $item['cart_item_id']; ?>">
+                            P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?>
+                        </p>
                         <!-- Remove button — nagpapadala ng cart_item_id sa remove_item.php -->
-                        <a href="remove_item.php?cart_item_id=<?php echo $item['cart_item_id']; ?>"
-                           class="remove-btn">Remove</a>
+                        <!-- <a onclick="removeItem(<?php echo $item['cart_item_id']; ?>)"
+                        class="remove-btn" style="cursor:pointer;">Remove</a> -->
                     </div>
                 </div>
                 <?php endforeach; ?>
@@ -207,8 +220,6 @@ if(mysqli_num_rows($cart_q) > 0) {
 
     <!-- ============================================================
          ORDER SUMMARY SIDEBAR
-         Ang form ay nakabalot sa buong aside para ma-submit ang
-         pickup_time at notes kasama ang place_order button
          ============================================================ -->
     <?php if(!$order_success && !empty($cart_items)): ?>
     <aside>
@@ -240,11 +251,11 @@ if(mysqli_num_rows($cart_q) > 0) {
                 <div class="subtotal-container">
                     <div class="subtotal-row">
                         <span>Subtotal</span>
-                        <span>P <?php echo number_format($subtotal, 2); ?></span>
+                        <span id="subtotal-amount">P <?php echo number_format($subtotal, 2); ?></span>
                     </div>
                     <div class="subtotal-row total-bold">
                         <span>Total</span>
-                        <span>P <?php echo number_format($subtotal, 2); ?></span>
+                        <span id="total-amount">P <?php echo number_format($subtotal, 2); ?></span>
                     </div>
                 </div>
 
@@ -257,7 +268,21 @@ if(mysqli_num_rows($cart_q) > 0) {
     </aside>
     <?php endif; ?>
 </div>
+<!-- REMOVE CONFIRMATION MODAL -->
+<div id="remove-modal" class="modal-overlay">
+    <div class="modal-card">
+        <p id="remove-modal-msg"></p>
+        <div class="modal-buttons">
+            <button id="remove-cancel-btn" class="btn-secondary">Keep it</button>
+            <button id="remove-confirm-btn" class="btn-danger">Remove</button>
+        </div>
+    </div>
+</div>
 
+<!-- HINDI NA KAILANGAN ng cart.js para sa totals — galing na sa PHP/DB -->
+<script src="js/global.js"></script>
+<script src="js/cart.js"></script>
+</body>
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-brand">
@@ -304,7 +329,4 @@ if(mysqli_num_rows($cart_q) > 0) {
     </div>
 </footer>
 
-<!-- HINDI NA KAILANGAN ng cart.js para sa totals — galing na sa PHP/DB -->
-<script src="js/global.js"></script>
-</body>
 </html>

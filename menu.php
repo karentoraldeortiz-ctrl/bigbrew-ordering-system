@@ -138,7 +138,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                     <!-- FRONT -->
                     <div class="card-front">
                         <button class="flip-btn">↻</button>
-                        <img src="<?php echo htmlspecialchars($product['image']); ?>"
+                        <img src="assets/products/<?php echo htmlspecialchars($product['image']); ?>"
                              alt="<?php echo htmlspecialchars($product['product_name']); ?>">
                         <h3><?php echo htmlspecialchars($product['product_name']); ?></h3>
                         <!-- ADD BUTTON: nagpapadala ng product info sa modal -->

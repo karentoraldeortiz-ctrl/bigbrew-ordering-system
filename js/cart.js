@@ -1,123 +1,149 @@
+// ============================================================
+// cart.js — DB version
+// ============================================================
+
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. DOM Elements
-    const itemsContainer = document.getElementById('cart-items-container');
-    const emptyMsg = document.querySelector('.empty-cart');
-    const asideSummary = document.querySelector('aside');
-    const subtotalDisplay = document.getElementById('subtotal-amount');
-    const totalDisplay = document.getElementById('total-amount');
-    const checkoutBtn = document.getElementById('checkout-btn');
 
-    // 2. Main Display Function
-    function displayCart() {
-        // Kuhanin ang data mula sa LocalStorage
-        let cart = JSON.parse(localStorage.getItem('bigBrewCart')) || [];
+    // ============================================================
+    // UPDATE QUANTITY — + o - button
+    // Kapag naging 0 ang result → ipakita ang remove modal
+    // ============================================================
+    window.updateQty = async (cart_item_id, change) => {
+        const qtySpan    = document.getElementById(`qty-${cart_item_id}`);
+        const currentQty = parseInt(qtySpan.textContent.trim());
 
-        // Check kung empty ung cart
-        if (cart.length === 0) {
-            emptyMsg.style.display = 'block';
-            asideSummary.style.display = 'none'; // Tago ang sidebar kung walang order
-            if (itemsContainer) itemsContainer.innerHTML = "";
+        // Kung - ay pipindutin at 1 na ang qty → modal agad, wag pa pumunta sa server
+        if(currentQty + change <= 0) {
+            showRemoveModal(cart_item_id);
             return;
         }
 
-        // Kung may laman, ipakita ang sidebar at itago ang empty message
-        emptyMsg.style.display = 'none';
-        asideSummary.style.display = 'block';
-        
-        if (itemsContainer) {
-            itemsContainer.innerHTML = "";
-            let grandTotal = 0;
+        try {
+            const formData = new FormData();
+            formData.append('cart_item_id', cart_item_id);
+            formData.append('action', 'update');
+            formData.append('change', change);
 
-            cart.forEach((item, index) => {
-                grandTotal += item.price * item.qty;
-                
-                // I-render ang bawat item card
-             itemsContainer.innerHTML += `
-    <div class="cart-card">
-        <img src="${item.img}" alt="${item.name}">
-        
-        <div class="item-info">
-            <h4>${item.name}</h4>
-            <p>${item.size}, ${item.addons.join(', ')}</p>
-            
-            <div class="qty-stepper">
-                <button onclick="updateQty(${index}, -1)">-</button>
-                <span>${item.qty}</span>
-                <button onclick="updateQty(${index}, 1)">+</button>
-            </div>
-        </div>
-        
-        <div class="item-price">P ${item.price}</div>
-    </div>
-                `;
+            const response = await fetch('update_qty.php', {
+                method: 'POST',
+                body: formData
             });
 
-            // Update subtotal at grand total sa sidebar
-            subtotalDisplay.innerText = `P ${grandTotal}`;
-            totalDisplay.innerText = `P ${grandTotal}`;
-        }
-    }
+            const result = await response.json();
 
-    // 3. Update Quantity Function
-    window.updateQty = (index, change) => {
-        let cart = JSON.parse(localStorage.getItem('bigBrewCart'));
-        
-        // Hanapin ang base price per unit
-        // let unitPrice = cart[index].price / cart[index].qty;
-        
-        // cart[index].qty += change;
-
-        if (cart[index].qty + change <= 0) {
-            // Tanggalin ang item kung ang quantity ay naging zero
-            if (confirm("Remove this item from cart?")) {
-                cart.splice(index, 1);
+            if(result.success) {
+                qtySpan.textContent = result.new_qty;
+                recalcTotals();
+                checkIfEmpty();
             } else {
-                cart[index].qty = 1; // Ibalik sa 1 kung nag-cancel
+                alert('Something went wrong: ' + result.message);
             }
-        } else {
-            // Update ang total price ng specific item na to
-             cart[index].qty += change;
-        }
 
-        localStorage.setItem('bigBrewCart', JSON.stringify(cart));
-        displayCart();
+        } catch(err) {
+            console.error('Update qty error:', err);
+            alert('Connection error. Please try again.');
+        }
     };
 
-    // 4. Checkout Logic
-    if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', () => {
-        const cart = JSON.parse(localStorage.getItem('bigBrewCart')) || [];
-        
-        if (cart.length === 0) {
-            alert("Your cart is empty!");
-            return;
-        }
+    // ============================================================
+    // MODAL — lalabas kapag naging 0 na ang qty
+    // ============================================================
+    function showRemoveModal(cart_item_id) {
+        const card        = document.getElementById(`cart-card-${cart_item_id}`);
+        const productName = card.querySelector('h4').textContent;
 
-        const pickupTime = document.getElementById('pick-up-time').value;
-        const paymentMethod = "Pay upon Pickup";
-        const note = document.querySelector('.note-barista').value;
+        const modal      = document.getElementById('remove-modal');
+        const modalMsg   = document.getElementById('remove-modal-msg');
+        const confirmBtn = document.getElementById('remove-confirm-btn');
+        const cancelBtn  = document.getElementById('remove-cancel-btn');
 
-        const finalOrder = {
-            orderId: Math.floor(100000000 + Math.random() * 900000000), // Random ID gaya ng sa screenshot
-            items: cart,
-            time: pickupTime,
-            payment: paymentMethod,
-            note: note,
-            total: document.getElementById('total-amount').innerText
+        modalMsg.textContent = `Remove "${productName}" from your cart?`;
+
+        // Buksan ang modal
+        modal.classList.add('active');
+
+        // Confirm — tanggalin sa DB at DOM
+        confirmBtn.onclick = async () => {
+            modal.classList.remove('active');
+            await removeItem(cart_item_id);
         };
 
-        // I-save ang order para mabasa ng confirmatio page
-        localStorage.setItem('lastOrder', JSON.stringify(finalOrder));
-
-        // c-clear nya ung cart
-        localStorage.removeItem('bigBrewCart');
-        
-        // di-direct sa confirmation page
-        window.location.href = "orderConfirmed.html";
-            
-        });
+        // Cancel — isara lang, walang gagawin
+        cancelBtn.onclick = () => {
+            modal.classList.remove('active');
+        };
     }
 
-    // Initial Run
-    displayCart();
+    // ============================================================
+    // REMOVE ITEM — tinatawag ng modal confirm button
+    // ============================================================
+    window.removeItem = async (cart_item_id) => {
+        try {
+            const formData = new FormData();
+            formData.append('cart_item_id', cart_item_id);
+            formData.append('action', 'remove');
+
+            const response = await fetch('update_qty.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if(result.success) {
+                const card = document.getElementById(`cart-card-${cart_item_id}`);
+                if(card) card.remove();
+                recalcTotals();
+                checkIfEmpty();
+            }
+        } catch(err) {
+            console.error('Remove item error:', err);
+        }
+    };
+
+    // ============================================================
+    // RECALCULATE TOTALS
+    // ============================================================
+    function recalcTotals() {
+        let grandTotal = 0;
+
+        document.querySelectorAll('.cart-item').forEach(card => {
+            const unitPrice    = parseFloat(card.dataset.unitPrice) || 0;
+            const cart_item_id = card.dataset.cartItemId;
+            const qtySpan      = document.getElementById(`qty-${cart_item_id}`);
+            const qty          = parseInt(qtySpan?.textContent.trim()) || 0;
+            const itemTotal    = unitPrice * qty;
+
+            grandTotal += itemTotal;
+
+            const itemPriceEl = document.getElementById(`item-price-${cart_item_id}`);
+            if(itemPriceEl) itemPriceEl.textContent = `P ${itemTotal.toFixed(2)}`;
+        });
+
+        const subtotalDisplay = document.getElementById('subtotal-amount');
+        const totalDisplay    = document.getElementById('total-amount');
+
+        if(subtotalDisplay) subtotalDisplay.textContent = `P ${grandTotal.toFixed(2)}`;
+        if(totalDisplay)    totalDisplay.textContent    = `P ${grandTotal.toFixed(2)}`;
+    }
+
+    // ============================================================
+    // CHECK IF EMPTY
+    // ============================================================
+    function checkIfEmpty() {
+        const remaining  = document.querySelectorAll('.cart-item').length;
+        const emptyMsg   = document.querySelector('.empty-cart');
+        const aside      = document.querySelector('aside');
+        const cartHeader = document.getElementById('cart-items-container');
+        const cartTitle  = document.getElementById('cart-title');
+
+        if(remaining === 0) {
+            if(emptyMsg)   emptyMsg.style.display  = 'block';
+            if(aside)      aside.style.display      = 'none';
+            if(cartTitle)  cartTitle.style.display  = 'none';
+        }
+    }
+
+    // Initial run
+    recalcTotals();
 });
