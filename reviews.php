@@ -54,13 +54,19 @@ if ($is_logged_in) {
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="menu.php">Our Menu</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="cart.php"><img src="assets/icons/icons8-cart-24.png" alt="" /></a></li>
+                    <li><a href="about.php_logo_guid">About Us</a></li>
+                    <li>
+                        <a href="cart.php" class="cart-link">
+                            <img src="assets/icons/icons8-cart-24.png" alt="">
+                            <span id="cartBadge" class="cart-badge">0</span>
+                        </a>
+                    </li>
                     <li><a href="account.php"><img src="assets/icons/icons8-profile-24.png" alt="" /></a></li>
                 </ul>
             </div>
             <div class="hamburger" id="hamburger">
                 <span></span><span></span><span></span>
+                <span id="cartBadgeMobile" class="cart-badge-mobile"></span>
             </div>
         </nav>
     </header>
