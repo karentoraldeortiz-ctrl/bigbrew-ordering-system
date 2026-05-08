@@ -47,7 +47,6 @@ body {
 }
 .nav-links {
     display: flex;
-    gap: 10px;
 }
 .nav-links li a {
     color: white;
@@ -81,10 +80,10 @@ nav a:hover {
         top: 100%;
         left: 0;
         right: 0;
-        flex-direction: row;
+        flex-direction: column;
         background-color: var(--dark-color);
         padding: 15px 0;
-        gap: 20px;
+        /* gap: 50px; */
         display: none;
     }
     .nav-links.active {
@@ -206,13 +205,26 @@ nav a:hover {
 
 
 @media (max-width: 600px) {
-  .navbar {
+  body {
+    margin-top: 55px;
+  }
+    .navbar {
         padding: 5px 20px;
     }
-    .navlogo img{
+    .navlogo img {
         width: 200px;
         height: auto;
         margin-top: 10px;
+    }
+    .nav-links {
+      padding: 0 5px;
+    }
+    .nav-links li {
+        padding-left: 0;      
+        padding: 8px 10px;   
+    }
+    .nav-links li a {
+        font-size: 14px;
     }
 
   .footer-container {
