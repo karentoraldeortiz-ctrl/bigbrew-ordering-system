@@ -56,8 +56,9 @@ while ($order = mysqli_fetch_assoc($orders_q)) {
     $order['items'] = $items;
 
 // Check if already reviewed
+// Check if user already reviewed
 $rev_q = mysqli_query($conn,
-    "SELECT review_id FROM reviews WHERE order_id = '$oid'"
+    "SELECT review_id FROM reviews WHERE user_id = '$user_id'"
 );
 $order['reviewed'] = mysqli_num_rows($rev_q) > 0;
 

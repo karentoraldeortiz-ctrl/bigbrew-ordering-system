@@ -1936,3 +1936,20 @@ textarea {
         font-size: 0.9rem;
     }
 }
+
+.write-box.account-review-box {
+    width: 100%;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+.write-box.account-review-box .write-review {
+    width: 100%;
+}
+.account-review-box {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 2rem;
+  margin-bottom: 60px;
+}

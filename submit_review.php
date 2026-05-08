@@ -20,33 +20,27 @@ if (!$data) {
     exit;
 }
 
-$user_id  = (int) $_SESSION['user_id'];
-$order_id = (int) ($data['order_id'] ?? 0);
-$rating   = (int) ($data['rating'] ?? 0);
-$comment  = mysqli_real_escape_string($conn, $data['comment'] ?? '');
-
-if ($order_id === 0) {
-    echo json_encode(['success' => false, 'message' => 'Invalid order']);
-    exit;
-}
+$user_id = (int) $_SESSION['user_id'];
+$rating  = (int) ($data['rating'] ?? 0);
+$comment = mysqli_real_escape_string($conn, $data['comment'] ?? '');
 
 if ($rating < 1 || $rating > 5) {
     echo json_encode(['success' => false, 'message' => 'Invalid rating']);
     exit;
 }
 
-// Check kung na-review na
+// Check kung nag-review na ang user (one review per user)
 $check = mysqli_query($conn,
-    "SELECT review_id FROM reviews WHERE order_id = '$order_id'"
+    "SELECT review_id FROM reviews WHERE user_id = '$user_id'"
 );
 if (mysqli_num_rows($check) > 0) {
-    echo json_encode(['success' => false, 'message' => 'Already reviewed!']);
+    echo json_encode(['success' => false, 'message' => 'You have already submitted a review!']);
     exit;
 }
 
 $q = mysqli_query($conn,
-    "INSERT INTO reviews (user_id, order_id, rating, comment)
-     VALUES ('$user_id', '$order_id', '$rating', '$comment')"
+    "INSERT INTO reviews (user_id, rating, comment)
+     VALUES ('$user_id', '$rating', '$comment')"
 );
 
 if (!$q) {

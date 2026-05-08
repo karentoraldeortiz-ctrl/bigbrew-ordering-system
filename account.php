@@ -51,7 +51,32 @@ $user = mysqli_fetch_assoc($query)
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
     <!-- END GLOBAL METADATA -->
+<style>
+  .account-hero {
+    margin-bottom: 60px;
+  }
+  .account-review-box {
+    margin-bottom: 60px;
+  }
+ <style>
+  .account-review-box {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 1.5rem;
+    margin-bottom: 60px;
+  }
 
+  .account-review-box .write-review {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .account-review-box .write-review button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+</style>
     
   
   </head>
@@ -207,11 +232,11 @@ $user = mysqli_fetch_assoc($query)
       </div>
 
       <!-- REVIEW MODAL -->
-      <div id="reviewModal" class="modal-overlay" style="display:none;">
+       <!-- REVIEW MODAL -->
+      <div id="reviewModal" style="display:none;">
         <div class="modal-card" style="max-width:420px;width:90%;padding:2rem;border-radius:20px;position:relative;">
           <span onclick="closeReviewModal()" style="position:absolute;right:20px;top:15px;cursor:pointer;font-size:24px;">&times;</span>
           <h3 style="margin-bottom:1rem;color:var(--dark-color);">Leave a Review</h3>
-          <input type="hidden" id="review-order-id" />
           <div style="margin-bottom:1rem;">
             <label style="font-size:0.9rem;font-weight:500;display:block;margin-bottom:8px;">Rating</label>
             <div id="star-container" style="display:flex;gap:8px;font-size:2rem;cursor:pointer;">
