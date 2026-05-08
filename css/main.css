@@ -441,6 +441,9 @@ body {
     gap: 40px;
     padding: 5%;
 }
+.account-container2 {
+    background-color: red;
+}
 .account-container1, .account-container2 {
     background-color: white;
     padding: 2rem;

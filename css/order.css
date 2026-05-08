@@ -271,15 +271,21 @@ body {
     display: flex;
     gap: 20px;
     padding: 2rem;
+    align-items: flex-start;
 }
 
-main {
+.cart-container main {
     flex: 3;
     background-color: var(--light-color);
     padding: 0 1rem;
+    /* overflow-y: auto;
+    max-height: calc(100vh - 120px); */
+}
+.cart-container main::-webkit-scrollbar {
+    width: 8px;
 }
 
-aside {
+.cart-container aside {
     flex: 1;
     background-color: white;
     border-radius: 20px;
@@ -381,6 +387,20 @@ aside {
     font-size: 1.2rem;
     color: var(--dark-color);
 }
+.empty-cart p{
+    color: #555;
+    font-size: 0.95rem;
+}
+.empty-cart a {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: var(--pop-color);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+}
 
 .order-summary-content h4 {
     font-size: 1.4rem;
@@ -465,15 +485,14 @@ aside {
     font-weight: bold;
     font-size: larger;
 }
-
 .total-bold {
     font-weight: 700;
-    font-size: 1.7rem;
+    font-weight: 700;
+    font-size: 1.5rem;
     color: var(--pop-color);
     border-top: 1px solid #eee;
     margin-top: 10px;
 }
-
 .checkout-btn {
     width: 100%;
     background-color: var(--pop-color); 
@@ -493,7 +512,7 @@ aside {
 }
 
 /* ======== REMOVE ITEM MODAL ========= */
-.modal-overlay {
+.modal-overlay-remove {
     display: none;
     position: fixed;
     inset: 0;
@@ -503,15 +522,16 @@ aside {
     justify-content: center;
 }
 
-.modal-overlay.active {
+.modal-overlay-remove.active {
     display: flex;
 }
 
-.modal-card {
+.modal-card1 {
     background: white;
+    color: var(--dark-color);
     border-radius: 16px;
     padding: 32px;
-    max-width: 340px;
+    max-width: 280px;
     width: 90%;
     text-align: center;
 }
@@ -852,6 +872,7 @@ aside {
 
 .display-time {
     color: var(--pop-color); 
+    padding-bottom: 10px;
 }
 
 .info-row span {
