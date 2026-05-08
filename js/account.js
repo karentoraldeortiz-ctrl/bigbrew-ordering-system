@@ -97,13 +97,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   const editForm = document.getElementById('editProfileForm');
-  if (editForm) {
-    editForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Profile updated! (Wire up to update_profile.php)');
-      closeModal();
+  editForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const data = {
+        name: document.getElementById('editName').value,
+        email: document.getElementById('editEmail').value,
+        phone: document.getElementById('editPhone').value,
+        birthday: document.getElementById('editBirthday').value,
+    };
+
+    fetch('update_profile.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            // i-update yung displayed name
+            document.getElementById('user-name').innerText = data.name;
+            alert('Profile updated!');
+            closeModal();
+        } else {
+            alert(result.message || 'Failed to update.');
+        }
     });
-  }
+});
 
   function capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);

@@ -70,8 +70,7 @@ $pickup_display = $pickup_labels[trim($order['pickup_time'])] ?? $order['pickup_
     <div class="topbar">
         <a href="javascript:history.back()" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i>
-        </a>
-        <span class="topbar-title">Order Receipt</span>
+</a>
     </div>
 
     <!-- RECEIPT CARD -->
