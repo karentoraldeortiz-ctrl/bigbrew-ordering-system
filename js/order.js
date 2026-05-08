@@ -10,33 +10,38 @@ document.querySelectorAll('.flip-btn').forEach(button => {
 const filterButtons = document.querySelectorAll('.tab');
 const menuItems = document.querySelectorAll('.card');
 const noResultsMessage = document.getElementById('no-results');
+document.querySelector('.tab[data-category="all"]').classList.add('active');
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t =>
+      t.classList.remove('active', 'just-activated')
+    );
+    tab.classList.add('active');
+    void tab.offsetWidth; // force reflow
+    tab.classList.add('just-activated');
+    setTimeout(() => tab.classList.remove('just-activated'), 650);
+  });
+});
 
 filterButtons.forEach(button => {
     button.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+
         const selectedCategory = button.getAttribute('data-category');
         let hasVisibleItems = false;
 
         menuItems.forEach(item => {
-
-            if (selectedCategory === 'all' || selectedCategory === 'milk-tea') {
-
-                if (selectedCategory === 'all' || item.classList.contains('milk-tea')) {
-                    item.style.display = 'block';
-                    hasVisibleItems = true;
-                } else {
-                    item.style.display = 'none';
-                }
-
+            if (selectedCategory === 'all' || item.classList.contains(selectedCategory)) {
+                item.style.display = 'block';
+                hasVisibleItems = true;
             } else {
                 item.style.display = 'none';
             }
         });
 
-        if (!hasVisibleItems) {
-            noResultsMessage.style.display = 'block';
-        } else {
-            noResultsMessage.style.display = 'none';
-        }
+        noResultsMessage.style.display = hasVisibleItems ? 'none' : 'block';
     });
 });
 
@@ -60,6 +65,10 @@ addBtns.forEach(btn => {
         // let selectedProductId = null;
         selectedProductId = btn.getAttribute('data-id');
 
+        const category = btn.getAttribute('data-category');
+        document.getElementById('modalProductCategory').innerText = 
+            category ? category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : '';
+
         const card = e.target.closest('.card-front');
         const img = card.querySelector('img').src;
         const name = card.querySelector('h3').innerText;
@@ -78,8 +87,39 @@ addBtns.forEach(btn => {
         document.getElementById('qtyVal').innerText = "1";
         document.getElementById('btnAddToCart').disabled = true;
 
+        // I-build ang size buttons dynamically galing sa DB data
+            const sizesJSON   = btn.getAttribute('data-sizes');
+            const sizeContainer = document.querySelector('.size-container');
+            sizeContainer.innerHTML = ''; // clear muna
+
+            if (sizesJSON) {
+                const sizes = JSON.parse(sizesJSON);
+                sizes.forEach(size => {
+                    const sizeBtn = document.createElement('button');
+                    sizeBtn.classList.add('size-opt');
+                    sizeBtn.setAttribute('data-size-id', size.size_id);
+                    sizeBtn.setAttribute('data-price', size.price);
+                    sizeBtn.value = size.size_name;
+                    sizeBtn.innerHTML = `${size.size_name} <span>₱${size.price}</span>`;
+
+                    sizeBtn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.size-opt').forEach(b => b.classList.remove('active'));
+                        e.currentTarget.classList.add('active');
+                        currentBasePrice = parseInt(e.currentTarget.getAttribute('data-price'));
+                        selectedSize     = e.currentTarget.value;
+                        selectedSizeId   = e.currentTarget.getAttribute('data-size-id');
+                        document.getElementById('btnAddToCart').disabled = false;
+                        calculatePrice();
+                    });
+
+                    sizeContainer.appendChild(sizeBtn);
+                });
+            }
+
         modal.style.display = 'flex';
         calculatePrice();
+
+        
     });
 });
 
@@ -155,14 +195,6 @@ if (!selectedProductId || !selectedSizeId) {
     return;
 }
 
-    // const item = {
-    //     name: document.getElementById('modalProductName').innerText,
-    //     size: selectedSize,
-    //     addons: Array.from(document.querySelectorAll('.addon-check:checked')).map(c => c.value),
-    //     price: currentBasePrice + addonsTotal,
-    //     qty: parseInt(document.getElementById('qtyVal').innerText),
-    //     img: document.getElementById('modalProductImg').src
-    // };
 
         fetch('add_to_cart.php', {
         method: 'POST',

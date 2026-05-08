@@ -113,11 +113,13 @@ while($row = mysqli_fetch_assoc($addons_result)) {
       <h1>MENU</h1>
 
       <div class="tabs">
-    <button class="tab" data-category="all">all</button>
-    <button class="tab" data-category="milk-tea">milk tea</button>
-    <button class="tab" data-category="coffee">coffee</button>
-    <button class="tab" data-category="fruit-tea">fruit tea</button>
-    <button class="tab" data-category="brosty">brosty</button>
+    <button class="tab" data-category="all"><span>all</span></button>
+    <button class="tab" data-category="milk-tea"><span>milk tea</span></button>
+    <button class="tab" data-category="coffee"><span>coffee</span></button>
+    <button class="tab" data-category="fruit-tea"><span>fruit tea</span></button>
+    <button class="tab" data-category="praf"><span>praf</span></button>
+    <button class="tab" data-category="brosty"><span>brosty</span></button>
+    
 </div>
 
 <div id="no-results" style="display: none; text-align: center; padding: 50px; color: #231916;">
@@ -141,11 +143,13 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                         <img src="assets/products/<?php echo htmlspecialchars($product['image']); ?>"
                              alt="<?php echo htmlspecialchars($product['product_name']); ?>">
                         <h3><?php echo htmlspecialchars($product['product_name']); ?></h3>
+                        <p class="product-category"><?php echo ucwords(str_replace('-', ' ', $product['category'])); ?></p>
                         <!-- ADD BUTTON: nagpapadala ng product info sa modal -->
                         <button class="add-btn"
                             data-id="<?php echo $product['product_id']; ?>"
                             data-name="<?php echo htmlspecialchars($product['product_name']); ?>"
                             data-img="<?php echo htmlspecialchars($product['image']); ?>"
+                            data-category="<?php echo htmlspecialchars($product['category']); ?>"
                             data-sizes='<?php echo json_encode($product["sizes"]); ?>'>
                             +
                         </button>
@@ -200,7 +204,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
     </div>
 
     <!-- ========= Cart PopUp Window ===========-->
-   <div id="productModal" class="modal-overlay" style="display: none;">
+   <div id="productModal" class="modal-overlay1" style="display: none;">
     <div class="modal-card">
         <span class="close-modal">&times;</span>
         
@@ -211,23 +215,26 @@ while($row = mysqli_fetch_assoc($addons_result)) {
 
             <div class="modal-right">
                 <h2 id="modalProductName">Product Name</h2>
-                
-                <p class="option-label">choose size</p>
-                <div class="size-container">
-                  <button class="size-opt" data-size-id="1" data-price="29" value="medio">
-                  <button class="size-opt" data-size-id="2" data-price="39" value="grande">                </div>
+                <p id="modalProductCategory" class="product-category"></p>
 
+                <p class="option-label">choose size</p>
+                <div class="size-container"></div>
+                  <!-- <button class="size-opt" data-size-id="1" data-price="29" value="medio">
+                  <button class="size-opt" data-size-id="2" data-price="39" value="grande">                </div> -->
+                
                 <p class="option-label">add ons</p>
                 <div class="addons-grid">
-                    <label><input type="checkbox" class="addon-check" data-price="9" value="pearl"> <span>pearl</span> <span class="addon-price">P 9</span></label>
-                    <label><input type="checkbox" class="addon-check" data-price="9" value="cream cheese"> <span>cream cheese</span> <span class="addon-price">P 9</span></label>
-                    <label><input type="checkbox" class="addon-check" data-price="9" value="cream puff"> <span>cream puff</span> <span class="addon-price">P 9</span></label>
-                    <label><input type="checkbox" class="addon-check" data-price="9" value="crystal"> <span>crystal</span> <span class="addon-price">P 9</span></label>
-                    <label><input type="checkbox" class="addon-check" data-price="9" value="whipped cream"> <span>whipped cream</span> <span class="addon-price">P 9</span></label>
-                    <label><input type="checkbox" class="addon-check" data-price="9" value="cheesecake"> <span>cheesecake</span> <span class="addon-price">P 9</span></label>
-                    <label><input type="checkbox" class="addon-check" data-price="9" value="crushed oreo"> <span>crushed oreo</span> <span class="addon-price">P 9</span></label>
-                    <label><input type="checkbox" class="addon-check" data-price="9" value="coffee jelly"> <span>coffee jelly</span> <span class="addon-price">P 9</span></label>
-                </div>
+                    <?php foreach($addons as $addon): ?>
+                        <label>
+                            <input type="checkbox" 
+                                   class="addon-check" 
+                                   data-price="<?php echo $addon['price']; ?>" 
+                                   value="<?php echo htmlspecialchars($addon['addon_name']); ?>">
+                            <span><?php echo htmlspecialchars($addon['addon_name']); ?></span>
+                            <span class="addon-price">₱<?php echo $addon['price']; ?></span>
+                        </label>
+                    <?php endforeach; ?>                
+                  </div>
 
                 <div class="modal-footer">
                     <div class="price-summary">

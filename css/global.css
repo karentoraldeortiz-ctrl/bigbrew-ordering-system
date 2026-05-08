@@ -205,7 +205,16 @@ nav a:hover {
 }
 
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
+  .navbar {
+        padding: 5px 20px;
+    }
+    .navlogo img{
+        width: 200px;
+        height: auto;
+        margin-top: 10px;
+    }
+
   .footer-container {
     flex-direction: column;
     text-align: center;
