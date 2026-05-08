@@ -1,26 +1,6 @@
 const hamburger = document.getElementById("hamburger");
 const navLinks = document.getElementById("navlinks");
 
-  hamburger.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
-    });
-
-        // function toggleMenu() { 
-        //     const navLinks = document.getElementById("navlinks");
-        //     navLinks.classList.toggle("active");
-        // }       
-
-// check if logged in
-function isLoggedIn() {
-  return localStorage.getItem("user") !== null;
-}
-
-// if (!isLoggedIn()) {
-//   alert("Please login first");
-//   window.location.href = "login.html";
-// }
-
-
 hamburger.addEventListener("click", () => {
     navLinks.classList.toggle("active");
 });
@@ -34,19 +14,28 @@ function updateCartBadge() {
             const badge = document.getElementById('cartBadge');
             const badgeMobile = document.getElementById('cartBadgeMobile');
 
-            [badge, badgeMobile].forEach(el => {
-                if (!el) return;
+            // cart icon badge — may number pa rin
+            if (badge) {
                 if (count > 0) {
-                    el.textContent = count > 99 ? '99+' : count;
-                    el.classList.add('visible');
-                    el.style.transform = 'scale(1.4)';
-                    setTimeout(() => el.style.transform = 'scale(1)', 200);
+                    badge.textContent = count > 99 ? '99+' : count;
+                    badge.classList.add('visible');
+                    badge.style.transform = 'scale(1.4)';
+                    setTimeout(() => badge.style.transform = 'scale(1)', 200);
                 } else {
-                    el.classList.remove('visible');
+                    badge.classList.remove('visible');
                 }
-            });
+            }
+
+            // hamburger badge — dot lang, walang number
+            if (badgeMobile) {
+                if (count > 0) {
+                    badgeMobile.classList.add('visible');
+                } else {
+                    badgeMobile.classList.remove('visible');
+                }
+            }
         });
 }
 
-// I-load agad pagbukas ng kahit anong page
 updateCartBadge();
+setInterval(updateCartBadge, 5000);

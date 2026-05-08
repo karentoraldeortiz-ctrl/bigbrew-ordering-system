@@ -91,7 +91,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                 <span></span>
                 <span></span>
             </div>
-            <span id="cartBadgeMobile" class="cart-badge-mobile">0</span>
+            <span id="cartBadgeMobile" class="cart-badge-mobile"></span>
         </nav>
     </header>
 

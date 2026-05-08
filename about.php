@@ -48,19 +48,17 @@
                     <span id="cartBadge" class="cart-badge">0</span>
                   </a>
                 </li>
-            <li>
-              <a href="account.php"
-                ><img src="assets/icons/icons8-profile-24.png" alt="Profile"
-              /></a>
-            </li>
-          </ul>
-        </div>
-        <div class="hamburger" id="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </nav>
+                <li><a href="account.php"> <img src="assets/icons/icons8-profile-24.png" alt=""></a></li>
+                </ul>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span id="cartBadgeMobile" class="cart-badge-mobile"></span>
+        </nav>
     </header>
 
     <section class="about-container">

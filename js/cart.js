@@ -95,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(card) card.remove();
                 recalcTotals();
                 checkIfEmpty();
+                updateCartBadge();
             }
         } catch(err) {
             console.error('Remove item error:', err);
