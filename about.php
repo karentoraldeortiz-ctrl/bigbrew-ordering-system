@@ -41,14 +41,15 @@
           <ul>
             <li><a href="index.php">Home</a></li>
             <li><a href="menu.php">Our Menu</a></li>
-            <li><a href="about.html">About Us</a></li>
+            <li><a href="about.php">About Us</a></li>
             <li>
-              <a href="cart.php"
-                ><img src="assets/icons/icons8-cart-24.png" alt="Cart"
-              /></a>
-            </li>
+                  <a href="cart.php" class="cart-link">
+                    <img src="assets/icons/icons8-cart-24.png" alt="">
+                    <span id="cartBadge" class="cart-badge">0</span>
+                  </a>
+                </li>
             <li>
-              <a href="account.html"
+              <a href="account.php"
                 ><img src="assets/icons/icons8-profile-24.png" alt="Profile"
               /></a>
             </li>

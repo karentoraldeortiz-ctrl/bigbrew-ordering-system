@@ -214,8 +214,9 @@ if (!selectedProductId || !selectedSizeId) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            alert("Added to cart!");
             modal.style.display = 'none';
+            showCartToast('Item added to cart!');
+            updateCartBadge();
         } else {
             alert(data.message);
         }
@@ -228,3 +229,49 @@ closeBtn.onclick = () => modal.style.display = 'none';
 window.onclick = (e) => {
     if (e.target == modal) modal.style.display = 'none';
 };
+
+// ========== CART TOAST + BADGE ==========
+
+function showCartToast(msg) {
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'cart-toast';
+    toast.innerHTML = `<span>🛒</span><span>${msg}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add('hide');
+        toast.addEventListener('animationend', () => toast.remove());
+    }, 2500);
+}
+
+function updateCartBadge() {
+    fetch('get_cart_count.php')
+        .then(res => res.json())
+        .then(data => {
+            const count = data.count || 0;
+            const badge = document.getElementById('cartBadge');
+            const badgeMobile = document.getElementById('cartBadgeMobile');
+
+            [badge, badgeMobile].forEach(el => {
+                if (!el) return;
+                if (count > 0) {
+                    el.textContent = count > 99 ? '99+' : count;
+                    el.classList.add('visible');
+                    el.style.transform = 'scale(1.4)';
+                    setTimeout(() => el.style.transform = 'scale(1)', 200);
+                } else {
+                    el.classList.remove('visible');
+                }
+            });
+        });
+}
+
+// I-load agad ang badge count pagbukas ng page
+updateCartBadge();
