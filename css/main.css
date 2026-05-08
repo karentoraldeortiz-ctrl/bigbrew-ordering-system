@@ -1388,7 +1388,7 @@ textarea {
   /* About */
   .about-hero-wrapper { overflow: hidden; }
   .about-hero { flex-direction: column; padding: 30px 16px 120px 16px; text-align: center; gap: 12px; }
-  .about-text h1 { font-size: 1.5rem; }
+  .about-text h1 { font-size: 1.25rem; }
   .about-img { display: none; }
   .hero-wave { height: 150px; width: 150%; left: -25%; bottom: -40px; }
   .dark-content-area { padding: 0 16px 60px 16px; }
