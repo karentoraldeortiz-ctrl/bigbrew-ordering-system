@@ -289,7 +289,12 @@ nav a:hover {
 }
 
 .cart-badge-mobile.visible {
-  display: block;
+  display: inline-flex;;
+}
+@media (min-width: 701px) {
+    .cart-badge-mobile {
+        display: none !important;
+    }
 }
 /* ===== TOAST ===== */
 #toastContainer {

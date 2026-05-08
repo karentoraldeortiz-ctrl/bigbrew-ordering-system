@@ -3,7 +3,7 @@
     box-sizing: border-box;
 }
 html, body {
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 body {
     background-color: var(--light-color);
@@ -427,6 +427,9 @@ body {
 /* end of home page */
 
 /* ============= ACCOUNT PAGE ============= */
+.account-hero {
+    overflow: visible !important;
+}
 .account-hero header{
     background-color: var(--dark-color);
     color: var(--light-color);
@@ -441,9 +444,6 @@ body {
     gap: 40px;
     padding: 5%;
 }
-.account-container2 {
-    background-color: red;
-}
 .account-container1, .account-container2 {
     background-color: white;
     padding: 2rem;
@@ -453,10 +453,12 @@ body {
 }
 .account-container1 {
     width: 30%;
+    position: sticky;
+    top: 100px;
 }
 .account-container2 {
     width: 70%;
-    overflow-y: auto;
+    /* overflow-y: auto; */
 }
 .account-container2 h2 {
     padding-bottom: 10px;
@@ -625,6 +627,7 @@ body {
     }
     .account-container1 {
         width: 100%;
+        position: static;
     }
     .account-container2 {
         width: 100%;
