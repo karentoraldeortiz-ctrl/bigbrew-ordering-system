@@ -89,90 +89,109 @@ session_start();
       </div>
     </div>
 
-    <section class="best-seller">
-      <h2>Famous Five</h2>
-      <p>
-        Discover our most popular drinks, made with high-quality tea leaves,
-        vibrant fruit flavors, rich creamy textures, and delightful toppings in
-        every sip.
-      </p>
-      <div class="products">
-        <div class="arrow">
-          <img src="assets/icons/icons8-arrow-24-left.png" alt="" />
-        </div>
 
-        <div class="card">
-          <div class="card-inner">
-            <!-- FRONT -->
-            <div class="card-front">
-              <button class="flip-btn">↻</button>
-              <img src="assets/products/dark-choco.jpg" />
-              <h3>Dark Choco</h3>
-            </div>
+      <section class="best-seller">
+        <h2>Famous Five</h2>
+        <p>
+          Discover our most popular drinks, made with high-quality tea leaves,
+          vibrant fruit flavors, rich creamy textures, and delightful toppings in
+          every sip.
+        </p>
+        <div class="products">
+          <div class="arrow arrow-left" onclick="moveCarousel(-1)">
+            <img src="assets/icons/icons8-arrow-24-left.png" alt="Previous" />
+          </div>
 
-            <!-- BACK -->
-            <div class="card-back">
-              <button class="flip-btn">↻</button>
-              <h4>Dark Choco</h4>
-              <p>
-                Bold and indulgent, this rich dark chocolate blend meets smooth
-                milk tea for a decadent sip in every cup.
-              </p>
-            </div>
+          <div class="carousel-wrapper">
+            <div class="carousel-track" id="carouselTrack">
+
+              <div class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <button class="flip-btn">↻</button>
+                    <img src="assets/products/okinawa.jpg" />
+                    <h3>Okinawa</h3>
+                  </div>
+                  <div class="card-back">
+                    <button class="flip-btn">↻</button>
+                    <h4>Okinawa</h4>
+                    <p>Buttery caramel notes infused in classic milk tea.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <button class="flip-btn">↻</button>
+                    <img src="assets/products/wintermelon.jpg" />
+                    <h3>Wintermelon</h3>
+                  </div>
+                  <div class="card-back">
+                    <button class="flip-btn">↻</button>
+                    <h4>Wintermelon</h4>
+                    <p>Light, sweet, and refreshing wintermelon flavor.</p>
+                  </div>  
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <button class="flip-btn">↻</button>
+                    <img src="assets/products/no-img-product.png" />
+                    <h3>Kiwi</h3>
+                  </div>
+                  <div class="card-back">
+                    <button class="flip-btn">↻</button>
+                    <h4>Kiwi</h4>
+                    <p>no description available</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <button class="flip-btn">↻</button>
+                    <img src="assets/products/no-img-product.png" />
+                    <h3>Kape Brusko</h3>
+                  </div>
+                  <div class="card-back">
+                    <button class="flip-btn">↻</button>
+                    <h4>Kape Brusko</h4>
+                    <p>no description available</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <button class="flip-btn">↻</button>
+                    <img src="assets/products/dark-choco.jpg" />
+                    <h3>Dark Choco</h3>
+                  </div>
+                  <div class="card-back">
+                    <button class="flip-btn">↻</button>
+                    <h4>Dark Choco</h4>
+                    <p>Bold and indulgent, this rich dark chocolate blend meets smooth milk tea.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- end carousel-track -->
+          </div><!-- end carousel-wrapper -->
+
+          <div class="arrow arrow-right" onclick="moveCarousel(1)">
+            <img src="assets/icons/icons8-arrow-24.png" alt="Next" />
           </div>
         </div>
-        <div class="card">
-          <div class="card-inner">
-            <!-- FRONT -->
-            <div class="card-front">
-              <button class="flip-btn">↻</button>
-              <img src="assets/products/dark-choco.jpg" />
-              <h3>Dark Choco</h3>
-            </div>
 
-            <!-- BACK -->
-            <div class="card-back">
-              <button class="flip-btn">↻</button>
-              <h4>Dark Choco</h4>
-              <p>
-                Bold and indulgent, this rich dark chocolate blend meets smooth
-                milk tea for a decadent sip in every cup.
-              </p>
-            </div>
-          </div>
+        <div class="explore-btn">
+          <button><a href="menu.html">Explore the Menu</a></button>
         </div>
-        <div class="card">
-          <div class="card-inner">
-            <!-- FRONT -->
-            <div class="card-front">
-              <button class="flip-btn">↻</button>
-              <img src="assets/products/dark-choco.jpg" />
-              <h3>Dark Choco</h3>
-            </div>
-
-            <!-- BACK -->
-            <div class="card-back">
-              <button class="flip-btn">↻</button>
-              <h4>Dark Choco</h4>
-              <p>
-                Bold and indulgent, this rich dark chocolate blend meets smooth
-                milk tea for a decadent sip in every cup.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="arrow">
-          <img src="assets/icons/icons8-arrow-24.png" alt="" />
-        </div>
-      </div>
-      <div class="explore-btn">
-        <button>
-          <a href="menu.html">Explore the Menu</a>
-        </button>
-      </div>
-    </section>
-
+      </section>
     <section class="specials">
       <h2>What's New</h2>
       <p>
@@ -321,16 +340,16 @@ session_start();
         <h3>Quick Links</h3>
         <div class="links-grid">
           <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="menu.html">Menu</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="menu.php">Menu</a></li>
+            <li><a href="about.php">About</a></li>
           </ul>
           <ul>
-            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="reviews.php">Reviews</a></li>
             <li><a href="terms.html">Terms & Conditions</a></li>
             <li><a href="privacy.html">Privacy Policy</a></li>
           </ul>
-        </div>
+        </div> 
       </div>
 
       <div class="footer-column">
