@@ -37,9 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const reviewCard = document.createElement('div');
         reviewCard.className = 'write-box account-review-box';
 
-        const btnHtml = reviewData.already_reviewed
-          ? `<button disabled style="opacity:0.5;cursor:not-allowed;">✅ Already Reviewed</button>`
-          : `<button id="openBtn">Write a Review</button>`;
+        const btnHtml = !reviewData.has_orders
+  ? `<button disabled style="opacity:0.5;cursor:not-allowed;">Order first to leave a review</button>`
+  : reviewData.already_reviewed
+    ? `<button disabled style="opacity:0.5;cursor:not-allowed;">✅ Already Reviewed</button>`
+    : `<button id="openBtn">Write a Review</button>`;
 
         reviewCard.innerHTML = `
           <div class="write-review">
@@ -52,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const accountSection = document.querySelector('.account-hero');
 accountSection.appendChild(reviewCard);
 
-        if (!reviewData.already_reviewed) {
+        if (reviewData.has_orders && !reviewData.already_reviewed) {
           document.getElementById('openBtn').addEventListener('click', openReviewModal);
         }
       })

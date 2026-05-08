@@ -49,3 +49,62 @@ section a{
 .text-group li {
     margin-left: 2rem;
 }
+@media (max-width: 600px) {
+  body {
+    padding-top: 3.5rem;
+    min-height: auto;
+  }
+
+  .hero {
+    min-height: auto;
+  }
+
+  .hero-box {
+    height: 250px;
+    min-height: 250px;
+    padding: 0 1rem;
+  }
+
+  .hero-text h1 {
+    font-size: 1.1rem;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .hero-text p {
+    font-size: 0.62rem;
+    line-height: 1.3;
+  }
+
+  .scallop {
+    height: 28px;
+    margin-top: -8px;
+    background-size: 25px 25px;
+    background: radial-gradient(circle at 13px -7px, var(--dark-color) 19px, transparent 20px) repeat-x;
+  }
+
+  section {
+    padding: 0.8rem 1rem 1.5rem;
+    text-align: left;
+    font-size: 0.72rem;
+    line-height: 1.45;
+  }
+
+  section h3 {
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .text-group {
+    margin: 10px 0;
+  }
+
+  .indention {
+    margin-left: 0.3rem;
+  }
+
+  .text-group li {
+    margin-left: 0.8rem;
+  }
+}

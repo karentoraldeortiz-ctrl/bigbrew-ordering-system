@@ -924,6 +924,98 @@ textarea { height: 100px; resize: none; }
   margin-top: 1.5rem;
   color: white;
 }
+.review-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.review-modal-card {
+  background: #d8ffd8;
+  width: 90%;
+  max-width: 420px;
+  padding: 1.4rem 1.2rem;
+  border-radius: 16px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+}
+
+.review-close {
+  position: absolute;
+  right: 14px;
+  top: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.review-modal-card h3 {
+  font-size: 1rem;
+  margin-bottom: 3px;
+  color: #111;
+}
+
+.review-modal-card p {
+  font-size: 0.75rem;
+  color: #333;
+  margin-bottom: 14px;
+}
+
+.review-stars {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+}
+
+.review-stars span {
+  cursor: pointer;
+  color: #d0d0d0;
+  transition: 0.2s;
+}
+
+.review-stars span.active {
+  color: #c77728;
+}
+
+.review-stars span:hover {
+  transform: scale(1.1);
+}
+
+.review-modal-card textarea {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: inherit;
+  resize: none;
+  box-sizing: border-box;
+  font-size: 0.75rem;
+  outline: none;
+  margin-bottom: 14px;
+}
+
+.review-submit-btn {
+  background: var(--pop-color);
+  color: white;
+  border: none;
+  padding: 7px 28px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.review-submit-btn:hover {
+  background: #9f5b19;
+}
 @media (max-width: 600px) {
 
     .review-page {

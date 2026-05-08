@@ -194,14 +194,15 @@ if(mysqli_num_rows($cart_q) > 0) {
                                     · <?php echo htmlspecialchars($item['addons']); ?>
                                 <?php endif; ?>
                             </p>
-                            <div class="qty-stepper">
-                                <button onclick="updateQty(<?php echo $item['cart_item_id']; ?>, -1)">-</button>
-                                <span id="qty-<?php echo $item['cart_item_id']; ?>">
-                                    <?php echo $item['quantity']; ?>
-                                </span>
-                                <button onclick="updateQty(<?php echo $item['cart_item_id']; ?>, +1)">+</button>
-                            </div>
-                        </div>
+                         <div class="qty-Stepper">
+    <button type="button" onclick="updateQty(<?php echo $item['cart_item_id']; ?>, -1)">-</button>
+
+    <span id="qty-<?php echo $item['cart_item_id']; ?>">
+        <?php echo $item['quantity']; ?>
+    </span>
+
+    <button type="button" onclick="updateQty(<?php echo $item['cart_item_id']; ?>, 1)">+</button>
+</div>
                         <div class="cart-item-price">
                             <p id="item-price-<?php echo $item['cart_item_id']; ?>">
                                 P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?>

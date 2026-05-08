@@ -52,31 +52,29 @@ $user = mysqli_fetch_assoc($query)
     />
     <!-- END GLOBAL METADATA -->
 <style>
-  .account-hero {
-    margin-bottom: 60px;
-  }
-  .account-review-box {
-    margin-bottom: 60px;
-  }
- <style>
-  .account-review-box {
-    width: 100%;
-    box-sizing: border-box;
-    margin-top: 1.5rem;
-    margin-bottom: 60px;
-  }
+.account-hero {
+  margin-bottom: 45px;
+}
 
-  .account-review-box .write-review {
-    width: 100%;
-    box-sizing: border-box;
-  }
+.account-review-box {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 1.5rem;
+  margin-bottom: 45px;
+}
 
-  .account-review-box .write-review button {
-    width: 100%;
-    box-sizing: border-box;
-  }
+.account-review-box .write-review {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1.5rem;
+}
 
+.account-review-box .write-review button {
+  width: 100%;
+  box-sizing: border-box;
+}
 </style>
+
     
   
   </head>
@@ -232,28 +230,39 @@ $user = mysqli_fetch_assoc($query)
       </div>
 
       <!-- REVIEW MODAL -->
-       <!-- REVIEW MODAL -->
-      <div id="reviewModal" style="display:none;">
-        <div class="modal-card" style="max-width:420px;width:90%;padding:2rem;border-radius:20px;position:relative;">
-          <span onclick="closeReviewModal()" style="position:absolute;right:20px;top:15px;cursor:pointer;font-size:24px;">&times;</span>
-          <h3 style="margin-bottom:1rem;color:var(--dark-color);">Leave a Review</h3>
-          <div style="margin-bottom:1rem;">
-            <label style="font-size:0.9rem;font-weight:500;display:block;margin-bottom:8px;">Rating</label>
-            <div id="star-container" style="display:flex;gap:8px;font-size:2rem;cursor:pointer;">
-              <span class="rev-star" data-value="1" style="color:#ccc;">★</span>
-              <span class="rev-star" data-value="2" style="color:#ccc;">★</span>
-              <span class="rev-star" data-value="3" style="color:#ccc;">★</span>
-              <span class="rev-star" data-value="4" style="color:#ccc;">★</span>
-              <span class="rev-star" data-value="5" style="color:#ccc;">★</span>
-            </div>
-          </div>
-          <div style="margin-bottom:1.5rem;">
-            <label style="font-size:0.9rem;font-weight:500;display:block;margin-bottom:8px;">Comment</label>
-            <textarea id="review-comment" rows="4" placeholder="How was your order?" style="width:100%;border:1px solid #eee;border-radius:10px;padding:10px;font-family:inherit;resize:none;box-sizing:border-box;"></textarea>
-          </div>
-          <button onclick="submitReview()" style="width:100%;background:var(--pop-color);color:white;border:none;padding:12px;border-radius:12px;font-weight:600;font-size:1rem;cursor:pointer;">Submit Review</button>
-        </div>
-      </div>
+      <div id="reviewModal" class="review-modal-overlay">
+
+  <div class="review-modal-card">
+
+    <span onclick="closeReviewModal()" class="review-close">
+      &times;
+    </span>
+
+    <h3>Enjoyed our service? Let us know!</h3>
+
+    <p>Your feedback helps us improve our service.</p>
+
+    <div class="review-stars" id="star-container">
+      <span class="rev-star" data-value="1">★</span>
+      <span class="rev-star" data-value="2">★</span>
+      <span class="rev-star" data-value="3">★</span>
+      <span class="rev-star" data-value="4">★</span>
+      <span class="rev-star" data-value="5">★</span>
+    </div>
+
+    <textarea
+      id="review-comment"
+      rows="4"
+      placeholder="Write your feedback here."
+    ></textarea>
+
+    <button onclick="submitReview()" class="review-submit-btn">
+      Submit
+    </button>
+
+  </div>
+
+</div>
     </section>
 
     <footer class="main-footer">

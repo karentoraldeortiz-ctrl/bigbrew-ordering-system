@@ -266,36 +266,33 @@ body {
 
 /* ======== FOR CART PAGE =========*/
 .cart-container {
-    color: var(--dark-color);
-    margin-top: 5rem;
-    display: flex;
-    gap: 20px;
-    padding: 2rem;
-    align-items: flex-start;
+  color: var(--dark-color);
+  margin-top: 5rem;
+  display: flex;
+  gap: 20px;
+  padding: 2rem;
+  align-items: flex-start;
 }
 
-.cart-container main {
-    flex: 3;
-    background-color: var(--light-color);
-    padding: 0 1rem;
-    /* overflow-y: auto;
-    max-height: calc(100vh - 120px); */
-}
-.cart-container main::-webkit-scrollbar {
-    width: 8px;
-}
-
+/* I-update ang aside — alisin ang display:block, dagdag stretch */
 .cart-container aside {
-    flex: 1;
-    background-color: white;
-    border-radius: 20px;
-    padding: 1rem;
-    display: block;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    position: sticky;
-    top: 100px;
+  flex: 1;
+  background-color: white;
+  border-radius: 20px;
+  padding: 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 100px;
+  box-sizing: border-box; /* ← DAGDAG — para kasama ang padding sa width */
 }
 
+/* Siguraduhing main ay may box-sizing din */
+.cart-container main {
+  flex: 3;
+  background-color: var(--light-color);
+  padding: 0 1rem;
+  box-sizing: border-box; /* ← DAGDAG */
+}
 .cart-header {
     background-color: var(--dark-color);
     color: white;
@@ -510,7 +507,102 @@ body {
 .checkout-btn:hover {
     background-color: #8e551a;
 }
+.cart-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: auto;
+}
 
+.qty-Stepper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.qty-Stepper button {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: #2c140d;
+    color: white;
+    cursor: pointer;
+}
+
+.qty-Stepper span {
+    font-weight: 600;
+    min-width: 15px;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+
+  .cart-container {
+    flex-direction: column !important;
+    padding: 1rem !important;
+    gap: 15px;
+    align-items: stretch !important;
+  }
+
+  .cart-container main {
+    width: 100%;
+    flex: unset;
+    padding: 0;
+  }
+
+  .cart-container aside {
+    width: 100%;
+    flex: unset;
+    position: static !important;
+    top: unset !important;
+  }
+
+  .cart-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+    gap: 10px;
+  }
+  .cart-header img { width: 60px; }
+  .cart-header h1 { font-size: 1.2rem; }
+
+  .cart-item {
+    flex-wrap: nowrap;
+    align-items: center;
+    padding: 1rem;
+    gap: 10px;
+  }
+  .cart-item img {
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
+  }
+  .cart-item-details {
+    flex: 1;
+    min-width: 0;
+  }
+  .cart-item-price {
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .item-price {
+    font-size: 0.95rem;
+    white-space: nowrap;
+    margin-left: 0;
+  }
+
+  .order-summary-content h4 { font-size: 1.2rem; }
+  .summary-input, #pick-up-time, .note-barista {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+  .checkout-btn {
+    font-size: 0.95rem;
+    padding: 0.9rem;
+  }
+  .total-bold { font-size: 1.2rem; }
+}
 /* ======== REMOVE ITEM MODAL ========= */
 .modal-overlay-remove {
     display: none;
