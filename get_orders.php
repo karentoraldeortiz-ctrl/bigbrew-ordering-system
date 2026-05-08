@@ -54,7 +54,14 @@ while ($order = mysqli_fetch_assoc($orders_q)) {
     }
 
     $order['items'] = $items;
-    $orders[] = $order;
+
+// Check if already reviewed
+$rev_q = mysqli_query($conn,
+    "SELECT review_id FROM reviews WHERE order_id = '$oid'"
+);
+$order['reviewed'] = mysqli_num_rows($rev_q) > 0;
+
+$orders[] = $order;
 }
 
 echo json_encode(['success' => true, 'orders' => $orders]);

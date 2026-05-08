@@ -35,6 +35,8 @@ $user = mysqli_fetch_assoc($query)
     <meta name="author" content="Allyana Flores, Karen Ortiz" />
     <title>BigBrew | Account</title>
     <link rel="stylesheet" href="css/global.css" />
+    <!-- <link rel="stylesheet" href="account.css"> -->
+    <link rel="stylesheet" href="css/main.css" />
     <link
       rel="shortcut icon"
       href="assets/logo/logo-black.png"
@@ -50,7 +52,8 @@ $user = mysqli_fetch_assoc($query)
     />
     <!-- END GLOBAL METADATA -->
 
-    <link rel="stylesheet" href="css/main.css" />
+    
+    
     <style>
 .order-history-item {
     border: 1px solid rgba(0,0,0,0.08);
@@ -121,6 +124,40 @@ $user = mysqli_fetch_assoc($query)
     text-align: center;
     color: #aaa;
     padding: 30px 0;
+}
+.btn-leave-review {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: white;
+    background-color: var(--pop-color);
+    border: none;
+    padding: 5px 14px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 8px;
+}
+.btn-leave-review:hover { background-color: #8e551a; }
+.btn-reviewed {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #166534;
+    background-color: #DCFCE7;
+    padding: 5px 14px;
+    border-radius: 50px;
+    margin-left: 8px;
+}
+#reviewModal {
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0,0,0,0.6) !important;
+    display: none;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 9999 !important;
+}
+#reviewModal.show {
+    display: flex !important;
 }
 </style>
   </head>
@@ -274,6 +311,30 @@ $user = mysqli_fetch_assoc($query)
           <div id="receipt-content-area">
             <!-- Dito papasok ang HTML galing sa JS -->
           </div>
+        </div>
+      </div>
+
+      <!-- REVIEW MODAL -->
+      <div id="reviewModal" class="modal-overlay" style="display:none;">
+        <div class="modal-card" style="max-width:420px;width:90%;padding:2rem;border-radius:20px;position:relative;">
+          <span onclick="closeReviewModal()" style="position:absolute;right:20px;top:15px;cursor:pointer;font-size:24px;">&times;</span>
+          <h3 style="margin-bottom:1rem;color:var(--dark-color);">Leave a Review</h3>
+          <input type="hidden" id="review-order-id" />
+          <div style="margin-bottom:1rem;">
+            <label style="font-size:0.9rem;font-weight:500;display:block;margin-bottom:8px;">Rating</label>
+            <div id="star-container" style="display:flex;gap:8px;font-size:2rem;cursor:pointer;">
+              <span class="rev-star" data-value="1" style="color:#ccc;">★</span>
+              <span class="rev-star" data-value="2" style="color:#ccc;">★</span>
+              <span class="rev-star" data-value="3" style="color:#ccc;">★</span>
+              <span class="rev-star" data-value="4" style="color:#ccc;">★</span>
+              <span class="rev-star" data-value="5" style="color:#ccc;">★</span>
+            </div>
+          </div>
+          <div style="margin-bottom:1.5rem;">
+            <label style="font-size:0.9rem;font-weight:500;display:block;margin-bottom:8px;">Comment</label>
+            <textarea id="review-comment" rows="4" placeholder="How was your order?" style="width:100%;border:1px solid #eee;border-radius:10px;padding:10px;font-family:inherit;resize:none;box-sizing:border-box;"></textarea>
+          </div>
+          <button onclick="submitReview()" style="width:100%;background:var(--pop-color);color:white;border:none;padding:12px;border-radius:12px;font-weight:600;font-size:1rem;cursor:pointer;">Submit Review</button>
         </div>
       </div>
     </section>
