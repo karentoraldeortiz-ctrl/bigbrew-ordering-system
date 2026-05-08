@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const confirmBtn = document.getElementById('remove-confirm-btn');
         const cancelBtn  = document.getElementById('remove-cancel-btn');
 
-        modalMsg.textContent = `Remove "${productName}" from your cart?`;
+        modalMsg.textContent = `Are you sure you want to remove "${productName}" from your cart?`;
 
         // Buksan ang modal
         modal.classList.add('active');
@@ -137,11 +137,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const aside      = document.querySelector('aside');
         const cartHeader = document.getElementById('cart-items-container');
         const cartTitle  = document.getElementById('cart-title');
+        const container = document.getElementById('cart-items-container');
 
         if(remaining === 0) {
             if(emptyMsg)   emptyMsg.style.display  = 'block';
             if(aside)      aside.style.display      = 'none';
             if(cartTitle)  cartTitle.style.display  = 'none';
+            if(container) container.innerHTML = `
+                <div class="empty-cart">
+                    <h3>Your Cart</h3>
+                    <p>Your cart is empty.</p>
+                    <a href="menu.php">Browse Menu</a>
+                </div>
+            `;
+            updateCartBadge();
         }
     }
 

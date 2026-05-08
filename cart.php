@@ -270,8 +270,8 @@ if(mysqli_num_rows($cart_q) > 0) {
 <?php endif; ?>
 
 <!-- REMOVE CONFIRMATION MODAL -->
-<div id="remove-modal" class="modal-overlay">
-    <div class="modal-card">
+<div id="remove-modal" class="modal-overlay-remove">
+    <div class="modal-card1">
         <p id="remove-modal-msg"></p>
         <div class="modal-buttons">
             <button id="remove-cancel-btn" class="btn-secondary">Keep it</button>
