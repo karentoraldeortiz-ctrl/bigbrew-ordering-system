@@ -1576,7 +1576,52 @@ body {
     font-size: 12px;
     display: none;
 }
+@media (max-width: 600px) {
 
+    .review-page {
+        padding: 2rem 1rem;
+    }
+
+    .review-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .review-card {
+        width: 100%;
+    }
+
+    .write-review {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .write-review button {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 90%;
+        padding: 1.5rem;
+        border-radius: 15px;
+    }
+
+    .modal-content input {
+        width: 100%;
+    }
+
+    .star-rating-large {
+        font-size: 1.5rem;
+    }
+
+    .review-card p {
+        font-size: 12px;
+    }
+
+    .review-card small {
+        font-size: 11px;
+    }
+}
 /* end of review page */
 
 
