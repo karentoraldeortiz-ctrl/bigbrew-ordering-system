@@ -11,6 +11,14 @@ $user_id = $_SESSION['user_id'];
 $order_success = false;
 $order_id      = null;
 $message       = "";
+if(isset($_SESSION['order_success'])) {
+    $order_success = true;
+    $order_id = $_SESSION['order_id'];
+
+    // clear para di maulit
+    unset($_SESSION['order_success']);
+    unset($_SESSION['order_id']);
+}
 
 if(isset($_POST['place_order'])) {
     $pickup_time = $_POST['pickup_time'];
@@ -62,7 +70,12 @@ if(isset($_POST['place_order'])) {
             }
 
             mysqli_query($conn, "DELETE FROM cart_items WHERE cart_id='$cart_id'");
-            $order_success = true;
+            // $order_success = true;
+            $_SESSION['order_success'] = true;
+$_SESSION['order_id'] = $order_id;
+
+header("Location: cart.php");
+exit();
         }
     }
 }
