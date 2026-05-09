@@ -182,5 +182,27 @@ $unavail_q = mysqli_query($conn,
             </div>
         </div>
     </main>
+    <nav class="bottom-nav">
+    <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : ''; ?>">
+        <i class="fa fa-dashboard"></i>
+        <span>Dashboard</span>
+    </a>
+    <a href="orders.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'orders.php' || basename($_SERVER['PHP_SELF']) === 'order-details.php' ? 'active' : ''; ?>">
+        <i class="fa fa-shopping-cart"></i>
+        <span>Orders</span>
+    </a>
+    <a href="menu.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'menu.php' ? 'active' : ''; ?>">
+        <i class="fa fa-bars"></i>
+        <span>Menu</span>
+    </a>
+    <a href="logout.php">
+        <i class="fa fa-sign-out"></i>
+        <span>Logout</span>
+    </a>
+</nav>
+    <div class="new-order-toast" id="orderToast" onclick="goToOrders()">
+    🛎️ New Order Alert!
+</div>
+<script src="notif.js"></script>
 </body>
 </html>
