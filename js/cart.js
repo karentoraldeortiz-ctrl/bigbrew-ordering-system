@@ -1,6 +1,14 @@
 // ============================================================
 // cart.js — DB version
 // ============================================================
+const loginBtn = document.querySelector(".login-required-btn");
+
+if(loginBtn){
+    loginBtn.addEventListener("click", () => {
+        alert("Please log in first before placing your order.");
+        window.location.href = "login.php";
+    });
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 

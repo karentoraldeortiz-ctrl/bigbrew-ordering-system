@@ -2,20 +2,21 @@
 session_start();
 include "db.php";
 
-if(!isset($_SESSION['user_id'])) {
-  header("Location: login.php");
-  exit;
+$isLoggedIn = isset($_SESSION['user_id']);
+$user = null;
+
+if($isLoggedIn){
+    $user_id = $_SESSION['user_id'];
+
+    $query = mysqli_query($conn,
+      "SELECT full_name, email, phone_num, birthday
+      FROM users
+      WHERE user_id = '$user_id'"
+    );
+
+    $user = mysqli_fetch_assoc($query);
 }
 
-$user_id = $_SESSION['user_id'];
-
-$query = mysqli_query($conn,
-  "SELECT full_name, email, phone_num, birthday
-  FROM users
-  WHERE user_id = '$user_id'"
-);
-
-$user = mysqli_fetch_assoc($query)
 ?>
 
 <!doctype html>
@@ -115,6 +116,33 @@ $user = mysqli_fetch_assoc($query)
       <header>
         <h1>Account</h1>
       </header>
+              <?php if(!$isLoggedIn): ?>
+
+        <div class="guest-account-state">
+            <div class="guest-account-card">
+                <i class="fa-solid fa-user-lock"></i>
+
+                <h2>You are not logged in</h2>
+
+                <p>
+                    Login or create an account to view your profile,
+                    order history, and manage your orders.
+                </p>
+
+                <div class="guest-account-buttons">
+                    <a href="login.php" class="guest-login-btn">
+                        Login
+                    </a>
+
+                    <a href="signup.php" class="guest-signup-btn">
+                        Create Account
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <?php else: ?>
+      
       <div class="account-content">
         <div class="account-container1">
           <div class="acc-info">
@@ -263,6 +291,7 @@ $user = mysqli_fetch_assoc($query)
   </div>
 
 </div>
+<?php endif; ?>
     </section>
 
     <footer class="main-footer">

@@ -39,7 +39,7 @@ while ($order = mysqli_fetch_assoc($orders_q)) {
 
     // Fetch items for this order
     $items_q = mysqli_query($conn,
-        "SELECT p.product_name, ps.size_name, oi.quantity, oi.unit_price, oi.addons
+        "SELECT p.product_name, p.category, ps.size_name, oi.quantity, oi.unit_price, oi.addons
          FROM order_items oi
          JOIN products p ON oi.product_id = p.product_id
          JOIN product_sizes ps ON oi.size_id = ps.size_id

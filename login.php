@@ -24,8 +24,68 @@ if(isset($_POST['login'])){
 
   if(mysqli_num_rows($result) > 0) {
     $user = mysqli_fetch_assoc($result);
+
     $_SESSION['user_id'] = $user['user_id'];
     $_SESSION['name'] = $user['full_name'];
+
+    $user_id = $user['user_id'];
+
+    // MERGE GUEST CART TO USER DATABASE CART
+    if(isset($_SESSION['guest_cart']) && !empty($_SESSION['guest_cart'])) {
+
+      // Check if user already has cart
+      $cart_check = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id = '$user_id'");
+
+      if(mysqli_num_rows($cart_check) > 0) {
+        $cart = mysqli_fetch_assoc($cart_check);
+        $cart_id = $cart['cart_id'];
+      } else {
+        mysqli_query($conn, "INSERT INTO cart (user_id) VALUES ('$user_id')");
+        $cart_id = mysqli_insert_id($conn);
+      }
+
+      foreach($_SESSION['guest_cart'] as $guestItem) {
+        $product_id = intval($guestItem['product_id']);
+        $size_id    = intval($guestItem['size_id']);
+        $quantity   = intval($guestItem['quantity']);
+        $unit_price = floatval($guestItem['unit_price']);
+        $addons     = mysqli_real_escape_string($conn, $guestItem['addons']);
+
+        // Check if same item already exists
+        $item_check = mysqli_query($conn,
+          "SELECT cart_item_id, quantity 
+          FROM cart_items
+          WHERE cart_id = '$cart_id'
+          AND product_id = '$product_id'
+          AND size_id = '$size_id'
+          AND addons = '$addons'"
+        );
+
+        if(mysqli_num_rows($item_check) > 0) {
+          $existing = mysqli_fetch_assoc($item_check);
+          $new_qty = $existing['quantity'] + $quantity;
+
+          mysqli_query($conn,
+            "UPDATE cart_items
+            SET quantity = '$new_qty'
+            WHERE cart_item_id = '{$existing['cart_item_id']}'"
+          );
+        } else {
+          mysqli_query($conn,
+            "INSERT INTO cart_items 
+            (cart_id, product_id, size_id, addons, quantity, unit_price)
+            VALUES
+            ('$cart_id', '$product_id', '$size_id', '$addons', '$quantity', '$unit_price')"
+          );
+        }
+      }
+
+      unset($_SESSION['guest_cart']);
+
+      header("Location: cart.php");
+      exit;
+    }
+
     header("Location: index.php");
     exit;
   } else {
