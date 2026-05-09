@@ -2,11 +2,6 @@
 session_start();
 include "db.php";
 
-// if(isset($_SESSION['user_id'])){
-//   header("Location: index.php");
-//   exit;
-// }
-
 $message = "";
 
 if(isset($_POST['login'])){
@@ -14,24 +9,30 @@ if(isset($_POST['login'])){
   $email = $_POST['email'];
   $password = $_POST['password'];
 
+  // ✅ CHECK ADMIN FIRST
+  if($email === 'admin@bigbrew.com' && $password === 'bigbrew2026') {
+    $_SESSION['staff_logged_in'] = true;
+    $_SESSION['staff_name'] = 'BigBrew Admin';
+    header("Location: staff/dashboard.php");
+    exit;
+  }
+
+  // ✅ CHECK USER SA DATABASE
   $result = mysqli_query($conn,
-  "SELECT * FROM users WHERE email='$email' AND password='$password'");
+    "SELECT * FROM users WHERE email='$email' AND password='$password'"
+  );
 
   if(mysqli_num_rows($result) > 0) {
-
-  $user = mysqli_fetch_assoc($result);
-
-  $_SESSION['user_id'] = $user['user_id'];
-  $_SESSION['name'] = $user['full_name'];
-
-
-  header("Location: index.php");
-  exit;
+    $user = mysqli_fetch_assoc($result);
+    $_SESSION['user_id'] = $user['user_id'];
+    $_SESSION['name'] = $user['full_name'];
+    header("Location: index.php");
+    exit;
   } else {
     $message = "Invalid email or password!";
   }
 }
-?> 
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -101,7 +102,7 @@ if(isset($_POST['login'])){
         <div class="divider"><span>or</span></div>
         <div class="create-acc-btn">
           <button>
-            <a href="signup.html"><h4>Create Account</h4></a>
+            <a href="signup.php"><h4>Create Account</h4></a>
           </button>
         </div>
       </div>
