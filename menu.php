@@ -67,7 +67,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
     <header>
         <nav class="navbar">
             <div class="navlogo">
-                <a href="index.html">
+                <a href="index.php">
                     <img src="assets/logo/bb-maysan-logo-1.png" alt="">
                 </a>
             </div>
@@ -197,12 +197,12 @@ while($row = mysqli_fetch_assoc($addons_result)) {
       <h3>Quick Links</h3>
       <div class="links-grid">
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="menu.html">Menu</a></li>
-          <li><a href="about.html">About</a></li>
+          <li><a href="index.php">Home</a></li>
+          <li><a href="menu.php">Menu</a></li>
+          <li><a href="about.php">About</a></li>
         </ul>
         <ul>
-          <li><a href="reviews.html">Reviews</a></li>
+          <li><a href="reviews.php">Reviews</a></li>
           <li><a href="terms.html">Terms & Conditions</a></li>
           <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>

@@ -159,7 +159,7 @@ else{
         </form>
 
         <div class="hasAccount">
-          Already has account? <a href="login.html">Login here.</a>
+          Already has account? <a href="login.php">Login here.</a>
         </div>
         <hr />
         <p>

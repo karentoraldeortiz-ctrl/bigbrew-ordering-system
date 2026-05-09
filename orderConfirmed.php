@@ -81,7 +81,7 @@ $pickup_display = $pickup_labels[$order['pickup_time']] ?? $order['pickup_time']
             <ul>
                 <li><a href="index.php">Home</a></li>
                 <li><a href="menu.php">Our Menu</a></li>
-                <li><a href="about.html">About Us</a></li>
+                <li><a href="about.php">About Us</a></li>
                 <li><a href="cart.php"><img src="assets/icons/icons8-cart-24.png" alt="" /></a></li>
                 <li><a href="account.php"><img src="assets/icons/icons8-profile-24.png" alt="" /></a></li>
             </ul>

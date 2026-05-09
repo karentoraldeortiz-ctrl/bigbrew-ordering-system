@@ -12,6 +12,14 @@ $order_success = false;
 $order_id      = null;
 $message       = "";
 
+if(isset($_SESSION['order_success'])) {
+    $order_success = true;
+    $order_id = $_SESSION['order_id'];
+
+    unset($_SESSION['order_success']);
+    unset($_SESSION['order_id']);
+}
+
 if(isset($_POST['place_order'])) {
     $pickup_time = $_POST['pickup_time'];
     $notes       = mysqli_real_escape_string($conn, $_POST['notes']);
@@ -61,8 +69,15 @@ if(isset($_POST['place_order'])) {
                 );
             }
 
-            mysqli_query($conn, "DELETE FROM cart_items WHERE cart_id='$cart_id'");
-            $order_success = true;
+          mysqli_query($conn, "DELETE FROM cart_items WHERE cart_id='$cart_id'");
+
+// ✅ SAVE TO SESSION
+$_SESSION['order_success'] = true;
+$_SESSION['order_id'] = $order_id;
+
+// ✅ REDIRECT (VERY IMPORTANT)
+header("Location: cart.php");
+exit();
         }
     }
 }
@@ -307,10 +322,10 @@ if(mysqli_num_rows($cart_q) > 0) {
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="menu.php">Menu</a></li>
-                    <li><a href="about.html">About</a></li>
+                    <li><a href="about.php">About</a></li>
                 </ul>
                 <ul>
-                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="reviews.php">Reviews</a></li>
                     <li><a href="terms.html">Terms & Conditions</a></li>
                     <li><a href="privacy.html">Privacy Policy</a></li>
                 </ul>
