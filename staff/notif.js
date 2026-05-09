@@ -1,30 +1,34 @@
-let lastCheck = localStorage.getItem('lastOrderCheck') || 
-    new Date().toISOString().slice(0, 19).replace('T', ' ');
-
 const currentPage = window.location.pathname.split('/').pop();
 const onOrdersPage = currentPage === 'orders.php' || currentPage === 'order-details.php';
 
-// Kung nasa orders page na, i-clear ang toast at i-update ang lastCheck
+// If on orders page, clear the alert and update lastCheck
 if (onOrdersPage) {
-    localStorage.setItem('lastOrderCheck', new Date().toISOString().slice(0, 19).replace('T', ' '));
     localStorage.removeItem('hasNewOrder');
+    localStorage.setItem('lastOrderCheck', new Date().toISOString().slice(0, 19).replace('T', ' '));
 }
 
-// Kung may nakaimbak na new order alert at hindi pa napupuntahan ang orders
-if (localStorage.getItem('hasNewOrder') && !onOrdersPage) {
+// Show toast if there's a pending alert and we're not on orders page
+if (localStorage.getItem('hasNewOrder') === '1' && !onOrdersPage) {
     document.getElementById('orderToast').classList.add('show');
 }
 
 function checkNewOrders() {
+    const lastCheck = localStorage.getItem('lastOrderCheck') ||
+        new Date().toISOString().slice(0, 19).replace('T', ' ');
+
     fetch('check-new-orders.php?since=' + encodeURIComponent(lastCheck))
         .then(res => res.json())
         .then(data => {
-            if (data.new_orders > 0 && !onOrdersPage) {
-                localStorage.setItem('hasNewOrder', '1');
-                document.getElementById('orderToast').classList.add('show');
+            // Only update lastCheck if no new orders — so we don't miss any
+            if (data.new_orders > 0) {
+                if (!onOrdersPage) {
+                    localStorage.setItem('hasNewOrder', '1');
+                    document.getElementById('orderToast').classList.add('show');
+                }
+            } else {
+                // No new orders, safe to advance the time window
+                localStorage.setItem('lastOrderCheck', new Date().toISOString().slice(0, 19).replace('T', ' '));
             }
-            lastCheck = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            localStorage.setItem('lastOrderCheck', lastCheck);
         })
         .catch(err => console.error('Order check failed:', err));
 }
@@ -34,4 +38,5 @@ function goToOrders() {
     window.location.href = 'orders.php';
 }
 
+// Check every 10 seconds
 setInterval(checkNewOrders, 10000);
