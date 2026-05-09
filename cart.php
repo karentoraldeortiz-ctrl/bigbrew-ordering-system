@@ -2,12 +2,9 @@
 session_start();
 include "db.php";
 
-if(!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
+$isLoggedIn = isset($_SESSION['user_id']);
+$user_id = $isLoggedIn ? $_SESSION['user_id'] : null;
 
-$user_id = $_SESSION['user_id'];
 $order_success = false;
 $order_id      = null;
 $message       = "";
@@ -20,7 +17,7 @@ if(isset($_SESSION['order_success'])) {
     unset($_SESSION['order_id']);
 }
 
-if(isset($_POST['place_order'])) {
+if(isset($_POST['place_order']) && $isLoggedIn) {
     $pickup_time = $_POST['pickup_time'];
     $notes       = mysqli_real_escape_string($conn, $_POST['notes']);
 
@@ -83,30 +80,68 @@ exit();
 }
 
 // LOAD CART ITEMS
-$cart_q     = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id='$user_id'");
 $cart_items = [];
 $subtotal   = 0;
 
-if(mysqli_num_rows($cart_q) > 0) {
-    $cart    = mysqli_fetch_assoc($cart_q);
-    $cart_id = $cart['cart_id'];
+if($isLoggedIn) {
+    // LOGGED IN CART FROM DATABASE
+    $cart_q = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id='$user_id'");
 
-    $items_q = mysqli_query($conn,
-        "SELECT ci.cart_item_id, ci.quantity, ci.addons, ci.unit_price,
-                p.product_name, p.image,
-                ps.size_name
-         FROM cart_items ci
-         JOIN products p       ON ci.product_id = p.product_id
-         JOIN product_sizes ps ON ci.size_id    = ps.size_id
-         WHERE ci.cart_id = '$cart_id'"
-    );
+    if(mysqli_num_rows($cart_q) > 0) {
+        $cart    = mysqli_fetch_assoc($cart_q);
+        $cart_id = $cart['cart_id'];
 
-    while($row = mysqli_fetch_assoc($items_q)) {
-        $cart_items[] = $row;
-        $subtotal += $row['unit_price'] * $row['quantity'];
+        $items_q = mysqli_query($conn,
+            "SELECT ci.cart_item_id, ci.quantity, ci.addons, ci.unit_price,
+                    p.product_name, p.image, p.category,
+                    ps.size_name
+             FROM cart_items ci
+             JOIN products p       ON ci.product_id = p.product_id
+             JOIN product_sizes ps ON ci.size_id    = ps.size_id
+             WHERE ci.cart_id = '$cart_id'"
+        );
+
+        while($row = mysqli_fetch_assoc($items_q)) {
+            $cart_items[] = $row;
+            $subtotal += $row['unit_price'] * $row['quantity'];
+        }
     }
-}
-?>
+} else {
+    // GUEST CART FROM SESSION
+    if(isset($_SESSION['guest_cart']) && !empty($_SESSION['guest_cart'])) {
+        foreach($_SESSION['guest_cart'] as $key => $guestItem) {
+            $product_id = intval($guestItem['product_id']);
+            $size_id    = intval($guestItem['size_id']);
+
+            $item_q = mysqli_query($conn,
+                "SELECT p.product_name, p.image, p.category, ps.size_name
+                 FROM products p
+                 JOIN product_sizes ps ON p.product_id = ps.product_id
+                 WHERE p.product_id = '$product_id'
+                 AND ps.size_id = '$size_id'
+                 LIMIT 1"
+            );
+
+            if(mysqli_num_rows($item_q) > 0) {
+                $info = mysqli_fetch_assoc($item_q);
+
+                $cart_items[] = [
+                    'cart_item_id' => $key,
+                    'quantity'    => $guestItem['quantity'],
+                    'addons'      => $guestItem['addons'],
+                    'unit_price'  => $guestItem['unit_price'],
+                    'product_name'=> $info['product_name'],
+                    'image'       => $info['image'],
+                    'category'    => $info['category'],
+                    'size_name'   => $info['size_name'],
+                    'is_guest'    => true
+                ];
+
+                $subtotal += $guestItem['unit_price'] * $guestItem['quantity'];
+            }
+        }
+    }
+}?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -168,60 +203,85 @@ if(mysqli_num_rows($cart_q) > 0) {
             <p class="error-msg"><?php echo $message; ?></p>
         <?php endif; ?>
 
-        <?php if(!$order_success): ?>
-            <?php if(empty($cart_items)): ?>
-                <!-- EMPTY CART STATE -->
-                <div class="empty-cart">
-                    <h3>Your Cart</h3>
-                    <p>Your cart is empty.</p>
-                    <a href="menu.php">Browse Menu</a>
-                </div>
+<?php if(!$order_success): ?>
+
+    <?php if(empty($cart_items)): ?>
+        <!-- EMPTY CART STATE -->
+        <div class="empty-cart">
+            <h3>Your Cart</h3>
+
+            <?php if(!$isLoggedIn): ?>
+                <p>Your cart is empty. Browse the menu and add your favorite drinks.</p>
             <?php else: ?>
-                <!-- CART ITEMS -->
-                <div id="cart-items-container">
-                    <h3 id="cart-title">Your Cart</h3>
-                    <?php foreach($cart_items as $item): ?>
-                    <div class="cart-item"
-                         id="cart-card-<?php echo $item['cart_item_id']; ?>"
-                         data-cart-item-id="<?php echo $item['cart_item_id']; ?>"
-                         data-unit-price="<?php echo $item['unit_price']; ?>">
+                <p>Your cart is empty.</p>
+            <?php endif; ?>
 
-                        <img src="assets/products/<?php echo htmlspecialchars($item['image']); ?>"
-                             alt="<?php echo htmlspecialchars($item['product_name']); ?>">
+            <a href="menu.php">Browse Menu</a>
+        </div>
 
-                        <div class="cart-item-details">
-                            <h4><?php echo htmlspecialchars($item['product_name']); ?></h4>
-                            <p><?php echo htmlspecialchars($item['size_name']); ?>
-                                <?php if(!empty($item['addons'])): ?>
-                                    · <?php echo htmlspecialchars($item['addons']); ?>
-                                <?php endif; ?>
-                            </p>
-                         <div class="qty-Stepper">
-    <button type="button" onclick="updateQty(<?php echo $item['cart_item_id']; ?>, -1)">-</button>
+    <?php else: ?>
 
-    <span id="qty-<?php echo $item['cart_item_id']; ?>">
-        <?php echo $item['quantity']; ?>
-    </span>
+        <!-- CART ITEMS -->
+        <div id="cart-items-container">
+            <div class="cart-subheader">
+                <h3 id="cart-title">Your Cart</h3>
+                <a href="menu.php#menu-section"><p> + add item </p></a>
+            </div>
 
-    <button type="button" onclick="updateQty(<?php echo $item['cart_item_id']; ?>, 1)">+</button>
-</div>
-                        <div class="cart-item-price">
-                            <p id="item-price-<?php echo $item['cart_item_id']; ?>">
-                                P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?>
-                            </p>
+            <?php foreach($cart_items as $item): ?>
+                <div class="cart-item"
+                     id="cart-card-<?php echo htmlspecialchars($item['cart_item_id']); ?>"
+                    data-cart-item-id="<?php echo htmlspecialchars($item['cart_item_id']); ?>"
+                    data-unit-price="<?php echo $item['unit_price']; ?>"
+                    data-is-guest="<?php echo !$isLoggedIn ? '1' : '0'; ?>">
+
+                    <img src="assets/products/<?php echo htmlspecialchars($item['image']); ?>"
+                         alt="<?php echo htmlspecialchars($item['product_name']); ?>">
+
+                    <div class="cart-item-details">
+                        <h4><?php echo htmlspecialchars($item['product_name']); ?></h4>
+                        <p class="cart-product-category">
+                            <?php echo ucwords(str_replace('-', ' ', htmlspecialchars($item['category']))); ?>
+                        </p>
+
+                        <p>
+                            <?php echo htmlspecialchars($item['size_name']); ?>
+
+                            <?php if(!empty($item['addons'])): ?>
+                                · <?php echo htmlspecialchars($item['addons']); ?>
+                            <?php endif; ?>
+                        </p>
+
+                        <div class="qty-Stepper">
+                                <button type="button" onclick="updateQty('<?php echo $item['cart_item_id']; ?>', -1)">-</button>
+
+                            <span id="qty-<?php echo $item['cart_item_id']; ?>">
+                                <?php echo $item['quantity']; ?>
+                            </span>
+
+                                <button type="button" onclick="updateQty('<?php echo $item['cart_item_id']; ?>', 1)">+</button>
                         </div>
                     </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        <?php endif; ?>
 
+                    <div class="cart-item-price">
+                        <p id="item-price-<?php echo $item['cart_item_id']; ?>">
+                            P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?>
+                        </p>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+    <?php endif; ?>
+
+<?php endif; ?>
     </main>
 
     <!-- ORDER SUMMARY SIDEBAR -->
     <?php if(!$order_success && !empty($cart_items)): ?>
     <aside>
-        <form method="POST" action="">
+        <div class="aside-content">
+                    <form method="POST" action="">
             <div class="order-summary-content">
                 <h4>Order Summary</h4>
                 <div class="display-time">
@@ -256,11 +316,23 @@ if(mysqli_num_rows($cart_q) > 0) {
                     </div>
                 </div>
 
+                <?php if($isLoggedIn): ?>
+
                 <button type="submit" name="place_order" class="checkout-btn">
                     Checkout
                 </button>
+
+                <?php else: ?>
+
+                <button type="button" class="checkout-btn login-required-btn">
+                    Login to Checkout
+                </button>
+
+                <?php endif; ?>
             </div>
         </form>
+
+        </div>
     </aside>
     <?php endif; ?>
 </div>

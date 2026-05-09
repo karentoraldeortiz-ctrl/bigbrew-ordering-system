@@ -196,7 +196,7 @@ body {
   margin-top: 7rem;
   margin-bottom: 7rem;
 }
-.box1, .box2 {
+.box1, .box2, .box3 {
   width: 95%;
   height: 100%;
   border-radius: 20px;
@@ -206,26 +206,26 @@ body {
   padding: 2.5rem;
   transition: all 0.4s ease;
 }
-.box-text1, .box-text2 {
+.box-text1, .box-text2, .box-text3 {
   color: black;
   max-width: 100%;
   padding: 5px;
 }
-.box-text1 h3, .box-text2 h3 {
+.box-text1 h3, .box-text2 h3, .box-text3 h3 {
   font-size: 2rem;
   margin-bottom: 1rem;
 }
-.box-text1 p { text-align: left; }
-.box-text1 p, .box-text2 p { padding: 0; }
-.box-text2 p, .box-text2 h3 { text-align: right; }
-.box-text1 button, .box-text2 button {
+.box-text1 p, .box-text3 p { text-align: left; }
+.box-text1 p, .box-text2 p, .box-text3 p { padding: 0; }
+.box-text2 p, .box-text2 h3, .box-text3 p, .box-text3 h3 { text-align: right; }
+.box-text1 button, .box-text2 button, .box-text3 button {
   padding: 0.5rem;
   width: 120px;
   border: none;
   background-color: var(--pop-color);
   border-radius: 20px;
 }
-.box-text1 div {
+.box-text1 div, .box-text3 div {
   display: flex;
   justify-content: flex-start;
   margin-top: 1rem;
@@ -235,7 +235,7 @@ body {
   justify-content: flex-end;
   margin-top: 1rem;
 }
-.box-text1 a, .box-text2 a {
+.box-text1 a, .box-text2 a, .box-text3 a {
   text-decoration: none;
   color: white;
 }
@@ -249,6 +249,7 @@ body {
 .box1:hover { background-color: #7A7D24; }
 .box2:hover { background-color: #F7BFBF; }
 .box2:hover .box-text2 { color: white; }
+.box3:hover { background-color: #F3C69A; }
 
 /* How to Order */
 .how-to-order {
@@ -1248,6 +1249,112 @@ textarea {
   margin-top: 2rem;
   margin-bottom: 60px;
 }
+.order-history-items {
+  color: #5b4033;
+  font-size: 14px;
+  line-height: 1.5;
+}
+/* ======= not logged in */
+
+.guest-account-state {
+  min-height: 55vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.guest-account-card {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  padding: 45px 35px;
+  border-radius: 22px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.guest-account-card i {
+  font-size: 52px;
+  color: #5b2e1f;
+  margin-bottom: 18px;
+}
+
+.guest-account-card h2 {
+  font-size: 28px;
+  color: #2b1a13;
+  margin-bottom: 12px;
+}
+
+.guest-account-card p {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.guest-account-buttons {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.guest-login-btn,
+.guest-signup-btn {
+  padding: 12px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.guest-login-btn {
+  background: #5b2e1f;
+  color: #fff;
+}
+
+.guest-login-btn:hover {
+  background: #3d1e14;
+  transform: translateY(-2px);
+}
+
+.guest-signup-btn {
+  background: #f3e7da;
+  color: #5b2e1f;
+  border: 1px solid #5b2e1f;
+}
+
+.guest-signup-btn:hover {
+  background: #5b2e1f;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .guest-account-card {
+    padding: 35px 24px;
+  }
+
+  .guest-account-card h2 {
+    font-size: 23px;
+  }
+
+  .guest-account-card p {
+    font-size: 14px;
+  }
+
+  .guest-account-buttons {
+    flex-direction: column;
+  }
+
+  .guest-login-btn,
+  .guest-signup-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 
 /* ===== RESPONSIVE ===== */
 
@@ -1273,9 +1380,11 @@ textarea {
   .hero1-text h1 { font-size: 2.2rem; }
 
   /* Best Seller */
+  .best-seller { padding: 1rem 0;}
   .best-seller h2 { font-size: 1.6rem; }
   .best-seller p { padding: 0 5%; font-size: 0.8rem; }
-  .products { padding: 20px 10px; gap: 15px; }
+  .products { padding: 20px 5px; gap: 15px; }
+  
 
   /* Carousel — 2 cards on mobile */
   .carousel-wrapper { max-width: 100%; }
@@ -1306,7 +1415,7 @@ textarea {
   position: relative;
 }
 
-.box1, .box2 {
+.box1, .box2, .box3 {
   flex-direction: row;
   text-align: center;
   padding: 1.5rem;
@@ -1315,7 +1424,7 @@ textarea {
 }
 
 /* Image bleeds to top edge, no side margins */
-.box1 img, .box2 img {           
+.box1 img, .box2 img, .box3 img {           
   max-width: 100%;
   margin: 0;
   border-radius: 0;        /* card clips it instead */
@@ -1337,22 +1446,27 @@ textarea {
     right: -52px;
     width: 135px;
 }
+.box3 img {
+    width: 130px;  
+  top: -20px; 
+  left: 60px;
+}
 /* Hide the paragraph on mobile like the reference */
 .box-text1 p,
-.box-text2 p { display: none; }
+.box-text2 p, .box-text3 p { display: none; }
 
 /* Keep heading and button visible with breathing room */
 .box-text1 h3,
-.box-text2 h3 {
+.box-text2 h3, .box-text3 h3 {
   font-size: 1rem;
   margin-top: 1rem;
   margin-bottom: 0.75rem;
 }
-.box-text1 h3 { text-align: left; margin-left: 60px;}
+.box-text1 h3, .box-text3 h3 { text-align: left; margin-left: 60px;}
 .box-text2 h3 { text-align: right; margin-right: 130px;}
 .box-text2 div { justify-content: center; }
 
-.box-text1 button {
+.box-text1 button, .box-text3 button {
     margin-left: 80px;
 }
 

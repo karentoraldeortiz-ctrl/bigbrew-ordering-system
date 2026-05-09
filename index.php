@@ -1,9 +1,5 @@
 <?php
 session_start();
- if(!isset($_SESSION['user_id']) ){
- header("Location: login.php");
- exit;
-}
 ?>
 
 
@@ -47,7 +43,7 @@ session_start();
     <header>
       <nav class="navbar">
         <div class="navlogo">
-          <a href="index.php">
+          <a href="index.html">
             <img src="assets/logo/bb-maysan-logo-1.png" alt="" />
           </a>
         </div>
@@ -57,24 +53,22 @@ session_start();
             <li><a href="menu.php">Our Menu</a></li>
             <li><a href="about.php">About Us</a></li>
             <li>
-              <a href="cart.php">
-                <img src="assets/icons/icons8-cart-24.png" alt=""
-              /></a>
-            </li>
-            <li>
-              <a href="account.php">
-                <img src="assets/icons/icons8-profile-24.png" alt=""
-              /></a>
-            </li>
-          </ul>
-        </div>
+                  <a href="cart.php" class="cart-link">
+                    <img src="assets/icons/icons8-cart-24.png" alt="">
+                    <span id="cartBadge" class="cart-badge">0</span>
+                  </a>
+                </li>
+                <li><a href="account.php"> <img src="assets/icons/icons8-profile-24.png" alt=""></a></li>
+                </ul>
+            </div>
 
-        <div class="hamburger" id="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </nav>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <span id="cartBadgeMobile" class="cart-badge-mobile"></span>
+        </nav>
     </header>
 
     <div class="hero1" class="hero">
@@ -84,97 +78,116 @@ session_start();
           Discover your favorite BigBrew drinks and order online for quick and
           easy pickup.
         </p>
-        <button><a href="menu.php">Order Now</a></button>
+        <button><a href="menu.html">Order Now</a></button>
       </div>
       <div class="hero1-img">
         <img src="assets/pictures/index-hero.png" alt="BigBrew Hero Image" />
       </div>
     </div>
 
-    <section class="best-seller">
-      <h2>Famous Five</h2>
-      <p>
-        Discover our most popular drinks, made with high-quality tea leaves,
-        vibrant fruit flavors, rich creamy textures, and delightful toppings in
-        every sip.
-      </p>
-      <div class="products">
-        <div class="arrow">
-          <img src="assets/icons/icons8-arrow-24-left.png" alt="" />
-        </div>
 
-        <div class="card">
-          <div class="card-inner">
-            <!-- FRONT -->
-            <div class="card-front">
-              <button class="flip-btn">↻</button>
-              <img src="assets/products/dark-choco.jpg" />
-              <h3>Dark Choco</h3>
-            </div>
+      <section class="best-seller">
+        <h2>Famous Five</h2>
+        <p>
+          Discover our most popular drinks, made with high-quality tea leaves,
+          vibrant fruit flavors, rich creamy textures, and delightful toppings in
+          every sip.
+        </p>
+        <div class="products">
+          <div class="arrow arrow-left" onclick="moveCarousel(-1)">
+            <img src="assets/icons/icons8-arrow-24-left.png" alt="Previous" />
+          </div>
 
-            <!-- BACK -->
-            <div class="card-back">
-              <button class="flip-btn">↻</button>
-              <h4>Dark Choco</h4>
-              <p>
-                Bold and indulgent, this rich dark chocolate blend meets smooth
-                milk tea for a decadent sip in every cup.
-              </p>
-            </div>
+          <div class="carousel-wrapper">
+            <div class="carousel-track" id="carouselTrack">
+
+              <div class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <button class="flip-btn">↻</button>
+                    <img src="assets/products/okinawa.jpg" />
+                    <h3>Okinawa</h3>
+                  </div>
+                  <div class="card-back">
+                    <button class="flip-btn">↻</button>
+                    <h4>Okinawa</h4>
+                    <p>Buttery caramel notes infused in classic milk tea.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <button class="flip-btn">↻</button>
+                    <img src="assets/products/wintermelon.jpg" />
+                    <h3>Wintermelon</h3>
+                  </div>
+                  <div class="card-back">
+                    <button class="flip-btn">↻</button>
+                    <h4>Wintermelon</h4>
+                    <p>Light, sweet, and refreshing wintermelon flavor.</p>
+                  </div>  
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <button class="flip-btn">↻</button>
+                    <img src="assets/products/no-img-product.png" />
+                    <h3>Kiwi</h3>
+                  </div>
+                  <div class="card-back">
+                    <button class="flip-btn">↻</button>
+                    <h4>Kiwi</h4>
+                    <p>no description available</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <button class="flip-btn">↻</button>
+                    <img src="assets/products/no-img-product.png" />
+                    <h3>Kape Brusko</h3>
+                  </div>
+                  <div class="card-back">
+                    <button class="flip-btn">↻</button>
+                    <h4>Kape Brusko</h4>
+                    <p>no description available</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-inner">
+                  <div class="card-front">
+                    <button class="flip-btn">↻</button>
+                    <img src="assets/products/dark-choco.jpg" />
+                    <h3>Dark Choco</h3>
+                  </div>
+                  <div class="card-back">
+                    <button class="flip-btn">↻</button>
+                    <h4>Dark Choco</h4>
+                    <p>Bold and indulgent, this rich dark chocolate blend meets smooth milk tea.</p>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- end carousel-track -->
+          </div><!-- end carousel-wrapper -->
+
+          <div class="arrow arrow-right" onclick="moveCarousel(1)">
+            <img src="assets/icons/icons8-arrow-24.png" alt="Next" />
           </div>
         </div>
-        <div class="card">
-          <div class="card-inner">
-            <!-- FRONT -->
-            <div class="card-front">
-              <button class="flip-btn">↻</button>
-              <img src="assets/products/dark-choco.jpg" />
-              <h3>Dark Choco</h3>
-            </div>
 
-            <!-- BACK -->
-            <div class="card-back">
-              <button class="flip-btn">↻</button>
-              <h4>Dark Choco</h4>
-              <p>
-                Bold and indulgent, this rich dark chocolate blend meets smooth
-                milk tea for a decadent sip in every cup.
-              </p>
-            </div>
-          </div>
+        <div class="explore-btn">
+          <button><a href="menu.html">Explore the Menu</a></button>
         </div>
-        <div class="card">
-          <div class="card-inner">
-            <!-- FRONT -->
-            <div class="card-front">
-              <button class="flip-btn">↻</button>
-              <img src="assets/products/dark-choco.jpg" />
-              <h3>Dark Choco</h3>
-            </div>
-
-            <!-- BACK -->
-            <div class="card-back">
-              <button class="flip-btn">↻</button>
-              <h4>Dark Choco</h4>
-              <p>
-                Bold and indulgent, this rich dark chocolate blend meets smooth
-                milk tea for a decadent sip in every cup.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="arrow">
-          <img src="assets/icons/icons8-arrow-24.png" alt="" />
-        </div>
-      </div>
-      <div class="explore-btn">
-        <button>
-          <a href="menu.php">Explore the Menu</a>
-        </button>
-      </div>
-    </section>
-
+      </section>
     <section class="specials">
       <h2>What's New</h2>
       <p>
@@ -186,25 +199,40 @@ session_start();
           <div class="box1">
             <img src="assets/pictures/pistachio.png" alt="a new milktea product" />
             <div class="box-text1">
-              <h3>Dubai Pistachio Praf</h3>
-              <p>
-                Indulge in the rich, nutty flavor of pistachios blended with our
-                signature milk tea. Layers of creamy milk tea, crunchy pistachio bits, and a hint of sweetness create a delightful symphony of textures and flavors in every sip.
-              </p>
-              <div><button><a href="menu.php">Explore</a></button></div>
+                <h3>Dubai Pistachio Praf</h3>
+                <p>
+                  Indulge in the rich, nutty flavor of pistachios blended with our
+                  signature milk tea. Layers of creamy milk tea, crunchy pistachio bits, and a hint of sweetness create a delightful symphony of textures and flavors in every sip.
+                </p>
+                <div><button><a href="menu.html">Explore</a></button></div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="special-card">
-          <div class="box2">
-            <div class="box-text2">
-              <h3>Overload Strawberry Praf</h3>
-              <p>
-                Experience a burst of fruity sweetness with our Overload Strawberry Praf. This refreshing blend combines the natural sweetness of ripe strawberries with our signature milk tea, creating a delightful balance of flavors. Topped with fresh strawberry pieces and a drizzle of strawberry syrup, it's a perfect treat for strawberry lovers. 
-              </p>
-              <div><button><a href="menu.html">Explore</a></button></div>
-          </div>
-            <img src="assets/pictures/strawberry.png " alt="a new milktea product" />
+        <div class="special-card">
+            <div class="box2">
+              <div class="box-text2">
+                <h3>Overload Strawberry Praf</h3>
+                <p>
+                  Experience a burst of fruity sweetness with our Overload Strawberry Praf. This refreshing blend combines the natural sweetness of ripe strawberries with our signature milk tea, creating a delightful balance of flavors. Topped with fresh strawberry pieces and a drizzle of strawberry syrup, it's a perfect treat for strawberry lovers. 
+                </p>
+                <div><button><a href="menu.html">Explore</a></button></div>
+            </div>
+              <img src="assets/pictures/strawberry.png " alt="a new milktea product" />
+        </div>
+        </div>
+        <div class="special-card">
+            <div class="box3">
+              <img src="assets/pictures/kape-karavan.png" alt="a new milktea product" />
+              <div class="box-text3">
+                <h3>Kape Karavan</h3>
+                <p>
+                  A decadent journey in a cup: layers of bold iced coffee infused with salted caramel and vanilla, crowned with airy 
+                  cream puff and velvety cheesecake. Finished with coffee jelly, crushed Oreo, 
+                  and an optional extra shot for those who crave a stronger kick. Image has been food-styled for visual display only.
+                </p>
+                <div><button><a href="menu.html">Explore</a></button></div>
+            </div>
+          
       </div>
     </section>
 
@@ -332,7 +360,7 @@ session_start();
             <li><a href="terms.html">Terms & Conditions</a></li>
             <li><a href="privacy.html">Privacy Policy</a></li>
           </ul>
-        </div>
+        </div> 
       </div>
 
       <div class="footer-column">

@@ -3,10 +3,7 @@
 session_start();
 include "db.php";
 
-if(!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
+$isLoggedIn = isset($_SESSION['user_id']);
 
 $products_result = mysqli_query($conn,
     "SELECT p.product_id, p.product_name, p.description, p.category, p.image,
@@ -115,7 +112,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
      <div class="scallop"></div>
 
     <!-- Menu Section -->
-    <section class="menu-section">
+    <section class="menu-section" id="menu-section">
       <h1>MENU</h1>
 
       <div class="tabs">

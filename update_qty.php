@@ -11,11 +11,59 @@ include "db.php";
 
 header('Content-Type: application/json');
 
-// Guard: kailangan naka-login
-if(!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'message' => 'Not logged in']);
+$cart_item_id = $_POST['cart_item_id'] ?? '';
+$action       = $_POST['action'] ?? '';
+$change       = intval($_POST['change'] ?? 0);
+
+$isLoggedIn = isset($_SESSION['user_id']);
+
+/* GUEST CART UPDATE */
+if(!$isLoggedIn) {
+    if(!isset($_SESSION['guest_cart'][$cart_item_id])) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Guest cart item not found'
+        ]);
+        exit;
+    }
+
+    if($action === 'remove') {
+        unset($_SESSION['guest_cart'][$cart_item_id]);
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Item removed from guest cart'
+        ]);
+        exit;
+    }
+
+    if($action === 'update') {
+        $_SESSION['guest_cart'][$cart_item_id]['quantity'] += $change;
+
+        if($_SESSION['guest_cart'][$cart_item_id]['quantity'] <= 0) {
+            unset($_SESSION['guest_cart'][$cart_item_id]);
+
+            echo json_encode([
+                'success' => true,
+                'removed' => true
+            ]);
+            exit;
+        }
+
+        echo json_encode([
+            'success' => true,
+            'new_qty' => $_SESSION['guest_cart'][$cart_item_id]['quantity']
+        ]);
+        exit;
+    }
+
+    echo json_encode([
+        'success' => false,
+        'message' => 'Invalid guest cart action'
+    ]);
     exit;
 }
+
 
 $user_id      = $_SESSION['user_id'];
 $cart_item_id = intval($_POST['cart_item_id']);

@@ -101,8 +101,13 @@ accountSection.appendChild(reviewCard);
         const total = parseFloat(order.total_amount).toFixed(2);
         let itemSummary = 'No items';
         if (order.items && order.items.length > 0) {
-          const shown = order.items.slice(0, 2).map(i => `${i.product_name} (${i.size_name})`);
-          itemSummary = shown.join(', ');
+        const shown = order.items.slice(0, 2).map(i => {
+          const category = i.category 
+            ? i.category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+            : 'No Category';
+
+          return `${i.product_name} - ${category} (${i.size_name})`;
+        });          itemSummary = shown.join(', ');
           if (order.items.length > 2) itemSummary += ` & ${order.items.length - 2} more`;
         }
 
