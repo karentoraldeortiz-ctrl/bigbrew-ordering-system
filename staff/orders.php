@@ -202,7 +202,7 @@ $pickup_labels = [
     <div class="new-order-toast" id="orderToast" onclick="goToOrders()">
     🛎️ New Order Alert!
 </div>
-<script src="toast.js"></script>
+
     <script>
         function toggleItems(orderId) {
             const dropdown = document.getElementById('items-' + orderId);
@@ -218,5 +218,6 @@ $pickup_labels = [
             });
         });
     </script>
+    <script src="notif.js"></script>
 </body>
 </html>
