@@ -191,12 +191,12 @@ if($isLoggedIn) {
 <div class="cart-container">
     <main>
         <div class="cart-header">
-            <div>
+            <div class="store-info">
                 <h1>Bigbrew Maysan</h1>
                 <div class="store-status"><span>open</span></div>
                 <p>094 Maysan Rd, Valenzuela, 1442 Metro Manila</p>
             </div>
-            <div><img src="assets/pictures/store-pic.jpg" alt="" /></div>
+            <div class="store-image"><img src="assets/pictures/store-pic.jpg" alt="" /></div>
         </div>
 
         <?php if($message != ""): ?>
