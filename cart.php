@@ -1,6 +1,15 @@
 <?php
 session_start();
 include "db.php";
+date_default_timezone_set('Asia/Manila');
+
+$currentTime = date('H:i');
+$openingTime = '11:00';
+$closingTime = '21:00';
+
+$isStoreOpen = ($currentTime >= $openingTime && $currentTime < $closingTime);
+$storeStatusText = $isStoreOpen ? 'Open' : 'Closed';
+$storeStatusClass = $isStoreOpen ? 'open' : 'closed';
 
 $isLoggedIn = isset($_SESSION['user_id']);
 $user_id = $isLoggedIn ? $_SESSION['user_id'] : null;
@@ -193,8 +202,11 @@ if($isLoggedIn) {
         <div class="cart-header">
             <div class="store-info">
                 <h1>Bigbrew Maysan</h1>
-                <div class="store-status"><span>open</span></div>
+                <div class="store-status <?php echo $storeStatusClass; ?>">
+                    <span><?php echo $storeStatusText; ?></span>
+                </div>
                 <p>094 Maysan Rd, Valenzuela, 1442 Metro Manila</p>
+                <p class="store-hours">Business Hours: 8:00 AM - 5:00 PM</p>
             </div>
             <div class="store-image"><img src="assets/pictures/store-pic.jpg" alt="" /></div>
         </div>

@@ -113,9 +113,10 @@ while($row = mysqli_fetch_assoc($addons_result)) {
 
     <!-- Menu Section -->
     <section class="menu-section" id="menu-section">
-      <h1>MENU</h1>
+      
 
       <div class="tabs">
+        <h1>MENU</h1>
     <button class="tab" data-category="all"><span>all</span></button>
     <button class="tab" data-category="milk-tea"><span>milk tea</span></button>
     <button class="tab" data-category="coffee"><span>coffee</span></button>
@@ -185,7 +186,6 @@ while($row = mysqli_fetch_assoc($addons_result)) {
       <h3>Contact</h3>
       <ul>
         <li>0929 563 4350</li>
-        <li>info@bigbrew.com</li>
         <li>094 Maysan Rd, Valenzuela, 1442 Metro Manila</li>
       </ul>
     </div>
@@ -200,8 +200,8 @@ while($row = mysqli_fetch_assoc($addons_result)) {
         </ul>
         <ul>
           <li><a href="reviews.php">Reviews</a></li>
-          <li><a href="terms.html">Terms & Conditions</a></li>
-          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.php">Terms & Conditions</a></li>
+          <li><a href="privacy.php">Privacy Policy</a></li>
         </ul>
       </div>
     </div>

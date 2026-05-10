@@ -105,15 +105,16 @@ body {
 }
 
 .tabs {
-    /* margin: 20px 0; */
     padding: 20px 0;
     position: sticky;
-    top: 76px;
+    top: 65px;
     align-self: flex-start;
     z-index: 10;
     background-color: var(--light-color);
 }
-
+.tabs h1 {
+    margin-bottom: 10px;
+}
 .tab {
     border: none;
     padding: 9px 20px;
@@ -396,18 +397,32 @@ body {
     color: #b36b21;
     margin-left: auto;
 }
-
-.store-status {
-    background-color: #BAFA9B;
-    width: 80px;
-    border-radius: 20px;
-    align-items: center;
-    text-align: center;
-    color: black;
-    margin: 5px 0;
-    font-size: 0.7rem;
+.store-status {    
+  margin: 10px 0;
+}
+.store-status span {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
 }
 
+.store-status.open span {
+  background: #d7f7df;
+  color: #207a38;
+}
+
+.store-status.closed span {
+  background: #ffe0dc;
+  color: #b3261e;
+}
+
+.store-hours {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+/* === */
 .empty-cart {
     text-align: center;
     padding: 50px;
@@ -594,8 +609,8 @@ a
         flex-direction: column;
         gap: 5px;
     }
-    .store-status {
-        font-size: 0.5rem;
+    .store-status span{
+        font-size: 10px;
         width: 50px;
         padding: 3px 7px;
     }
@@ -1403,7 +1418,7 @@ a
 
     /* TABS */
     .tabs {
-        top: 72px;
+        top: 65px;
     }
     .tab {
         padding: 6px 11px;
