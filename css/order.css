@@ -633,7 +633,6 @@ a
     font-size: 0.95rem;
     padding: 0.9rem;
   }
-  .total-bold { font-size: 1.2rem; }
 }
 /* ======== REMOVE ITEM MODAL ========= */
 .modal-overlay-remove {
@@ -1542,19 +1541,19 @@ a
         font-size: 1.2rem;
     }
 
-    .summary-label {
-        font-size: 0.85rem;
+    .summary-label, .display-time, .subtotal-row {
+        font-size: 0.8rem;
     }
 
     .summary-input,
     #pick-up-time,
     .note-barista {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         padding: 10px;
     }
 
     .total-bold {
-        font-size: 1.6rem;
+        font-size: 1.3rem;
         text-align: center;
     }
 
@@ -1562,9 +1561,9 @@ a
         gap: 8px;
     }
 
-    .subtotal-row {
-        font-size: 0.9rem;
-    }
+    /* .subtotal-row {
+        font-size: 1rem;
+    } */
 
     .checkout-btn {
         font-size: 0.95rem;
