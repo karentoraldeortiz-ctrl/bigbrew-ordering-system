@@ -129,11 +129,8 @@ $pickup_labels = [
                             <span class="pickup-badge">⏱ <?php echo htmlspecialchars($pickup_display); ?></span>
                         </div>
 
-                        <!-- RIGHT: Chevron toggle + Status dropdown -->
+                        <!-- RIGHT: Status dropdown -->
                         <div class="card-right">
-                            <!-- <button class="toggle-btn" onclick="event.stopPropagation(); toggleItems(<?php echo $oid; ?>)" id="btn-<?php echo $oid; ?>">
-                                <i class="fa fa-chevron-down"></i>
-                            </button> -->
                             <div class="card-status">
                                 <form method="POST" onclick="event.stopPropagation()">
                                     <input type="hidden" name="order_id" value="<?php echo $oid; ?>">
@@ -150,7 +147,7 @@ $pickup_labels = [
 
                     </div>
 
-                    <!-- ITEMS DROPDOWN (toggled by chevron) -->
+                    <!-- ITEMS DROPDOWN -->
                     <div class="order-items-dropdown" id="items-<?php echo $oid; ?>">
                         <?php if (empty($items)): ?>
                             <p style="font-size:13px;color:#aaa;">No items found.</p>
@@ -181,43 +178,39 @@ $pickup_labels = [
             <?php endif; ?>
         </section>
     </main>
+
     <nav class="bottom-nav">
-    <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : ''; ?>">
-        <i class="fa fa-dashboard"></i>
-        <span>Dashboard</span>
-    </a>
-    <a href="orders.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'orders.php' || basename($_SERVER['PHP_SELF']) === 'order-details.php' ? 'active' : ''; ?>">
-        <i class="fa fa-shopping-cart"></i>
-        <span>Orders</span>
-    </a>
-    <a href="menu.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'menu.php' ? 'active' : ''; ?>">
-        <i class="fa fa-bars"></i>
-        <span>Menu</span>
-    </a>
-    <a href="logout.php">
-        <i class="fa fa-sign-out"></i>
-        <span>Logout</span>
-    </a>
-</nav>
+        <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : ''; ?>">
+            <i class="fa fa-dashboard"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="orders.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'orders.php' || basename($_SERVER['PHP_SELF']) === 'order-details.php' ? 'active' : ''; ?>">
+            <i class="fa fa-shopping-cart"></i>
+            <span>Orders</span>
+        </a>
+        <a href="menu.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'menu.php' ? 'active' : ''; ?>">
+            <i class="fa fa-bars"></i>
+            <span>Menu</span>
+        </a>
+        <a href="logout.php">
+            <i class="fa fa-sign-out"></i>
+            <span>Logout</span>
+        </a>
+    </nav>
+
     <div class="new-order-toast" id="orderToast" onclick="goToOrders()">
-    🛎️ New Order Alert!
-</div>
+        🛎️ New Order Alert!
+    </div>
 
+    <script src="notif.js"></script>
     <script>
-        function toggleItems(orderId) {
-            const dropdown = document.getElementById('items-' + orderId);
-            const btn = document.getElementById('btn-' + orderId);
-            dropdown.classList.toggle('open');
-            btn.classList.toggle('open');
-        }
-
-        // Click card → go to order details
+        // Click card → dismiss toast + go to order details
         document.querySelectorAll('.order-card').forEach(card => {
             card.addEventListener('click', function () {
+                dismissToast();
                 window.location.href = 'order-details.php?order_id=' + this.dataset.orderId;
             });
         });
     </script>
-    <script src="notif.js"></script>
 </body>
 </html>

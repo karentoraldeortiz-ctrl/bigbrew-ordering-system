@@ -1,39 +1,58 @@
 const currentPage = window.location.pathname.split('/').pop();
-const onOrdersPage = currentPage === 'orders.php' || currentPage === 'order-details.php';
 
-// If on orders page, clear the alert
-if (onOrdersPage) {
-    localStorage.removeItem('hasNewOrder');
+function showToast() {
+    const toast = document.getElementById('orderToast');
+    if (toast) toast.classList.add('show');
 }
 
-// Show toast immediately if there's a stored alert
-if (localStorage.getItem('hasNewOrder') === '1' && !onOrdersPage) {
-    document.getElementById('orderToast').classList.add('show');
+function hideToast() {
+    const toast = document.getElementById('orderToast');
+    if (toast) toast.classList.remove('show');
+}
+
+// Initialize lastSeenOrderId on first load
+if (!localStorage.getItem('lastSeenOrderId')) {
+    localStorage.setItem('lastSeenOrderId', '0');
+}
+
+// Show toast on load if not dismissed
+if (localStorage.getItem('toastDismissed') !== '1' && localStorage.getItem('hasNewOrder') === '1') {
+    showToast();
 }
 
 function checkNewOrders() {
-    fetch('check-new-orders.php')
+    const lastSeenId = localStorage.getItem('lastSeenOrderId') || '0';
+
+    fetch('check-new-orders.php?last_id=' + lastSeenId)
         .then(res => res.json())
         .then(data => {
-            if (data.new_orders > 0 && !onOrdersPage) {
+            if (data.new_order_id && data.new_order_id > parseInt(lastSeenId)) {
+                // Brand new order came in
+                localStorage.setItem('lastSeenOrderId', data.new_order_id);
                 localStorage.setItem('hasNewOrder', '1');
-                document.getElementById('orderToast').classList.add('show');
-            } else if (onOrdersPage) {
-                localStorage.removeItem('hasNewOrder');
-                document.getElementById('orderToast').classList.remove('show');
+                localStorage.removeItem('toastDismissed');
+                showToast();
+            } else if (localStorage.getItem('toastDismissed') !== '1' && localStorage.getItem('hasNewOrder') === '1') {
+                showToast();
             }
         })
         .catch(err => console.error('Order check failed:', err));
 }
 
 function goToOrders() {
-    localStorage.removeItem('hasNewOrder');
+    localStorage.setItem('toastDismissed', '1');
+    hideToast();
     window.location.href = 'orders.php';
 }
 
-// Check immediately on page load, then every 5 seconds
+function dismissToast() {
+    localStorage.setItem('toastDismissed', '1');
+    hideToast();
+}
+
 checkNewOrders();
 setInterval(checkNewOrders, 5000);
+
 
 // order details
 
