@@ -43,7 +43,9 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
     <link rel="shortcut icon" href="../assets/logo/logo-black.png" type="image/png" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <link rel="stylesheet" href="staff.css" />
+  <link rel="stylesheet" href="staff.css">
+
+
 </head>
 <body>
     <aside class="sidebar">
@@ -79,11 +81,14 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
         </header>
 
         <div class="menu-filter">
-            <form method="GET" style="display:flex;gap:16px;align-items:center;width:100%;">
+            <form method="GET" class="mobile-filter-form">
                 <div class="menu-search">
                     <div>
                         <span><i class="fa fa-search"></i></span>
-                        <input type="text" name="search" id="searchInput" value="<?php echo htmlspecialchars($search); ?>" placeholder="Search product..." oninput="liveSearch()" />
+                        <input type="text" name="search" id="searchInput"
+                               value="<?php echo htmlspecialchars($search); ?>"
+                               placeholder="Search product..."
+                               oninput="liveSearch()" />
                     </div>
                 </div>
                 <input type="hidden" name="category" value="<?php echo htmlspecialchars($category); ?>">
@@ -95,14 +100,16 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
                         <option value="not-available" <?php echo $sort === 'not-available' ? 'selected' : ''; ?>>Not Available</option>
                     </select>
                 </div>
-                <button type="submit" style="padding:6px 14px;border-radius:8px;border:none;background:var(--pop-color);color:white;cursor:pointer;font-family:inherit;">Search</button>
+                <button type="submit"  class="search-btn">Search</button>
             </form>
         </div>
 
         <div class="menu-content">
             <div class="menu-category">
                 <?php foreach ($categories as $cat): ?>
-                <div style="<?php echo $category === $cat ? 'border-bottom:2px solid var(--pop-color);font-weight:600;' : ''; ?>cursor:pointer;"
+                <div style="<?php echo $category === $cat
+                        ? 'border-bottom:2px solid var(--pop-color);font-weight:600;'
+                        : ''; ?>cursor:pointer;"
                     onclick="window.location.href='menu.php?category=<?php echo urlencode($cat); ?>&sort=<?php echo $sort; ?>&search=<?php echo urlencode($search); ?>'">
                     <?php echo htmlspecialchars($cat); ?>
                 </div>
@@ -121,22 +128,41 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
                     </thead>
                     <tbody>
                         <?php if (mysqli_num_rows($products_q) === 0): ?>
-                            <tr><td colspan="4" style="text-align:center;color:#aaa;padding:20px;">No products found.</td></tr>
+                            <tr>
+                                <td colspan="4" style="text-align:center;color:#aaa;padding:20px;">
+                                    No products found.
+                                </td>
+                            </tr>
                         <?php else: ?>
                             <?php while ($product = mysqli_fetch_assoc($products_q)): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($product['product_name']); ?></td>
                                 <td><?php echo htmlspecialchars($product['category'] ?? '—'); ?></td>
                                 <td>
-                                    <span style="padding:3px 12px;border-radius:50px;font-size:12px;font-weight:600;background:<?php echo $product['is_available'] ? '#DCFCE7' : '#FEE2E2'; ?>;color:<?php echo $product['is_available'] ? '#166534' : '#991B1B'; ?>;">
+                                    <span style="
+                                        padding:3px 12px;
+                                        border-radius:50px;
+                                        font-size:12px;
+                                        font-weight:600;
+                                        background:<?php echo $product['is_available'] ? '#DCFCE7' : '#FEE2E2'; ?>;
+                                        color:<?php echo $product['is_available'] ? '#166534' : '#991B1B'; ?>;">
                                         <?php echo $product['is_available'] ? 'Available' : 'Not Available'; ?>
                                     </span>
                                 </td>
                                 <td>
                                     <form method="POST">
                                         <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
-                                        <input type="hidden" name="current" value="<?php echo $product['is_available']; ?>">
-                                        <button type="submit" name="toggle" style="padding:5px 14px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;background:<?php echo $product['is_available'] ? '#FEE2E2' : '#DCFCE7'; ?>;color:<?php echo $product['is_available'] ? '#991B1B' : '#166534'; ?>;">
+                                        <input type="hidden" name="current"    value="<?php echo $product['is_available']; ?>">
+                                        <button type="submit" name="toggle" style="
+                                            padding:5px 14px;
+                                            border-radius:8px;
+                                            border:none;
+                                            cursor:pointer;
+                                            font-family:inherit;
+                                            font-size:12px;
+                                            font-weight:600;
+                                            background:<?php echo $product['is_available'] ? '#FEE2E2' : '#DCFCE7'; ?>;
+                                            color:<?php echo $product['is_available'] ? '#991B1B' : '#166534'; ?>;">
                                             <?php echo $product['is_available'] ? 'Mark Unavailable' : 'Mark Available'; ?>
                                         </button>
                                     </form>
