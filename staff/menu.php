@@ -6,7 +6,6 @@ if (!isset($_SESSION['staff_logged_in'])) {
 }
 include "../db.php";
 
-// TOGGLE AVAILABILITY
 if (isset($_POST['toggle'])) {
     $product_id = (int) $_POST['product_id'];
     $current    = (int) $_POST['current'];
@@ -16,7 +15,6 @@ if (isset($_POST['toggle'])) {
     exit;
 }
 
-// FETCH PRODUCTS
 $search   = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
 $sort     = isset($_GET['sort']) ? $_GET['sort'] : 'all';
 $category = isset($_GET['category']) ? mysqli_real_escape_string($conn, $_GET['category']) : 'All';
@@ -28,10 +26,8 @@ if ($sort === 'not-available') $where[] = "is_available = 0";
 if ($category !== 'All') $where[] = "category = '$category'";
 
 $where_sql = count($where) ? "WHERE " . implode(" AND ", $where) : "";
-
 $products_q = mysqli_query($conn, "SELECT * FROM products $where_sql ORDER BY product_name ASC");
 
-// FETCH CATEGORIES
 $cat_q = mysqli_query($conn, "SELECT DISTINCT category FROM products ORDER BY category ASC");
 $categories = ['All'];
 while ($row = mysqli_fetch_assoc($cat_q)) {
@@ -51,21 +47,13 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
 </head>
 <body>
     <aside class="sidebar">
-        <div class="logo">
-            <img src="../assets/logo/bbmaysan.png" alt="" />
-        </div>
+        <div class="logo"><img src="../assets/logo/bbmaysan.png" alt="" /></div>
         <hr />
         <div class="main-menu">
             <h6>MAIN MENU</h6>
-            <div class="dash-tab">
-                <a href="dashboard.php"><h3><i class="fa fa-dashboard"></i> Dashboard</h3></a>
-            </div>
-            <div class="orders-tab">
-                <a href="orders.php"><h3><i class="fa fa-shopping-cart"></i> Orders</h3></a>
-            </div>
-            <div class="menu-tab active">
-                <a href="menu.php"><h3><i class="fa fa-bars"></i> Menu Availability</h3></a>
-            </div>
+            <div class="dash-tab"><a href="dashboard.php"><h3><i class="fa fa-dashboard"></i> Dashboard</h3></a></div>
+            <div class="orders-tab"><a href="orders.php"><h3><i class="fa fa-shopping-cart"></i> Orders</h3></a></div>
+            <div class="menu-tab active"><a href="menu.php"><h3><i class="fa fa-bars"></i> Menu Availability</h3></a></div>
         </div>
         <hr />
         <div class="acc">
@@ -84,7 +72,6 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
         </div>
     </aside>
 
-    <!-- MOBILE WRAPPER: scrollable, replaces the flex main on mobile -->
     <div class="menu-main-content">
         <header>
             <h2>Menu Availability</h2>
@@ -113,7 +100,6 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
         </div>
 
         <div class="menu-content">
-            <!-- CATEGORY TABS -->
             <div class="menu-category">
                 <?php foreach ($categories as $cat): ?>
                 <div style="<?php echo $category === $cat ? 'border-bottom:2px solid var(--pop-color);font-weight:600;' : ''; ?>cursor:pointer;"
@@ -123,7 +109,6 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
                 <?php endforeach; ?>
             </div>
 
-            <!-- MENU TABLE -->
             <div class="menu-table">
                 <table>
                     <thead>
@@ -143,13 +128,7 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
                                 <td><?php echo htmlspecialchars($product['product_name']); ?></td>
                                 <td><?php echo htmlspecialchars($product['category'] ?? '—'); ?></td>
                                 <td>
-                                    <span style="
-                                        padding:3px 12px;
-                                        border-radius:50px;
-                                        font-size:12px;
-                                        font-weight:600;
-                                        background:<?php echo $product['is_available'] ? '#DCFCE7' : '#FEE2E2'; ?>;
-                                        color:<?php echo $product['is_available'] ? '#166534' : '#991B1B'; ?>;">
+                                    <span style="padding:3px 12px;border-radius:50px;font-size:12px;font-weight:600;background:<?php echo $product['is_available'] ? '#DCFCE7' : '#FEE2E2'; ?>;color:<?php echo $product['is_available'] ? '#166534' : '#991B1B'; ?>;">
                                         <?php echo $product['is_available'] ? 'Available' : 'Not Available'; ?>
                                     </span>
                                 </td>
@@ -157,16 +136,7 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
                                     <form method="POST">
                                         <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
                                         <input type="hidden" name="current" value="<?php echo $product['is_available']; ?>">
-                                        <button type="submit" name="toggle" style="
-                                            padding:5px 14px;
-                                            border-radius:8px;
-                                            border:none;
-                                            cursor:pointer;
-                                            font-family:inherit;
-                                            font-size:12px;
-                                            font-weight:600;
-                                            background:<?php echo $product['is_available'] ? '#FEE2E2' : '#DCFCE7'; ?>;
-                                            color:<?php echo $product['is_available'] ? '#991B1B' : '#166534'; ?>;">
+                                        <button type="submit" name="toggle" style="padding:5px 14px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;background:<?php echo $product['is_available'] ? '#FEE2E2' : '#DCFCE7'; ?>;color:<?php echo $product['is_available'] ? '#991B1B' : '#166534'; ?>;">
                                             <?php echo $product['is_available'] ? 'Mark Unavailable' : 'Mark Available'; ?>
                                         </button>
                                     </form>
@@ -182,23 +152,24 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
 
     <nav class="bottom-nav">
         <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : ''; ?>">
-            <i class="fa fa-dashboard"></i>
-            <span>Dashboard</span>
+            <i class="fa fa-dashboard"></i><span>Dashboard</span>
         </a>
         <a href="orders.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'orders.php' || basename($_SERVER['PHP_SELF']) === 'order-details.php' ? 'active' : ''; ?>">
-            <i class="fa fa-shopping-cart"></i>
-            <span>Orders</span>
+            <i class="fa fa-shopping-cart"></i><span>Orders</span>
         </a>
         <a href="menu.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'menu.php' ? 'active' : ''; ?>">
-            <i class="fa fa-bars"></i>
-            <span>Menu</span>
+            <i class="fa fa-bars"></i><span>Menu</span>
         </a>
         <a href="logout.php">
-            <i class="fa fa-sign-out"></i>
-            <span>Logout</span>
+            <i class="fa fa-sign-out"></i><span>Logout</span>
         </a>
     </nav>
 
+    <div class="new-order-toast" id="orderToast" onclick="goToOrders()">
+        🛎️ New Order Alert!
+    </div>
+
+    <script src="notif.js"></script>
     <script>
     function liveSearch() {
         const query = document.getElementById('searchInput').value.toLowerCase();
@@ -211,14 +182,5 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
         });
     }
     </script>
-
-    </nav>
-    <div class="new-order-toast" id="orderToast" onclick="goToOrders()">
-    🛎️ New Order Alert!
-</div>
-
-  
-    <script src="notif.js"></script>
-</body>
 </body>
 </html>
