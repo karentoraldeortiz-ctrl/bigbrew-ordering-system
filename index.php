@@ -78,7 +78,7 @@ session_start();
           Discover your favorite BigBrew drinks and order online for quick and
           easy pickup.
         </p>
-        <button><a href="menu.html">Order Now</a></button>
+        <button><a href="menu.php">Order Now</a></button>
       </div>
       <div class="hero1-img">
         <img src="assets/pictures/index-hero.png" alt="BigBrew Hero Image" />
@@ -185,7 +185,7 @@ session_start();
         </div>
 
         <div class="explore-btn">
-          <button><a href="menu.html">Explore the Menu</a></button>
+          <button><a href="menu.php">Explore the Menu</a></button>
         </div>
       </section>
     <section class="specials">
@@ -204,7 +204,7 @@ session_start();
                   Indulge in the rich, nutty flavor of pistachios blended with our
                   signature milk tea. Layers of creamy milk tea, crunchy pistachio bits, and a hint of sweetness create a delightful symphony of textures and flavors in every sip.
                 </p>
-                <div><button><a href="menu.html">Explore</a></button></div>
+                <div><button><a href="menu.php">Explore</a></button></div>
             </div>
           </div>
         </div>
@@ -215,7 +215,7 @@ session_start();
                 <p>
                   Experience a burst of fruity sweetness with our Overload Strawberry Praf. This refreshing blend combines the natural sweetness of ripe strawberries with our signature milk tea, creating a delightful balance of flavors. Topped with fresh strawberry pieces and a drizzle of strawberry syrup, it's a perfect treat for strawberry lovers. 
                 </p>
-                <div><button><a href="menu.html">Explore</a></button></div>
+                <div><button><a href="menu.php">Explore</a></button></div>
             </div>
               <img src="assets/pictures/strawberry.png " alt="a new milktea product" />
         </div>
@@ -228,9 +228,9 @@ session_start();
                 <p>
                   A decadent journey in a cup: layers of bold iced coffee infused with salted caramel and vanilla, crowned with airy 
                   cream puff and velvety cheesecake. Finished with coffee jelly, crushed Oreo, 
-                  and an optional extra shot for those who crave a stronger kick. Image has been food-styled for visual display only.
+                  and an optional extra shot for those who crave a stronger kick. 
                 </p>
-                <div><button><a href="menu.html">Explore</a></button></div>
+                <div><button><a href="menu.php">Explore</a></button></div>
             </div>
           
       </div>

@@ -277,7 +277,7 @@ nav a:hover {
 
 .cart-badge-mobile {
   display: none;
-  position: absolute;
+  /* position: absolute;
   top: 14px;
   right: 18px;
   background: #E2231A;
@@ -285,12 +285,9 @@ nav a:hover {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); */
 }
 
-.cart-badge-mobile.visible {
-  display: inline-flex;;
-}
 /* ===== TOAST ===== */
 #toastContainer {
   position: fixed;
