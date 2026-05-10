@@ -292,16 +292,21 @@ body {
   padding: 2rem;
   align-items: flex-start;
 }
-
+.cart-container aside {
+  width: 350px;
+  position: sticky;
+  top: 100px;
+  align-self: flex-start;
+}
 .cart-container .aside-content {
   flex: 1.5;
   background-color: white;
   border-radius: 20px;
   padding: 1.5rem;
-  width: 100%;
+  width: 350px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  position: sticky;
-  top: 100px;
+  /* position: sticky;
+  top: 100px; */
   /* box-sizing: border-box;  */
 }
 
@@ -466,7 +471,7 @@ body {
 .note-barista::placeholder {
     color: #d8d8d8;
 }
-
+a
 .subtotal-container {
     margin-top: 1.5rem;
     padding-top: 1rem;
@@ -559,26 +564,6 @@ body {
 }
 
 @media (max-width: 600px) {
-
-  .cart-container {
-    flex-direction: column !important;
-    padding: 1rem !important;
-    gap: 15px;
-    align-items: stretch !important;
-  }
-
-  .cart-container main {
-    width: 100%;
-    flex: unset;
-    padding: 0;
-  }
-
-  .cart-container aside {
-    /* width: 100%; */
-    flex: unset;
-    position: static !important;
-    top: unset !important;
-  }
    .cart-header {
         justify-content: space-between;
         flex-direction: row;
@@ -1294,25 +1279,6 @@ body {
 }
 
 @media (max-width: 768px) {
-    .cart-container {
-        flex-direction: column;
-        padding: 15px;
-        gap: 18px;
-    }
-
-    main {
-        width: 100%;
-        padding: 0;
-    }
-
-    aside {
-        display: block;        
-        /* width: 100%; */
-        position: static;
-        /* padding: 20px; */
-        border-radius: 18px;
-        box-sizing: border-box;
-    }
 
     .cart-header,
     .cart-card {
@@ -1516,17 +1482,27 @@ body {
         flex-direction: column;
         padding: 1rem;
         gap: 15px;
+        align-items: stretch;
     }
+      .cart-container main {
+    width: 100%;
+    flex: unset;
+    padding: 0;
+  }
+    .cart-container aside {
+    display: block;
+    width: 100%;
+    flex: unset;
+    position: static;
+    top: unset;
+    border-radius: 18px;
+    box-sizing: border-box;
+  }
 
-    main {
-        padding: 0;
-    }
-
-    aside {
-        /* width: 100%; */
-        position: relative;
-        top: 0;
-    }
+  .cart-container .aside-content {
+    width: 100%;
+    position: static;
+  }
 
     .cart-card {
         flex-direction: column;
