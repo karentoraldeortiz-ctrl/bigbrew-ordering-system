@@ -794,7 +794,11 @@ hr {
     }
 
     .bottom-nav a i { font-size: 18px; }
-    .bottom-nav a.active { color: var(--pop-color); }
+    .bottom-nav a { color: rgba(255,255,255,0.45); }
+    .bottom-nav a.active { background-color: transparent !important; }
+    .bottom-nav a .nav-icon { color: rgba(255,255,255,0.45); }
+    .bottom-nav a.active .nav-icon { color: var(--pop-color) !important; }
+    .bottom-nav a.active span { color: rgba(255,255,255,0.45) !important; }
     .bottom-nav a span { font-family: 'Poppins', sans-serif; font-weight: 600; }
 
     /* ── PAGE HEADERS ────────────────────────────────────── */
