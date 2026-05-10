@@ -211,5 +211,14 @@ while ($row = mysqli_fetch_assoc($cat_q)) {
         });
     }
     </script>
+
+    </nav>
+    <div class="new-order-toast" id="orderToast" onclick="goToOrders()">
+    🛎️ New Order Alert!
+</div>
+
+  
+    <script src="notif.js"></script>
+</body>
 </body>
 </html>
