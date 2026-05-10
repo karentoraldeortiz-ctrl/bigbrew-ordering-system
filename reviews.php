@@ -141,7 +141,6 @@ if ($is_logged_in) {
                 <h3>Contact</h3>
                 <ul>
                     <li>0929 563 4350</li>
-                    <li>info@bigbrew.com</li>
                     <li>094 Maysan Rd, Valenzuela, 1442 Metro Manila</li>
                 </ul>
             </div>
@@ -155,8 +154,8 @@ if ($is_logged_in) {
                     </ul>
                     <ul>
                         <li><a href="reviews.php">Reviews</a></li>
-                        <li><a href="terms.html">Terms & Conditions</a></li>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.php">Terms & Conditions</a></li>
+                        <li><a href="privacy.php">Privacy Policy</a></li>
                     </ul>
                 </div>
             </div>

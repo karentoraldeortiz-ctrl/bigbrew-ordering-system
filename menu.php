@@ -275,6 +275,9 @@ while($row = mysqli_fetch_assoc($addons_result)) {
   </div>
 
   </footer>
+  <script>
+  window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+</script>
     <script src="js/order.js"></script>
      <script src="js/global.js"></script>
 </body>

@@ -381,6 +381,9 @@ session_start();
       <p>&copy; 2026. BigBrew Maysan. All Rights Reserved.</p>
     </div>
   </footer>
+  <script>
+  window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+</script>
   <script src="js/main.js"></script>
   <script src="js/global.js"></script>
 </html>

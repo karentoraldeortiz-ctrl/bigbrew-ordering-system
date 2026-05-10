@@ -164,8 +164,8 @@ else{
         <hr />
         <p>
           By proceeding you agree to our
-          <a href="terms.html">Terms and Conditions</a> and confirm you have
-          read and understand our <a href="privacy.html">Privacy Policy</a>.
+          <a href="terms.php">Terms and Conditions</a> and confirm you have
+          read and understand our <a href="privacy.php">Privacy Policy</a>.
         </p>
       </div>
     </div>

@@ -367,7 +367,9 @@ if($isLoggedIn) {
         </div>
     </div>
 </div>
-
+<script>
+  window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+</script>
 <script src="js/global.js"></script>
 <script src="js/cart.js"></script>
 </body>
@@ -384,7 +386,6 @@ if($isLoggedIn) {
             <h3>Contact</h3>
             <ul>
                 <li>0929 563 4350</li>
-                <li>info@bigbrew.com</li>
                 <li>094 Maysan Rd, Valenzuela, 1442 Metro Manila</li>
             </ul>
         </div>
@@ -398,8 +399,8 @@ if($isLoggedIn) {
                 </ul>
                 <ul>
                     <li><a href="reviews.php">Reviews</a></li>
-                    <li><a href="terms.html">Terms & Conditions</a></li>
-                    <li><a href="privacy.html">Privacy Policy</a></li>
+                    <li><a href="terms.php">Terms & Conditions</a></li>
+                    <li><a href="privacy.php">Privacy Policy</a></li>
                 </ul>
             </div>
         </div>

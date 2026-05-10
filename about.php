@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -117,7 +118,7 @@
                 We take pride in our service. Check out our customer
                 testimonials below.
               </p>
-              <a href="reviews.html" class="testimonial-link"
+              <a href="reviews.php" class="testimonial-link"
                 >View Customer Feedback</a
               >
             </div>
@@ -171,7 +172,7 @@
       </div>
     </section>
 
-    <section class="visit-section">
+    <section class="visit-section" id="contact">
       <div class="visit-card">
         <div class="visit-info">
           <h2>Visit Us</h2>
@@ -186,7 +187,6 @@
           <div class="info-item">
             <strong>Contact:</strong>
             <p>Phone: 09295634350</p>
-            <p>Email: hello@bigbrew.com</p>
           </div>
         </div>
         <div class="visit-map">
@@ -219,7 +219,6 @@
           <h3>Contact</h3>
           <ul>
             <li>0929 563 4350</li>
-            <li>info@bigbrew.com</li>
             <li>094 Maysan Rd, Valenzuela, 1442 Metro Manila</li>
           </ul>
         </div>
@@ -234,8 +233,8 @@
             </ul>
             <ul>
               <li><a href="reviews.php">Reviews</a></li>
-              <li><a href="terms.html">Terms</a></li>
-              <li><a href="privacy.html">Privacy</a></li>
+              <li><a href="terms.php">Terms & Conditions</a></li>
+              <li><a href="privacy.php">Privacy Policy</a></li>
             </ul>
           </div>
         </div>
@@ -258,7 +257,9 @@
         <p>© 2026. BigBrew Maysan. All Rights Reserved.</p>
       </div>
     </footer>
-
+    <script>
+  window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+</script>
     <script src="js/global.js"></script>
   </body>
 </html>

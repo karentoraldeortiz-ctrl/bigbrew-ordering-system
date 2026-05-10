@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -144,6 +145,10 @@
         </div>
       </div>
     </section>
+    <script>
+  window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+</script>
+
     <script src="js/global.js"></script>
   </body>
   <footer class="main-footer">
@@ -162,7 +167,6 @@
         <h3>Contact</h3>
         <ul>
           <li>0929 563 4350</li>
-          <li>info@bigbrew.com</li>
           <li>094 Maysan Rd, Valenzuela, 1442 Metro Manila</li>
         </ul>
       </div>
@@ -171,14 +175,14 @@
         <h3>Quick Links</h3>
         <div class="links-grid">
           <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="menu.html">Menu</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="menu.php">Menu</a></li>
+            <li><a href="about.php">About</a></li>
           </ul>
           <ul>
-            <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="terms.html">Terms & Conditions</a></li>
-            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="reviews.php">Reviews</a></li>
+            <li><a href="terms.php">Terms & Conditions</a></li>
+            <li><a href="privacy.php">Privacy Policy</a></li>
           </ul>
         </div>
       </div>

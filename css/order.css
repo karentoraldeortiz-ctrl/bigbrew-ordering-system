@@ -1749,3 +1749,20 @@ a
         font-size: 0.9rem;
     }
 }
+
+/* for bottom nav fix */
+@media (max-width: 900px) {
+  .modal-card {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+
+  .modal-overlay1 {
+    align-items: flex-start;
+    padding-top: 85px;
+    padding-bottom: 110px;
+    overflow-y: auto;
+    z-index: 1101;
+  }
+
+}

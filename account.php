@@ -325,8 +325,8 @@ if($isLoggedIn){
             </ul>
             <ul>
               <li><a href="reviews.php">Reviews</a></li>
-              <li><a href="terms.html">Terms</a></li>
-              <li><a href="privacy.html">Privacy</a></li>
+              <li><a href="terms.php">Terms & Conditions</a></li>
+              <li><a href="privacy.php">Privacy Policy</a></li>
             </ul>
           </div>
         </div>
@@ -349,6 +349,9 @@ if($isLoggedIn){
         <p>© 2026. BigBrew Maysan. All Rights Reserved.</p>
       </div>
     </footer>
+    <script>
+  window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+</script>
     <script src="js/account.js"></script>
     <script src="js/global.js"></script>
   </body>
