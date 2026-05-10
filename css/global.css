@@ -291,11 +291,6 @@ nav a:hover {
 .cart-badge-mobile.visible {
   display: inline-flex;;
 }
-@media (min-width: 701px) {
-    .cart-badge-mobile {
-        display: none !important;
-    }
-}
 /* ===== TOAST ===== */
 #toastContainer {
   position: fixed;
@@ -348,7 +343,6 @@ nav a:hover {
 @media (max-width: 900px) {
   body {
     margin-top: 72px;
-    padding-bottom: 95px;
   }
 
   .navbar {
@@ -387,8 +381,7 @@ nav a:hover {
   }
 
   .cart-badge-mobile {
-    top: 14px;
-    right: 17px;
+    display: none !important;
   }
 
   .mobile-menu-overlay {
@@ -499,5 +492,15 @@ nav a:hover {
     display: inline-block;
   }
 }
+
+
+
+
+
+
+
+
+
+
 
 

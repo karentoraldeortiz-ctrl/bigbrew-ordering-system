@@ -122,3 +122,20 @@ function updateCartBadge() {
     })
     .catch(() => {});
 }
+
+
+
+
+/* MOVEMENT FOR SCROLL - STAGGER EFFECT HEHE */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.style.transitionDelay = `${i * 0.1}s`;
+  observer.observe(el);
+});
