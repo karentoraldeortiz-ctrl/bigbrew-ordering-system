@@ -29,7 +29,23 @@ if(isset($_SESSION['order_success'])) {
 if(isset($_POST['place_order']) && $isLoggedIn) {
     $pickup_time = $_POST['pickup_time'];
     $notes       = mysqli_real_escape_string($conn, $_POST['notes']);
-
+    if(!$isStoreOpen) {
+        $message = "Sorry, we're currently closed. Our store hours are 11:00 AM - 9:00 PM.";
+    } else {
+    $unavail_q = mysqli_query($conn,
+        "SELECT p.product_name FROM cart_items ci
+         JOIN cart c ON ci.cart_id = c.cart_id
+         JOIN products p ON ci.product_id = p.product_id
+         WHERE c.user_id = '$user_id' AND p.is_available = 0"
+    );
+    if(mysqli_num_rows($unavail_q) > 0) {
+        $unavail_names = [];
+        while($row = mysqli_fetch_assoc($unavail_q)) {
+            $unavail_names[] = $row['product_name'];
+        }
+        $message = "Some items are no longer available: " . implode(', ', $unavail_names) . ". Please remove them before checking out.";
+    } else {
+    
     $cart_q = mysqli_query($conn, "SELECT cart_id FROM cart WHERE user_id='$user_id'");
 
     if(mysqli_num_rows($cart_q) === 0) {
@@ -87,6 +103,8 @@ exit();
         }
     }
 }
+}
+}
 
 // LOAD CART ITEMS
 $cart_items = [];
@@ -101,8 +119,8 @@ if($isLoggedIn) {
         $cart_id = $cart['cart_id'];
 
         $items_q = mysqli_query($conn,
-            "SELECT ci.cart_item_id, ci.quantity, ci.addons, ci.unit_price,
-                    p.product_name, p.image, p.category,
+            "SELECT ci.cart_item_id, ci.product_id, ci.quantity, ci.addons, ci.unit_price,
+                    p.product_name, p.image, p.category, p.is_available,
                     ps.size_name
              FROM cart_items ci
              JOIN products p       ON ci.product_id = p.product_id
@@ -123,7 +141,7 @@ if($isLoggedIn) {
             $size_id    = intval($guestItem['size_id']);
 
             $item_q = mysqli_query($conn,
-                "SELECT p.product_name, p.image, p.category, ps.size_name
+                "SELECT p.product_name, p.image, p.category, p.is_available, ps.size_name
                  FROM products p
                  JOIN product_sizes ps ON p.product_id = ps.product_id
                  WHERE p.product_id = '$product_id'
@@ -143,6 +161,8 @@ if($isLoggedIn) {
                     'image'       => $info['image'],
                     'category'    => $info['category'],
                     'size_name'   => $info['size_name'],
+                    'is_available' => $info['is_available'],
+                    'product_id'   => $product_id, 
                     'is_guest'    => true
                 ];
 
@@ -211,9 +231,6 @@ if($isLoggedIn) {
             <div class="store-image"><img src="assets/pictures/store-pic.jpg" alt="" /></div>
         </div>
 
-        <?php if($message != ""): ?>
-            <p class="error-msg"><?php echo $message; ?></p>
-        <?php endif; ?>
 
 <?php if(!$order_success): ?>
 
@@ -241,9 +258,10 @@ if($isLoggedIn) {
             </div>
 
             <?php foreach($cart_items as $item): ?>
-                <div class="cart-item"
-                     id="cart-card-<?php echo htmlspecialchars($item['cart_item_id']); ?>"
+                <div class="cart-item <?php echo !$item['is_available'] ? 'item-unavailable' : ''; ?>"
+                    id="cart-card-<?php echo htmlspecialchars($item['cart_item_id']); ?>"
                     data-cart-item-id="<?php echo htmlspecialchars($item['cart_item_id']); ?>"
+                    data-product-id="<?php echo htmlspecialchars($item['product_id']); ?>"
                     data-unit-price="<?php echo $item['unit_price']; ?>"
                     data-is-guest="<?php echo !$isLoggedIn ? '1' : '0'; ?>">
 
@@ -252,6 +270,9 @@ if($isLoggedIn) {
 
                     <div class="cart-item-details">
                         <h4><?php echo htmlspecialchars($item['product_name']); ?></h4>
+                        <?php if(!$item['is_available']): ?>
+                            <span class="unavailable-tag">⚠️ No longer available</span>
+                        <?php endif; ?>
                         <p class="cart-product-category">
                             <?php echo ucwords(str_replace('-', ' ', htmlspecialchars($item['category']))); ?>
                         </p>
@@ -329,11 +350,13 @@ if($isLoggedIn) {
                 </div>
 
                 <?php if($isLoggedIn): ?>
-
-                <button type="submit" name="place_order" class="checkout-btn">
-                    Checkout
-                </button>
-
+                    <button type="submit" name="place_order" class="checkout-btn"
+                        <?php echo !$isStoreOpen ? 'disabled title="Store is currently closed"' : ''; ?>>
+                        <?php echo $isStoreOpen ? 'Checkout' : '🔒 Store Closed'; ?>
+                    </button>
+                    <?php if(!$isStoreOpen): ?>
+                        <p class="store-closed-msg">We're closed right now. Come back between 11:00 AM - 9:00 PM!</p>
+                    <?php endif; ?>
                 <?php else: ?>
 
                 <button type="button" class="checkout-btn login-required-btn">
@@ -381,6 +404,15 @@ if($isLoggedIn) {
 </div>
 <script>
   window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+
+window.__initialAvailability = <?php
+    $avail_q = mysqli_query($conn, "SELECT product_id, is_available FROM products");
+    $avail_data = [];
+    while($r = mysqli_fetch_assoc($avail_q)) {
+        $avail_data[$r['product_id']] = (int)$r['is_available'];
+    }
+    echo json_encode($avail_data);
+?>;
 </script>
 <script src="js/global.js"></script>
 <script src="js/cart.js"></script>

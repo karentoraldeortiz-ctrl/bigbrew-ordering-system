@@ -164,4 +164,80 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial run
     recalcTotals();
+
+    // ============================================================
+// CHECK UNAVAILABLE ITEMS — i-disable checkout kung meron
+// ============================================================
+// I-call din sa removeItem para mag-update pagkatanggal ng unavailable item
+const originalRemoveItem = window.removeItem;
+window.removeItem = async (cart_item_id) => {
+    await originalRemoveItem(cart_item_id);
+    // checkUnavailableItems();
+};
+
+// checkUnavailableItems(); 
+
 });
+function checkUnavailableItems() {
+    const unavailableItems = document.querySelectorAll('.cart-item.item-unavailable');
+    const checkoutBtn      = document.querySelector('.checkout-btn');
+    if (!checkoutBtn) return;
+
+    if (unavailableItems.length > 0) {
+        checkoutBtn.disabled      = true;
+        checkoutBtn.style.opacity = '0.5';
+        checkoutBtn.style.cursor  = 'not-allowed';
+        checkoutBtn.title         = 'Remove unavailable items first';
+    } else {
+        checkoutBtn.disabled      = false;
+        checkoutBtn.style.opacity = '';
+        checkoutBtn.style.cursor  = '';
+        checkoutBtn.title         = '';
+    }
+}
+
+// ============================================================
+// REALTIME AVAILABILITY POLLING — cart page
+// ============================================================
+function applyCartAvailability(data) {
+    document.querySelectorAll('.cart-item').forEach(card => {
+        const productId = card.dataset.productId;
+        if (!productId) return;
+
+        const isAvailable    = data[productId];
+        const alreadyFlagged = card.classList.contains('item-unavailable');
+
+        if (!isAvailable && !alreadyFlagged) {
+            card.classList.add('item-unavailable');
+            const h4 = card.querySelector('h4');
+            if (h4 && !card.querySelector('.unavailable-tag')) {
+                const tag = document.createElement('span');
+                tag.className   = 'unavailable-tag';
+                tag.textContent = '⚠️ No longer available';
+                h4.insertAdjacentElement('afterend', tag);
+            }
+        } else if (isAvailable && alreadyFlagged) {
+            card.classList.remove('item-unavailable');
+            const tag = card.querySelector('.unavailable-tag');
+            if (tag) tag.remove();
+        }
+    });
+    checkUnavailableItems();
+}
+
+function pollCartAvailability() {
+    // Gamitin muna ang preloaded data — zero delay
+    if (window.__initialAvailability) {
+        applyCartAvailability(window.__initialAvailability);
+        window.__initialAvailability = null;
+    }
+
+    // Fetch pa rin for subsequent updates
+    fetch('get-availability.php')
+        .then(res => res.json())
+        .then(data => applyCartAvailability(data))
+        .catch(err => console.warn('Cart availability poll failed:', err));
+}
+
+pollCartAvailability();
+setInterval(pollCartAvailability, 1000);
