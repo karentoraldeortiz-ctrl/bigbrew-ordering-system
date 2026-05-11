@@ -7,6 +7,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 
 $products_result = mysqli_query($conn,
     "SELECT p.product_id, p.product_name, p.description, p.category, p.image,
+            p.is_available,
             ps.size_id, ps.size_name, ps.price
      FROM products p
      JOIN product_sizes ps ON p.product_id = ps.product_id
@@ -23,6 +24,7 @@ while($row = mysqli_fetch_assoc($products_result)) {
             'description'  => $row['description'],
             'category'     => $row['category'],
             'image'        => $row['image'],
+            'is_available' => $row['is_available'],
             'sizes'        => []
         ];
     }
@@ -139,7 +141,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
  
         <?php else: ?>
             <?php foreach($products as $product): ?>
-            <div class="card <?php echo htmlspecialchars($product['category']); ?>">
+            <div class="card <?php echo htmlspecialchars($product['category']); ?> <?php echo !$product['is_available'] ? 'not-available' : ''; ?>">
                 <div class="card-inner">
                     <!-- FRONT -->
                     <div class="card-front">
@@ -149,14 +151,18 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                         <h3><?php echo htmlspecialchars($product['product_name']); ?></h3>
                         <p class="product-category"><?php echo ucwords(str_replace('-', ' ', $product['category'])); ?></p>
                         <!-- ADD BUTTON: nagpapadala ng product info sa modal -->
-                        <button class="add-btn"
-                            data-id="<?php echo $product['product_id']; ?>"
-                            data-name="<?php echo htmlspecialchars($product['product_name']); ?>"
-                            data-img="<?php echo htmlspecialchars($product['image']); ?>"
-                            data-category="<?php echo htmlspecialchars($product['category']); ?>"
-                            data-sizes='<?php echo json_encode($product["sizes"]); ?>'>
-                            +
-                        </button>
+                        <?php if($product['is_available']): ?>
+                            <button class="add-btn"
+                                data-id="<?php echo $product['product_id']; ?>"
+                                data-name="<?php echo htmlspecialchars($product['product_name']); ?>"
+                                data-img="<?php echo htmlspecialchars($product['image']); ?>"
+                                data-category="<?php echo htmlspecialchars($product['category']); ?>"
+                                data-sizes='<?php echo json_encode($product["sizes"]); ?>'>
+                                +
+                            </button>
+                        <?php else: ?>
+                            <div class="unavailable-badge">Not Available</div>
+                        <?php endif; ?>
                     </div>
                     <!-- BACK -->
                     <div class="card-back">

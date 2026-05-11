@@ -251,3 +251,49 @@ function showCartToast(msg) {
     }, 2500);
 }
 
+// ── Realtime availability polling ──────────────────────────
+function applyAvailability(availabilityMap) {
+    document.querySelectorAll('.card').forEach(card => {
+        const btn = card.querySelector('.add-btn');
+        const pid = btn ? btn.dataset.id : null;
+        if (!pid) return;
+
+        const isAvailable = availabilityMap[pid];
+        const front = card.querySelector('.card-front');
+
+        // Check current state para hindi mag-flicker kung walang pagbabago
+        const alreadyUnavailable = card.classList.contains('not-available');
+
+        if (!isAvailable && !alreadyUnavailable) {
+            // Naging not available
+            card.classList.add('not-available');
+            btn.style.display = 'none';
+
+            if (!front.querySelector('.unavailable-badge')) {
+                const badge = document.createElement('div');
+                badge.className = 'unavailable-badge';
+                badge.textContent = 'Not Available';
+                front.appendChild(badge);
+            }
+
+        } else if (isAvailable && alreadyUnavailable) {
+            // Naging available ulit
+            card.classList.remove('not-available');
+            btn.style.display = '';
+
+            const badge = front.querySelector('.unavailable-badge');
+            if (badge) badge.remove();
+        }
+    });
+}
+
+function pollAvailability() {
+    fetch('get-availability.php')
+        .then(res => res.json())
+        .then(data => applyAvailability(data))
+        .catch(err => console.warn('Availability poll failed:', err));
+}
+
+// Poll agad on load, tapos every 10 seconds
+pollAvailability();
+setInterval(pollAvailability, 10000);

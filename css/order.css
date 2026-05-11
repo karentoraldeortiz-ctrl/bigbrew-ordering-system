@@ -1269,7 +1269,44 @@ a
 .btn-order-again-modal:hover {
     background-color: #fff4e0;
 }
+/* ============ sa not available ============ */
+/* Not Available Card */
+.card .card-front img {
+    transition: filter 0.4s ease;
+}
 
+.card.not-available .card-front img {
+    filter: grayscale(100%) opacity(0.5);
+}
+
+.card.not-available h3 {
+    color: #aaa;
+    transition: color 0.3s ease;
+}
+.card.not-available .card-front img {
+    filter: grayscale(100%) opacity(0.5);
+}
+
+.card.not-available .card-front {
+    position: relative;
+}
+
+.unavailable-badge {
+    margin-top: 8px;
+    padding: 6px 14px;
+    background: #FEE2E2;
+    color: #991B1B;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.card.not-available h3 {
+    color: #aaa;
+}
 /* ====================== RESPONSIVE DESIGN ====================== */
 
 @media (max-width: 992px) {
