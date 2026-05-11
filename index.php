@@ -49,7 +49,7 @@ session_start();
         </div>
         <div class="nav-links" id="navlinks">
           <ul>
-            <li><a href="#">Home</a></li>
+            <li><a href="index.php">Home</a></li>
             <li><a href="menu.php">Our Menu</a></li>
             <li><a href="about.php">About Us</a></li>
             <li>

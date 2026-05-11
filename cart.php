@@ -179,7 +179,7 @@ if($isLoggedIn) {
                 <li><a href="menu.php">Our Menu</a></li>
                 <li><a href="about.php">About Us</a></li>
                 <li>
-                  <a href="#" class="cart-link">
+                  <a href="cart.php" class="cart-link">
                     <img src="assets/icons/icons8-cart-24.png" alt="">
                     <span id="cartBadge" class="cart-badge">0</span>
                   </a>
@@ -206,7 +206,7 @@ if($isLoggedIn) {
                     <span><?php echo $storeStatusText; ?></span>
                 </div>
                 <p>094 Maysan Rd, Valenzuela, 1442 Metro Manila</p>
-                <p class="store-hours">Business Hours: 8:00 AM - 5:00 PM</p>
+                <p class="store-hours">Business Hours: 11:00 AM - 9:00 PM</p>
             </div>
             <div class="store-image"><img src="assets/pictures/store-pic.jpg" alt="" /></div>
         </div>

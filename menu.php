@@ -73,7 +73,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
             <div class="nav-links" id="navlinks">
                 <ul>
                 <li><a href="index.php">Home</a></li>
-                <li><a href="#">Our Menu</a></li>
+                <li><a href="menu.php">Our Menu</a></li>
                 <li><a href="about.php">About Us</a></li> 
                 <li>
                   <a href="cart.php" class="cart-link">

@@ -2,11 +2,19 @@
 session_start();
 include "db.php";
 
+// GUEST — count from session
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['count' => 0]);
+    $count = 0;
+    if (isset($_SESSION['guest_cart']) && is_array($_SESSION['guest_cart'])) {
+        foreach ($_SESSION['guest_cart'] as $item) {
+            $count += (int)($item['quantity'] ?? 1);
+        }
+    }
+    echo json_encode(['count' => $count]);
     exit;
 }
 
+// LOGGED IN — count from DB
 $user_id = $_SESSION['user_id'];
 $result = mysqli_query($conn,
     "SELECT SUM(ci.quantity) as total 

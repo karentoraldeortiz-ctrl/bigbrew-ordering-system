@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   createMobileNav();
   updateCartBadge();
   setInterval(updateCartBadge, 5000);
+  setActiveNavLink();
 });
 
 function createMobileNav() {
@@ -124,18 +125,17 @@ function updateCartBadge() {
 }
 
 
+/* ===== DESKTOP NAV ACTIVE LINK ===== */
+function setActiveNavLink() {
+  const currentPage = window.location.pathname.split("/").pop() || "index.php";
 
+  document.querySelectorAll(".nav-links a").forEach(link => {
+    const href = link.getAttribute("href");
+    if (!href || href === "#") return;
 
-/* MOVEMENT FOR SCROLL - STAGGER EFFECT HEHE */
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
+    const linkPage = href.split("/").pop();
+    if (linkPage === currentPage) {
+      link.classList.add("active");
     }
   });
-}, { threshold: 0.15 });
-
-document.querySelectorAll('.reveal').forEach((el, i) => {
-  el.style.transitionDelay = `${i * 0.1}s`;
-  observer.observe(el);
-});
+}

@@ -55,6 +55,11 @@ body {
     font-family: 'Poppins', sans-serif;
     transition: 0.5s;
 }
+.nav-links li a.active {
+  color: var(--pop-color);
+  border-bottom: 2px solid var(--pop-color);
+  padding-bottom: 2px;
+}
 nav a:hover {
   text-decoration: underline;
   text-decoration-color: var(--pop-color);
@@ -329,6 +334,7 @@ nav a:hover {
   from { opacity: 1; transform: translateY(0) scale(1); }
   to   { opacity: 0; transform: translateY(-12px) scale(0.95); }
 }
+
 
 /* ===== NEW MOBILE NAVIGATION ===== */
 .mobile-bottom-nav,
