@@ -116,8 +116,36 @@ addBtns.forEach(btn => {
                 });
             }
 
-        modal.style.display = 'flex';
+        // I-fetch kung anong add-ons lang ang assigned sa product na ito
+fetch(`admin/menu.php?action=get_product_addons&id=${selectedProductId}`)
+    .then(res => res.json())
+    .then(assignedAddons => {
+        const assignedIds = assignedAddons.map(a => parseInt(a.addon_id));
+
+        document.querySelectorAll('.addon-check').forEach(check => {
+            const label = check.closest('label');
+            // Kunin ang addon_id mula sa data attribute (idadagdag natin sa HTML)
+            const addonId = parseInt(check.dataset.addonId);
+
+            if (assignedIds.length === 0 || assignedIds.includes(addonId)) {
+                label.style.display = '';
+            } else {
+                label.style.display = 'none';
+                check.checked = false; // i-uncheck para hindi ma-include sa price
+            }
+        });
+
         calculatePrice();
+    })
+    .catch(() => {
+        // Fallback: ipakita lahat
+        document.querySelectorAll('.addon-check').forEach(check => {
+            check.closest('label').style.display = '';
+        });
+        calculatePrice();
+    });
+
+modal.style.display = 'flex';
 
         
     });
@@ -254,46 +282,40 @@ function showCartToast(msg) {
 // ── Realtime availability polling ──────────────────────────
 function applyAvailability(availabilityMap) {
     document.querySelectorAll('.card').forEach(card => {
+        // Kuhanin ang pid mula sa data attribute ng card mismo, hindi sa btn
         const btn = card.querySelector('.add-btn');
-        const pid = btn ? btn.dataset.id : null;
-        if (!pid) return;
+        const badge = card.querySelector('.unavailable-badge');
+        const pid = btn ? btn.dataset.id : (badge ? null : null);
 
-        const isAvailable = availabilityMap[pid];
+        // I-store ang product_id sa card mismo para hindi mawala kahit naka-hide ang btn
+        if (btn && btn.dataset.id) {
+            card.dataset.productId = btn.dataset.id;
+        }
+
+        const resolvedPid = card.dataset.productId;
+        if (!resolvedPid) return;
+
+        const isAvailable = availabilityMap[resolvedPid];
         const front = card.querySelector('.card-front');
-
-        // Check current state para hindi mag-flicker kung walang pagbabago
         const alreadyUnavailable = card.classList.contains('not-available');
 
         if (!isAvailable && !alreadyUnavailable) {
-            // Naging not available
             card.classList.add('not-available');
-            btn.style.display = 'none';
+            if (btn) btn.style.display = 'none';
 
             if (!front.querySelector('.unavailable-badge')) {
-                const badge = document.createElement('div');
-                badge.className = 'unavailable-badge';
-                badge.textContent = 'Not Available';
-                front.appendChild(badge);
+                const newBadge = document.createElement('div');
+                newBadge.className = 'unavailable-badge';
+                newBadge.textContent = 'Not Available';
+                front.appendChild(newBadge);
             }
 
         } else if (isAvailable && alreadyUnavailable) {
-            // Naging available ulit
             card.classList.remove('not-available');
-            btn.style.display = '';
+            if (btn) btn.style.display = '';
 
-            const badge = front.querySelector('.unavailable-badge');
-            if (badge) badge.remove();
+            const existingBadge = front.querySelector('.unavailable-badge');
+            if (existingBadge) existingBadge.remove();
         }
     });
 }
-
-function pollAvailability() {
-    fetch('get-availability.php')
-        .then(res => res.json())
-        .then(data => applyAvailability(data))
-        .catch(err => console.warn('Availability poll failed:', err));
-}
-
-// Poll agad on load, tapos every 10 seconds
-pollAvailability();
-setInterval(pollAvailability, 10000);

@@ -236,9 +236,10 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                     <?php foreach($addons as $addon): ?>
                         <label>
                             <input type="checkbox" 
-                                   class="addon-check" 
-                                   data-price="<?php echo $addon['price']; ?>" 
-                                   value="<?php echo htmlspecialchars($addon['addon_name']); ?>">
+       class="addon-check"
+       data-addon-id="<?php echo $addon['addon_id']; ?>"
+       data-price="<?php echo $addon['price']; ?>" 
+       value="<?php echo htmlspecialchars($addon['addon_name']); ?>">
                             <span><?php echo htmlspecialchars($addon['addon_name']); ?></span>
                             <span class="addon-price">₱<?php echo $addon['price']; ?></span>
                         </label>
