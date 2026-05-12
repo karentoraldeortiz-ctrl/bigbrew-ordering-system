@@ -43,7 +43,7 @@ session_start();
     <header>
       <nav class="navbar">
         <div class="navlogo">
-          <a href="index.html">
+          <a href="index.php">
             <img src="assets/logo/bb-maysan-logo-1.png" alt="" />
           </a>
         </div>
@@ -71,29 +71,68 @@ session_start();
         </nav>
     </header>
 
-    <div class="hero1" class="hero">
-      <div class="hero1-text">
-        <h1>Sip Your Favorites Without the Wait.</h1>
-        <p>
-          Discover your favorite BigBrew drinks and order online for quick and
-          easy pickup.
-        </p>
-        <button><a href="menu.php">Order Now</a></button>
-      </div>
-      <div class="hero1-img">
-        <img src="assets/pictures/index-hero.png" alt="BigBrew Hero Image" />
-      </div>
-    </div>
+          <section class="home-hero-card"">
+            <img 
+              src="assets/pictures/milktea-hd.png" 
+              alt="BigBrew Drink" 
+              class="hero-drink hero-drink-left"
+            />
 
+            <div class="home-hero-text">
+              <h1>Sip Your Favorites<br />Without the Wait.</h1>
+              <p>
+                Discover your favorite BigBrew drinks and order online for quick and easy pickup.
+              </p>
+              <a href="menu.php" class="hero-order-btn">Order Now</a>
+            </div>
 
-      <section class="best-seller">
-        <h2>Famous Five</h2>
-        <p>
-          Discover our most popular drinks, made with high-quality tea leaves,
-          vibrant fruit flavors, rich creamy textures, and delightful toppings in
-          every sip.
-        </p>
-        <div class="products">
+            <img 
+              src="assets/pictures/milktea-hd.png" 
+              alt="BigBrew Drink" 
+              class="hero-drink hero-drink-right"
+            />
+          </section>
+
+          <section class="home-menu-preview">
+            <div class="home-section-header">
+              <h2>Menu</h2>
+              <p>Quench your thirst!</p>
+            </div>
+
+            <div class="category-preview-list">
+              <a href="menu.php?category=milk-tea" class="category-preview-card">
+                <img src="assets/pictures/milktea.png" alt="Milk Tea">
+                <span>Milk Tea</span>
+              </a>
+
+              <a href="menu.php?category=praf" class="category-preview-card">
+                <img src="assets/pictures/milktea.png" alt="Praf">
+                <span>Praf</span>
+              </a>
+
+              <a href="menu.php?category=coffee" class="category-preview-card">
+                <img src="assets/pictures/milktea.png" alt="Coffee">
+                <span>Coffee</span>
+              </a>
+
+              <a href="menu.php?category=fruit-tea" class="category-preview-card">
+                <img src="assets/pictures/milktea.png" alt="Fruit Tea">
+                <span>Fruit Tea</span>
+              </a>
+
+              <a href="menu.php?category=brosty" class="category-preview-card">
+                <img src="assets/pictures/milktea.png" alt="Brosty">
+                <span>Brosty</span>
+              </a>
+            </div>
+          </section>
+
+        <section class="best-seller">
+          <div class="best-seller-header">
+            <h2>Good Afternoon!</h2>
+            <p>Treat yourself with our best sellers!</p>
+          </div>        
+          <div class="products">
           <div class="arrow arrow-left" onclick="moveCarousel(-1)">
             <img src="assets/icons/icons8-arrow-24-left.png" alt="Previous" />
           </div>
@@ -185,7 +224,7 @@ session_start();
         </div>
 
         <div class="explore-btn">
-          <button><a href="menu.php">Explore the Menu</a></button>
+          <button><a href="menu.php">View Menu</a></button>
         </div>
       </section>
     <section class="specials">
