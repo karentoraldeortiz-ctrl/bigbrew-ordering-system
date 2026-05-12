@@ -867,7 +867,42 @@ a
     color: white;
     border-color: var(--dark-color);
 }
+/* ============ COLLAPSIBLE ADD-ONS ============ */
+.addons-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin: 15px 0 10px;
+}
 
+.addons-toggle .option-label {
+    margin: 0;  /* override existing margin kasi nasa button na */
+}
+
+.chevron-icon {
+    color: #888;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+}
+
+.addons-toggle[aria-expanded="true"] .chevron-icon {
+    transform: rotate(180deg);
+}
+
+.addons-grid {
+    /* existing styles mo ay intact, dagdag lang yung transition */
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+}
+
+.addons-grid[hidden] {
+    display: none;  /* override ng default hidden behavior */
+}
 /* --- ADDONS GRID --- */
 .addons-grid {
     display: grid;

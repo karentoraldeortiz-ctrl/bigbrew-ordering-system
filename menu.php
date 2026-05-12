@@ -95,7 +95,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
     </header>
 
     <!-- Hero Section -->
-   <section class="hero">
+   <!-- <section class="hero">
   <div class="hero-text">
     <h1>Quality in Every Cup</h1>
     <p>
@@ -110,7 +110,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
     <img src="assets/products/HERO_MENU.png" alt="hero image">
   </div>
 </section>
-    </section>
+    </section> -->
      <div class="scallop"></div>
 
     <!-- Menu Section -->
@@ -231,9 +231,16 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                   <!-- <button class="size-opt" data-size-id="1" data-price="29" value="medio">
                   <button class="size-opt" data-size-id="2" data-price="39" value="grande">                </div> -->
                 
-                <p class="option-label">add ons</p>
-                <div class="addons-grid">
-                    <?php foreach($addons as $addon): ?>
+                      <button class="addons-toggle" type="button" aria-expanded="false">
+                          <span class="option-label">add ons</span>
+                          <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" 
+                              width="16" height="16" viewBox="0 0 24 24" 
+                              fill="none" stroke="currentColor" stroke-width="2.5" 
+                              stroke-linecap="round" stroke-linejoin="round">
+                              <polyline points="6 9 12 15 18 9"/>
+                          </svg>
+                      </button>
+                      <div class="addons-grid" hidden>                    <?php foreach($addons as $addon): ?>
                         <label>
                             <input type="checkbox" 
        class="addon-check"
