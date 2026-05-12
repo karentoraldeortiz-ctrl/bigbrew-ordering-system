@@ -104,7 +104,7 @@ function renderTable(products) {
 
 // ── Toggle availability ───────────────────────────────────────────────────
 async function toggleAvailability(id, current) {
-  const newVal  = current ? 0 : 1;
+  const newVal  = parseInt(current) ? 0 : 1;
   const product = allProducts.find(p => p.product_id == id);
   if (!product) return;
   const payload = {

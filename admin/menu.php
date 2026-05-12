@@ -13,6 +13,7 @@ if (isset($_GET['action'])) {
         $res = mysqli_query($conn, "SELECT * FROM products ORDER BY product_id ASC");
         while ($row = mysqli_fetch_assoc($res)) {
             $id    = (int)$row['product_id'];
+            $row['is_available'] = (int)$row['is_available'];
             $sizes = [];
             $sRes  = mysqli_query($conn, "SELECT * FROM product_sizes WHERE product_id = $id");
             while ($s = mysqli_fetch_assoc($sRes)) $sizes[] = $s;

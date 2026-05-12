@@ -13,9 +13,17 @@ if(isset($_POST['login'])){
   if($email === 'admin@bigbrew.com' && $password === 'bigbrew2026') {
     $_SESSION['staff_logged_in'] = true;
     $_SESSION['staff_name'] = 'BigBrew Admin';
-    header("Location: staff/dashboard.php");
+    header("Location: admin/dashboard.php");
     exit;
   }
+
+    if($email === 'staff@bigbrew.com' && $password === 'staff2026') {
+    $_SESSION['staff_logged_in'] = true;
+    $_SESSION['staff_name'] = 'BigBrew Staff';
+    header("Location: Staff/dashboard.php");
+    exit;
+  }
+
 
   // ✅ CHECK USER SA DATABASE
   $result = mysqli_query($conn,
