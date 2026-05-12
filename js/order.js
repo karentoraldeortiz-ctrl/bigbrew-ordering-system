@@ -223,7 +223,18 @@ if (!selectedProductId || !selectedSizeId) {
     });
 
 });
+document.querySelector('.addons-toggle').addEventListener('click', function () {
+    const grid = document.querySelector('.addons-grid');
+    const isOpen = this.getAttribute('aria-expanded') === 'true';
 
+    this.setAttribute('aria-expanded', String(!isOpen));
+
+    if (isOpen) {
+        grid.setAttribute('hidden', '');
+    } else {
+        grid.removeAttribute('hidden');
+    }
+})
 // close modal
 closeBtn.onclick = () => modal.style.display = 'none';
 window.onclick = (e) => {
