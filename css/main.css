@@ -275,8 +275,8 @@ body {
 }
 
 .category-preview-card img {
-  width: 145px;
-  height: 145px;
+  width: 175px;
+  height: 175px;
   object-fit: contain;
   border-radius: 50%;
   transition: 0.25s ease;

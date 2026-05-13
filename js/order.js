@@ -298,3 +298,4 @@ function applyAvailability(availabilityMap) {
         }
     });
 }
+

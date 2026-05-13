@@ -142,7 +142,7 @@ session_start();
 </section>
           <section class="home-menu-preview">
             <div class="home-section-header">
-              <h2>Menu</h2>
+              <h2>What are you craving for?</h2>
               <p>Quench your thirst!</p>
             </div>
 
@@ -152,11 +152,6 @@ session_start();
                 <span>Milk Tea</span>
               </a>
               
-              <a href="menu.php?category=milk-tea" class="category-preview-card">
-                <img src="assets/pictures/milktea.png" alt="Milk Tea">
-                <span>Milk Tea</span>
-              </a>
-
               <a href="menu.php?category=praf" class="category-preview-card">
                 <img src="assets/pictures/praf.png" alt="Praf">
                 <span>Praf</span>
@@ -181,7 +176,7 @@ session_start();
 
         <section class="best-seller">
           <div class="best-seller-header">
-            <h2>What are you craving for?</h2>
+            <h2>Famous Drinks</h2>
             <p>Treat yourself with our best sellers!</p>
           </div>        
           <div class="products">
