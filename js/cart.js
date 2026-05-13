@@ -10,17 +10,40 @@ if(loginBtn){
     });
 }
 
+// ============================================================
+// SHOW REMOVE MODAL — GLOBAL (labas ng DOMContentLoaded)
+// ============================================================
+function showRemoveModal(cart_item_id) {
+    const card        = document.getElementById(`cart-card-${cart_item_id}`);
+    const productName = card.querySelector('h4').textContent;
+
+    const modal      = document.getElementById('remove-modal');
+    const modalMsg   = document.getElementById('remove-modal-msg');
+    const confirmBtn = document.getElementById('remove-confirm-btn');
+    const cancelBtn  = document.getElementById('remove-cancel-btn');
+
+    modalMsg.textContent = `Are you sure you want to remove "${productName}" from your cart?`;
+    modal.classList.add('active');
+
+    confirmBtn.onclick = async () => {
+        modal.classList.remove('active');
+        await window.removeItem(cart_item_id);
+    };
+
+    cancelBtn.onclick = () => {
+        modal.classList.remove('active');
+    };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // ============================================================
     // UPDATE QUANTITY — + o - button
-    // Kapag naging 0 ang result → ipakita ang remove modal
     // ============================================================
     window.updateQty = async (cart_item_id, change) => {
         const qtySpan    = document.getElementById(`qty-${cart_item_id}`);
         const currentQty = parseInt(qtySpan.textContent.trim());
 
-        // Kung - ay pipindutin at 1 na ang qty → modal agad, wag pa pumunta sa server
         if(currentQty + change <= 0) {
             showRemoveModal(cart_item_id);
             return;
@@ -54,36 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ============================================================
-    // MODAL — lalabas kapag naging 0 na ang qty
-    // ============================================================
-    function showRemoveModal(cart_item_id) {
-        const card        = document.getElementById(`cart-card-${cart_item_id}`);
-        const productName = card.querySelector('h4').textContent;
-
-        const modal      = document.getElementById('remove-modal');
-        const modalMsg   = document.getElementById('remove-modal-msg');
-        const confirmBtn = document.getElementById('remove-confirm-btn');
-        const cancelBtn  = document.getElementById('remove-cancel-btn');
-
-        modalMsg.textContent = `Are you sure you want to remove "${productName}" from your cart?`;
-
-        // Buksan ang modal
-        modal.classList.add('active');
-
-        // Confirm — tanggalin sa DB at DOM
-        confirmBtn.onclick = async () => {
-            modal.classList.remove('active');
-            await removeItem(cart_item_id);
-        };
-
-        // Cancel — isara lang, walang gagawin
-        cancelBtn.onclick = () => {
-            modal.classList.remove('active');
-        };
-    }
-
-    // ============================================================
-    // REMOVE ITEM — tinatawag ng modal confirm button
+    // REMOVE ITEM
     // ============================================================
     window.removeItem = async (cart_item_id) => {
         try {
@@ -104,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 recalcTotals();
                 checkIfEmpty();
                 updateCartBadge();
+                checkUnavailableItems();
             }
         } catch(err) {
             console.error('Remove item error:', err);
@@ -140,17 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // CHECK IF EMPTY
     // ============================================================
     function checkIfEmpty() {
-        const remaining  = document.querySelectorAll('.cart-item').length;
-        const emptyMsg   = document.querySelector('.empty-cart');
-        const aside      = document.querySelector('aside');
-        const cartHeader = document.getElementById('cart-items-container');
-        const cartTitle  = document.getElementById('cart-title');
+        const remaining = document.querySelectorAll('.cart-item').length;
+        const aside     = document.querySelector('aside');
         const container = document.getElementById('cart-items-container');
 
         if(remaining === 0) {
-            if(emptyMsg)   emptyMsg.style.display  = 'block';
-            if(aside)      aside.style.display      = 'none';
-            if(cartTitle)  cartTitle.style.display  = 'none';
+            if(aside) aside.style.display = 'none';
             if(container) container.innerHTML = `
                 <div class="empty-cart">
                     <h3>Your Cart</h3>
@@ -164,20 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial run
     recalcTotals();
-
-    // ============================================================
-// CHECK UNAVAILABLE ITEMS — i-disable checkout kung meron
-// ============================================================
-// I-call din sa removeItem para mag-update pagkatanggal ng unavailable item
-const originalRemoveItem = window.removeItem;
-window.removeItem = async (cart_item_id) => {
-    await originalRemoveItem(cart_item_id);
-    // checkUnavailableItems();
-};
-
-// checkUnavailableItems(); 
-
 });
+
+// ============================================================
+// CHECK UNAVAILABLE ITEMS — disable checkout kung meron
+// ============================================================
 function checkUnavailableItems() {
     const unavailableItems = document.querySelectorAll('.cart-item.item-unavailable');
     const checkoutBtn      = document.querySelector('.checkout-btn');
@@ -197,18 +178,19 @@ function checkUnavailableItems() {
 }
 
 // ============================================================
-// REALTIME AVAILABILITY POLLING — cart page
+// REALTIME AVAILABILITY POLLING
 // ============================================================
 function applyCartAvailability(data) {
     document.querySelectorAll('.cart-item').forEach(card => {
         const productId = card.dataset.productId;
         if (!productId) return;
 
-        const isAvailable    = data[productId];
-        const alreadyFlagged = card.classList.contains('item-unavailable');
+        const isAvailable = data[productId];
 
-        if (!isAvailable && !alreadyFlagged) {
+        if (!isAvailable) {
             card.classList.add('item-unavailable');
+
+            // Add unavailable tag kung wala pa
             const h4 = card.querySelector('h4');
             if (h4 && !card.querySelector('.unavailable-tag')) {
                 const tag = document.createElement('span');
@@ -216,23 +198,35 @@ function applyCartAvailability(data) {
                 tag.textContent = '⚠️ No longer available';
                 h4.insertAdjacentElement('afterend', tag);
             }
-        } else if (isAvailable && alreadyFlagged) {
+
+            // Add Remove button kung wala pa
+            const cartItemId = card.dataset.cartItemId;
+            if (cartItemId && !card.querySelector('.remove-unavailable-btn')) {
+                const removeBtn = document.createElement('button');
+                removeBtn.className   = 'remove-unavailable-btn';
+                removeBtn.textContent = 'Remove';
+                removeBtn.onclick = () => showRemoveModal(cartItemId);
+                const details = card.querySelector('.cart-item-details');
+                if (details) details.appendChild(removeBtn);
+            }
+
+        } else {
             card.classList.remove('item-unavailable');
             const tag = card.querySelector('.unavailable-tag');
             if (tag) tag.remove();
+            const removeBtn = card.querySelector('.remove-unavailable-btn');
+            if (removeBtn) removeBtn.remove();
         }
     });
     checkUnavailableItems();
 }
 
 function pollCartAvailability() {
-    // Gamitin muna ang preloaded data — zero delay
     if (window.__initialAvailability) {
         applyCartAvailability(window.__initialAvailability);
         window.__initialAvailability = null;
     }
 
-    // Fetch pa rin for subsequent updates
     fetch('get-availability.php')
         .then(res => res.json())
         .then(data => applyCartAvailability(data))

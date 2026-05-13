@@ -28,7 +28,7 @@ body {
 }
 
 /* =============================================
-   SIDEBAR — used by Dashboard & Menu Management
+   SIDEBAR
    ============================================= */
 
 .sidebar {
@@ -103,15 +103,14 @@ hr {
 }
 
 .logout-tab {
-     background: none;
-    border: none;
-    padding: 0;
-    margin: 0;
-    color: white;
-    cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: white;
+  cursor: pointer;
 }
 
-/* Active nav item */
 .dash-tab.active h3,
 .menu-tab.active h3,
 .sales-tab.active h3,
@@ -119,7 +118,6 @@ hr {
 .settings-tab.active h3,
 .logout-tab.active h3 { background-color: var(--pop-color); }
 
-/* Hover — non-active only */
 .dash-tab:not(.active):hover h3,
 .menu-tab:not(.active):hover h3,
 .sales-tab:not(.active):hover h3,
@@ -148,7 +146,7 @@ hr {
 .staff-acc p   { font-size: 0.62rem; color: rgba(255,255,255,0.45); }
 
 /* =============================================
-   TOAST — used by Dashboard & Menu Management
+   TOAST
    ============================================= */
 
 .toast {
@@ -163,12 +161,10 @@ hr {
   to   { opacity:1; transform:translateY(0); }
 }
 
-
 /* =============================================
-   DASHBOARD — dashboard.php only
+   DASHBOARD
    ============================================= */
 
-/* Main layout */
 .dash-main-content {
   flex: 1;
   display: flex;
@@ -179,7 +175,6 @@ hr {
   background-color: var(--light-color);
 }
 
-/* Page header */
 .dash-header h2 {
   font-size: 1.6rem;
   font-weight: 700;
@@ -191,7 +186,6 @@ hr {
   color: var(--text-muted);
 }
 
-/* Stat cards */
 .dash-summary {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -239,13 +233,12 @@ hr {
   margin-top: 2px;
 }
 
-/* Bottom panels grid */
 .dash-panels {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 1.2rem;
-  flex: 1;        /* fill remaining vertical space */
-  min-height: 0;  /* allow shrink */
+  flex: 1;
+  min-height: 0;
 }
 
 .panel {
@@ -294,7 +287,6 @@ hr {
 }
 .panel-body::-webkit-scrollbar { display: none; }
 
-/* Sales chart — fills panel height */
 .chart-body {
   position: relative;
   flex: 1;
@@ -307,7 +299,6 @@ hr {
   inset: 0;
 }
 
-/* Empty & loading states */
 .panel-empty {
   display: flex;
   flex-direction: column;
@@ -331,7 +322,6 @@ hr {
   gap: 8px;
 }
 
-/* Top Selling Products rows */
 .top-product-row {
   display: flex;
   align-items: center;
@@ -380,12 +370,10 @@ hr {
 .top-sold    { font-size: 12px; font-weight: 700; color: #2c1a0e; }
 .top-revenue { font-size: 11px; color: #b0906a; }
 
-
 /* =============================================
-   MENU MANAGEMENT — menu.php (admin) only
+   MENU MANAGEMENT
    ============================================= */
 
-/* Main layout */
 .menu-main {
   flex: 1;
   display: flex;
@@ -397,7 +385,6 @@ hr {
   min-width: 0;
 }
 
-/* Page header */
 .menu-page-header {
   display: flex;
   align-items: flex-start;
@@ -412,7 +399,6 @@ hr {
 
 .menu-header-actions { display: flex; align-items: center; gap: 10px; }
 
-/* Search input in header */
 .menu-search-wrap {
   display: flex; align-items: center; gap: 8px;
   background: white; border: 1px solid var(--border);
@@ -425,7 +411,6 @@ hr {
   color: var(--dark-color); width: 100%;
 }
 
-/* Add product button */
 .btn-add-product {
   display: flex; align-items: center; gap: 7px;
   padding: 8px 18px;
@@ -437,7 +422,6 @@ hr {
 }
 .btn-add-product:hover { background: #9a5c1e; transform: translateY(-1px); }
 
-/* Category tabs */
 .category-tabs { display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
 
 .cat-tab {
@@ -450,7 +434,6 @@ hr {
 .cat-tab:hover  { border-color: var(--pop-color); color: var(--pop-color); }
 .cat-tab.active { background: var(--pop-color); border-color: var(--pop-color); color: white; }
 
-/* Products table */
 .menu-table-wrap {
   background: white; border-radius: 12px;
   border: 1px solid var(--border); overflow: hidden;
@@ -477,8 +460,8 @@ hr {
 .menu-prod-table tr:last-child td { border-bottom: none; }
 .menu-prod-table tbody tr:hover   { background: #fdf8f2; }
 
-/* Thumbnail + name cell */
 .td-name-wrap { display: flex; align-items: center; gap: 11px; }
+.td-product-name { font-weight: 600; font-size: 13px; color: var(--dark-color); }
 .td-thumb {
   width: 40px; height: 40px; border-radius: 8px;
   background: #f5ece0 center/cover no-repeat;
@@ -487,7 +470,6 @@ hr {
 }
 .td-cat { color: #999; font-size: 12.5px; }
 
-/* Status badge */
 .status-badge {
   display: inline-block; padding: 3px 12px;
   border-radius: 50px; font-size: 11.5px; font-weight: 600;
@@ -495,12 +477,7 @@ hr {
 .status-badge.avail   { background: #dcfce7; color: #15803d; }
 .status-badge.unavail { background: #fee2e2; color: #991b1b; }
 
-/* Table action buttons */
 .td-actions { display: flex; gap: 7px; align-items: center; }
-
-/* Edit button visibility — desktop shows td-edit-desktop, hides td-edit-mobile */
-.td-edit-mobile { display: none; }
-.td-edit-desktop { display: inline-flex; }
 
 .tbl-btn-edit {
   display: flex; align-items: center; gap: 5px;
@@ -532,7 +509,9 @@ hr {
 
 .table-loading { text-align: center; color: #aaa; padding: 30px; }
 
-/* ── MODAL — used by Menu Management ── */
+/* =============================================
+   MODAL
+   ============================================= */
 
 .modal-overlay {
   position: fixed; inset: 0;
@@ -588,7 +567,6 @@ hr {
   color: var(--dark-color); margin-bottom: 2px;
 }
 
-/* Image upload box */
 .image-upload-box {
   width: 100%; height: 140px;
   border: 2px dashed var(--border); border-radius: 12px;
@@ -622,7 +600,6 @@ hr {
 .img-replace-overlay i    { color: white; font-size: 18px; }
 .img-replace-overlay span { color: white; font-size: 11px; font-weight: 600; }
 
-/* Add-ons checklist */
 .addon-label { font-size: 11px; color: #aaa; margin-top: -6px; }
 
 .addons-scroll {
@@ -648,7 +625,6 @@ hr {
 .addon-row-price { font-size: 11px; color: #aaa; font-weight: 600; }
 .addons-empty    { padding: 16px; text-align: center; color: #bbb; font-size: 12px; }
 
-/* Form fields */
 .field { display: flex; flex-direction: column; gap: 4px; }
 .field label { font-size: 11.5px; font-weight: 600; color: var(--dark-color); }
 .field input,
@@ -663,7 +639,6 @@ hr {
 .field textarea:focus { outline: none; border-color: var(--pop-color); background: white; }
 .field textarea { min-height: 64px; }
 
-/* Availability toggle */
 .availability-row {
   display: flex; align-items: center; justify-content: space-between;
   padding: 9px 12px; border-radius: 9px;
@@ -691,7 +666,6 @@ hr {
 .toggle-switch input:checked + .toggle-slider { background: #22c55e; }
 .toggle-switch input:checked + .toggle-slider::before { transform: translateX(19px); }
 
-/* Pricing / size rows */
 .size-fields { display: flex; flex-direction: column; gap: 8px; }
 .size-row    { display: flex; align-items: center; gap: 6px; }
 .currency    { font-size: 12px; color: #aaa; }
@@ -715,7 +689,6 @@ hr {
 }
 .add-topping-btn:hover { opacity: 0.7; }
 
-/* Audit box */
 .audit-box {
   padding: 10px 12px; border-radius: 9px;
   background: #fdf6ec; border: 1px solid var(--border);
@@ -723,7 +696,6 @@ hr {
 }
 .audit-title { font-weight: 700; color: var(--dark-color); margin-bottom: 3px; font-size: 11.5px; }
 
-/* Modal footer */
 .modal-footer {
   display: flex; align-items: center; justify-content: flex-end;
   gap: 10px; margin-top: 22px; padding-top: 16px;
@@ -756,9 +728,8 @@ hr {
 }
 .btn-save-changes:hover { background: #9a5c1e; }
 
-
 /* =============================================
-   STAFF MENU — staff/menu.php only
+   STAFF MENU
    ============================================= */
 
 .menu-main-content {
@@ -816,174 +787,17 @@ hr {
   cursor: pointer; font-family: inherit;
 }
 
-
 /* =============================================
-   RESPONSIVE — Mobile overrides
+   BOTTOM NAV
    ============================================= */
 
-@media (max-width: 900px) {
-  body { flex-direction: column; height: auto; min-height: 100vh; overflow-y: auto; }
-  .sidebar { display: none; }
-
-  /* ── Dashboard ── */
-  .dash-main-content { padding: 16px 16px 80px; gap: 14px; overflow-y: auto; flex: none; min-height: 100vh; }
-  .dash-header h2    { font-size: 1.15rem; }
-  .dash-header p     { font-size: 0.75rem; }
-  .dash-summary      { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .stat-card         { padding: 14px; border-radius: 10px; flex-direction: column; align-items: flex-start; gap: 8px; }
-  .stat-card i       { font-size: 1.2rem; }
-  .stat-info h3      { font-size: 1.1rem; }
-  .stat-info p       { font-size: 0.68rem; }
-  .dash-panels       { grid-template-columns: 1fr; flex: none; min-height: auto; }
-  .panel             { min-height: 300px; }
-  .chart-body        { min-height: 260px; }
-
-  /* ── Menu Management (admin) — card layout ── */
-  .menu-main           { padding: 16px 16px 80px; overflow-y: auto; flex: none; }
-  .menu-page-header    { flex-direction: column; gap: 10px; align-items: stretch; }
-  .menu-page-header h2 { font-size: 1.1rem; }
-  .menu-page-header p  { font-size: 0.72rem; }
-
-  /* Header: search left, add button right */
-  .menu-header-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    gap: 8px;
-  }
-  .menu-search-wrap { flex: 1; min-width: 0; }
-  .btn-add-product  { white-space: nowrap; font-size: 12px; padding: 7px 12px; }
-
-  /* Category tabs: horizontal scroll, no wrap */
-  .category-tabs {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-  }
-  .category-tabs::-webkit-scrollbar { display: none; }
-  .cat-tab { flex-shrink: 0; font-size: 12px; padding: 5px 14px; }
-
-  /* Hide table header on mobile */
-  .menu-prod-table thead { display: none; }
-
-  /* Each row becomes a card */
-  .menu-prod-table,
-  .menu-prod-table tbody,
-  .menu-prod-table tr,
-  .menu-prod-table td { display: block; width: 100%; }
-
-  .menu-prod-table tr {
-    background: white;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    margin-bottom: 10px;
-    padding: 12px 14px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-  }
-  .menu-prod-table tr:last-child { margin-bottom: 0; }
-
-  /* Remove individual cell borders */
-  .menu-prod-table td { border-bottom: none; padding: 3px 0; }
-
-  /* Product name cell */
-  .td-name { padding-bottom: 8px !important; }
-  .td-name-wrap { gap: 10px; }
-  .td-thumb { width: 38px; height: 38px; }
-
-  /* Category label */
-  .td-cat { font-size: 11px; color: #aaa; padding-left: 48px; }
-
-  /* Status badge */
-  .status-badge { font-size: 11px; padding: 2px 10px; }
-
-  /* Each row becomes a card */
-  .menu-prod-table tr {
-    display: block;
-    background: white;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    margin-bottom: 10px;
-    padding: 12px 14px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-  }
-  .menu-prod-table tr:last-child { margin-bottom: 0; }
-  .menu-prod-table td { display: block; border-bottom: none; padding: 3px 0; }
-
-  /* Name row: thumb + name on left, Edit button on right */
-  .td-name-wrap {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .td-product-name {
-    flex: 1;
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--dark-color);
-  }
-
-  /* Show mobile Edit, hide desktop Edit */
-  .td-edit-mobile  { display: inline-flex !important; flex-shrink: 0; font-size: 11px; padding: 5px 10px; white-space: nowrap; }
-  .td-edit-desktop { display: none !important; }
-
-  /* Bottom actions: Mark Unavailable + Delete only */
-  .td-actions {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 6px;
-    padding-top: 8px;
-    margin-top: 4px;
-    border-top: 1px solid #f5f0ea;
-  }
-  .tbl-btn-avail {
-    flex: 1;
-    font-size: 11px;
-    padding: 6px 8px;
-    text-align: center;
-    white-space: nowrap;
-  }
-  .tbl-btn-del {
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-  }
-
-  /* Table wrap: transparent since cards handle styling */
-  .menu-table-wrap {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    overflow: visible;
-  }
-
-  /* ── Modal ── */
-  .modal-body      { grid-template-columns: 1fr; gap: 16px; }
-  .modal-box       { padding: 18px 16px; max-height: 95vh; }
-  .image-upload-box { height: 120px; }
-  .modal-footer    { flex-wrap: wrap; }
-  .btn-delete-item { margin-right: 0; width: 100%; justify-content: center; }
-}
-
-
-/* =============================================
-   BOTTOM NAV — Mobile only (admin pages)
-   ============================================= */
-
-.bottom-nav {
-  display: none; /* hidden on desktop */
-}
+.bottom-nav { display: none; }
 
 @media (max-width: 900px) {
   .bottom-nav {
     display: flex;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     height: 60px;
     background: var(--dark-color);
     border-top: 1px solid rgba(255,255,255,0.1);
@@ -1010,51 +824,143 @@ hr {
     transition: color 0.15s;
   }
 
-  .bottom-nav a .nav-icon {
-    font-size: 18px;
-    line-height: 1;
-  }
-
-  .bottom-nav a span {
-    font-size: 10px;
-    line-height: 1;
-  }
-
-  .bottom-nav a.active {
-    color: var(--pop-color);
-  }
-
-  .bottom-nav a:not(.active):hover {
-    color: rgba(255,255,255,0.8);
-  }
+  .bottom-nav a .nav-icon { font-size: 18px; line-height: 1; }
+  .bottom-nav a span      { font-size: 10px; line-height: 1; }
+  .bottom-nav a.active    { color: var(--pop-color); }
+  .bottom-nav a:not(.active):hover { color: rgba(255,255,255,0.8); }
 }
 
-/* ── Remove focus outlines on mobile tap ── */
-@media (max-width: 900px) {
-  .bottom-nav a:focus,
-  .cat-tab:focus,
-  .btn-add-product:focus,
-  .tbl-btn-edit:focus,
-  .tbl-btn-avail:focus,
-  .tbl-btn-del:focus,
-  .panel:focus,
-  .stat-card:focus {
-    outline: none;
-  }
-}
+/* =============================================
+   RESPONSIVE
+   ============================================= */
 
-/* ── Fix panel border on mobile (dash appearance) ── */
 @media (max-width: 900px) {
-  .panel {
+  body { flex-direction: column; height: auto; min-height: 100vh; overflow-y: auto; }
+  .sidebar { display: none; }
+
+  /* Dashboard */
+  .dash-main-content { padding: 16px 16px 80px; gap: 14px; overflow-y: auto; flex: none; min-height: 100vh; }
+  .dash-header h2    { font-size: 1.15rem; }
+  .dash-header p     { font-size: 0.75rem; }
+  .dash-summary      { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-card         { padding: 14px; border-radius: 10px; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .stat-card i       { font-size: 1.2rem; }
+  .stat-info h3      { font-size: 1.1rem; }
+  .stat-info p       { font-size: 0.68rem; }
+  .dash-panels       { grid-template-columns: 1fr; flex: none; min-height: auto; }
+  .panel             { min-height: 300px; }
+  .chart-body        { min-height: 260px; }
+  .dash-panels       { padding-bottom: 70px; }
+  .panel             { border: 1px solid var(--border); border-style: solid; }
+
+  /* Menu Management header */
+  .menu-main           { padding: 16px 16px 80px; overflow-y: auto; flex: none; }
+  .menu-page-header    { flex-direction: column; gap: 10px; align-items: stretch; }
+  .menu-page-header h2 { font-size: 1.1rem; }
+  .menu-page-header p  { font-size: 0.72rem; }
+  .menu-header-actions { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; }
+  .menu-search-wrap    { flex: 1; min-width: 0; }
+  .btn-add-product     { white-space: nowrap; font-size: 12px; padding: 7px 12px; }
+
+  /* Category tabs */
+  .category-tabs {
+    flex-wrap: nowrap; overflow-x: auto;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch; padding-bottom: 4px;
+  }
+  .category-tabs::-webkit-scrollbar { display: none; }
+  .cat-tab { flex-shrink: 0; font-size: 12px; padding: 5px 14px; }
+
+  /* Table wrapper */
+  .menu-table-wrap {
+    background: transparent; border: none;
+    box-shadow: none; overflow: visible;
+  }
+
+  /* Hide table header */
+  .menu-prod-table thead { display: none; }
+
+  /* Each row = card with grid layout */
+  .menu-prod-table,
+  .menu-prod-table tbody { display: block; width: 100%; }
+
+  .menu-prod-table tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    background: white;
+    border-radius: 12px;
     border: 1px solid var(--border);
-    border-style: solid;
+    margin-bottom: 10px;
+    padding: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    gap: 6px 12px;
+    align-items: center;
   }
-  .dash-panels {
-    padding-bottom: 70px; /* space for bottom nav */
+
+  /* Name+image — left column, spans both rows */
+  .menu-prod-table td.td-name {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    display: flex;
+    align-items: center;
+    padding: 0 !important;
+    border: none !important;
   }
+
+  /* Status badge — right top */
+  .menu-prod-table td.td-status {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  /* Actions — right bottom */
+  .menu-prod-table td.td-actions {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 !important;
+    border: none !important;
+    margin-top: 0;
+  }
+
+  /* Hide Mark Available/Unavailable on mobile — Edit + Delete only */
+  .menu-prod-table td.td-actions .tbl-btn-avail { display: none; }
+
+  .td-name-wrap { gap: 10px; }
+  .td-thumb     { width: 42px; height: 42px; flex-shrink: 0; }
+
+  .td-name-wrap > div { display: flex; flex-direction: column; gap: 2px; }
+  .td-product-name    { font-size: 13px; font-weight: 600; }
+  .td-cat             { font-size: 11px; color: #aaa; padding: 0; }
+
+  .status-badge { font-size: 11px; padding: 3px 10px; }
+
+  .tbl-btn-edit { font-size: 11px; padding: 5px 10px; }
+  .tbl-btn-del  { width: 32px; height: 32px; }
+
+  /* Modal */
+  .modal-body      { grid-template-columns: 1fr; gap: 16px; }
+  .modal-box       { padding: 18px 16px; max-height: 95vh; }
+  .image-upload-box { height: 120px; }
+  .modal-footer    { flex-wrap: wrap; }
+  .btn-delete-item { margin-right: 0; width: 100%; justify-content: center; }
 }
 
-/* ── Remove browser default focus outline on bottom nav links ── */
+/* Remove focus outlines on mobile */
+@media (max-width: 900px) {
+  .bottom-nav a:focus, .cat-tab:focus, .btn-add-product:focus,
+  .tbl-btn-edit:focus, .tbl-btn-avail:focus, .tbl-btn-del:focus,
+  .panel:focus, .stat-card:focus { outline: none; }
+}
+
 .bottom-nav a,
 .bottom-nav a:focus,
 .bottom-nav a:active,

@@ -93,7 +93,7 @@ if (isset($_GET['action'])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | BigBrew Admin</title>
+  <title>Admin | Dashboard</title>
   <link rel="shortcut icon" href="../assets/logo/logo-black.png" type="image/png" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />

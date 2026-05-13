@@ -119,14 +119,14 @@ if($isLoggedIn) {
         $cart_id = $cart['cart_id'];
 
         $items_q = mysqli_query($conn,
-            "SELECT ci.cart_item_id, ci.product_id, ci.quantity, ci.addons, ci.unit_price,
-                    p.product_name, p.image, p.category, p.is_available,
-                    ps.size_name
-             FROM cart_items ci
-             JOIN products p       ON ci.product_id = p.product_id
-             JOIN product_sizes ps ON ci.size_id    = ps.size_id
-             WHERE ci.cart_id = '$cart_id'"
-        );
+    "SELECT ci.cart_item_id, ci.product_id, ci.quantity, ci.addons, ci.unit_price,
+            p.product_name, p.image, p.category, p.is_available,
+            COALESCE(ps.size_name, 'Unknown Size') as size_name
+     FROM cart_items ci
+     JOIN products p        ON ci.product_id = p.product_id
+     LEFT JOIN product_sizes ps ON ci.size_id = ps.size_id
+     WHERE ci.cart_id = '$cart_id'"
+);
 
         while($row = mysqli_fetch_assoc($items_q)) {
             $cart_items[] = $row;

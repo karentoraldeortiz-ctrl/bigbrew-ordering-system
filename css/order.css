@@ -392,31 +392,53 @@ body {
 }
 /* Unavailable cart item */
 .cart-item.item-unavailable {
-    opacity: 0.6;
+    position: relative;
     border-left: 3px solid #991B1B;
     background: #fff5f5;
+    overflow: hidden;
 }
 
-.unavailable-tag {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    color: #991B1B;
-    background: #FEE2E2;
-    padding: 2px 10px;
-    border-radius: 50px;
-    margin-bottom: 4px;
+/* Gray overlay sa buong card */
+.cart-item.item-unavailable::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(200, 200, 200, 0.45);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
 }
 
-#unavailable-warning {
-    display: none;
-    background: #FEE2E2;
+/* Gray out ang image */
+.cart-item.item-unavailable img {
+    filter: grayscale(100%) opacity(0.5);
+}
+
+/* Gray out ang text */
+.cart-item.item-unavailable .cart-item-details h4,
+.cart-item.item-unavailable .cart-item-details p,
+.cart-item.item-unavailable .item-price {
+    color: #aaa;
+}
+
+/* Keep unavailable tag visible at naka-taas ng overlay */
+.cart-item.item-unavailable .unavailable-tag {
+    position: relative;
+    z-index: 2;
     color: #991B1B;
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 12px;
+    background: #FEE2E2;
+}
+
+/* Gray out qty stepper, hindi na mapi-click */
+.cart-item.item-unavailable .qty-Stepper {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* Keep remove button clickable kahit unavailable */
+.cart-item.item-unavailable .qty-Stepper button.remove-btn {
+    pointer-events: all;
+    opacity: 1;
 }
 .store-closed-msg {
     font-size: 12px;
@@ -868,7 +890,7 @@ a
     border-color: var(--dark-color);
 }
 /* ============ COLLAPSIBLE ADD-ONS ============ */
-.addons-toggle {
+/* .addons-toggle {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -884,7 +906,7 @@ a
     background: #f5f5f5;
 }
 .addons-toggle .option-label {
-    margin: 0;  /* override existing margin kasi nasa button na */
+    margin: 0; 
 }
 
 .chevron-icon {
@@ -898,14 +920,14 @@ a
 }
 
 .addons-grid {
-    /* existing styles mo ay intact, dagdag lang yung transition */
+   
     overflow: hidden;
     transition: opacity 0.2s ease;
 }
 
 .addons-grid[hidden] {
-    display: none;  /* override ng default hidden behavior */
-}
+    display: none; 
+} */
 /* --- ADDONS GRID --- */
 .addons-grid {
     display: grid;
@@ -1893,4 +1915,28 @@ a
     z-index: 1101;
   }
 
+}
+
+/* unvailable */
+.remove-unavailable-btn {
+    display: block;
+    position: relative;
+    z-index: 2;
+    margin-top: 8px;
+    padding: 5px 16px;
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #fecaca;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    pointer-events: all !important;
+    width: fit-content;
+    transition: background 0.2s;
+}
+
+.remove-unavailable-btn:hover {
+    background: #fca5a5;
 }

@@ -68,7 +68,6 @@ function renderTable(products) {
     return;
   }
   tbody.innerHTML = products.map(p => {
-    // ✅ FIX: DB stores filename only — prefix IMG_BASE for display
     const imgUrl = p.image ? `${IMG_BASE}${p.image}` : '';
     return `
     <tr>
@@ -77,11 +76,13 @@ function renderTable(products) {
           <div class="td-thumb" style="${imgUrl ? `background-image:url('${imgUrl}')` : ''}">
             ${!imgUrl ? '🧋' : ''}
           </div>
-          <span>${p.product_name}</span>
+          <div>
+            <span class="td-product-name">${p.product_name}</span>
+            <div class="td-cat">${p.category || '—'}</div>
+          </div>
         </div>
       </td>
-      <td class="td-cat">${p.category || '—'}</td>
-      <td>
+      <td class="td-status">
         <span class="status-badge ${p.is_available ? 'avail' : 'unavail'}">
           ${p.is_available ? 'Available' : 'Not Available'}
         </span>
