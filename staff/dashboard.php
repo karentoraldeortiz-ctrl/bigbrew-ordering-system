@@ -64,9 +64,6 @@ $unavail_q = mysqli_query($conn,
             <div class="orders-tab">
                 <a href="orders.php"><h3><i class="fa fa-shopping-cart"></i> Orders</h3></a>
             </div>
-            <div class="menu-tab">
-                <a href="menu.php"><h3><i class="fa fa-bars"></i> Menu Availability</h3></a>
-            </div>
         </div>
         <hr>
         <div class="acc">
@@ -189,13 +186,10 @@ $unavail_q = mysqli_query($conn,
     <a href="orders.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'orders.php' || basename($_SERVER['PHP_SELF']) === 'order-details.php' ? 'active' : ''; ?>">
         <i class="fa fa-shopping-cart nav-icon"></i><span>Orders</span>
     </a>
-    <a href="menu.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'menu.php' ? 'active' : ''; ?>">
-        <i class="fa fa-bars nav-icon"></i><span>Menu</span>
-    </a>
     <a href="logout.php">
         <i class="fa fa-sign-out nav-icon"></i><span>Logout</span>
     </a>
-</nav>
+</nav>git
     <div class="new-order-toast" id="orderToast" onclick="goToOrders()">
     🛎️ New Order Alert!
 </div>

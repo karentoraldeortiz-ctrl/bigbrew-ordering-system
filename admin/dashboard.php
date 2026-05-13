@@ -124,9 +124,6 @@ if (isset($_GET['action'])) {
     <hr />
     <div class="acc">
       <h6>ACCOUNT</h6>
-      <div class="settings-tab">
-        <a href="settings.php"><h3><i class="fa fa-cog"></i> Settings</h3></a>
-      </div>
       <div class="logout-tab">
         <a href="logout.php"><h3><i class="fa fa-sign-out"></i> Logout</h3></a>
       </div>

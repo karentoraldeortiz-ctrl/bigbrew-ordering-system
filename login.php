@@ -79,13 +79,21 @@ if(isset($_POST['login'])){
             WHERE cart_item_id = '{$existing['cart_item_id']}'"
           );
         } else {
-          mysqli_query($conn,
+           // ✅ I-validate muna na valid yung size_id bago mag-insert
+    $size_check = mysqli_query($conn, 
+        "SELECT size_id FROM product_sizes WHERE size_id = '$size_id'"
+    );
+    
+    if (mysqli_num_rows($size_check) > 0) {
+        mysqli_query($conn,
             "INSERT INTO cart_items 
             (cart_id, product_id, size_id, addons, quantity, unit_price)
             VALUES
             ('$cart_id', '$product_id', '$size_id', '$addons', '$quantity', '$unit_price')"
-          );
-        }
+        );
+    }
+    // Kung invalid yung size_id, i-skip na lang — hindi na siya ii-insert
+}
       }
 
       unset($_SESSION['guest_cart']);
