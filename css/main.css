@@ -38,7 +38,6 @@ body {
 }
 
 .home-hero-card {
-  background: var(--dark-color);
   color: white;
   border-radius: 12px;
   display: flex;
@@ -104,7 +103,8 @@ body {
 }
 
 .hero-price-slide {
-  background: var(--dark-color);
+  background: var(--dark-color) !important;
+  background-image: none !important;
 }
 @media (max-width: 600px) {
   .home-hero-slider {
