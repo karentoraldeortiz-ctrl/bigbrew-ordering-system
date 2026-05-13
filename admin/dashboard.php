@@ -213,7 +213,18 @@ if (isset($_GET['action'])) {
 
     </div>
   </main>
-
+   <nav class="bottom-nav">
+    <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : ''; ?>">
+        <i class="fa fa-dashboard nav-icon"></i><span>Dashboard</span>
+    </a>
+    </a>
+    <a href="menu.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'menu.php' ? 'active' : ''; ?>">
+        <i class="fa fa-bars nav-icon"></i><span>Menu</span>
+    </a>
+    <a href="logout.php">
+        <i class="fa fa-sign-out nav-icon"></i><span>Logout</span>
+    </a>
+</nav>
   <script src="dashboard.js"></script>
 </body>
 </html>
