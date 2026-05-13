@@ -23,15 +23,29 @@ $orders_q = mysqli_query($conn,
      ORDER BY o.created_at DESC"
 );
 
-$pickup_labels = [
-    'asap'        => 'ASAP',
-    'in-15-min'   => 'In 15 minutes',
-    'in-30-min'   => 'In 30 minutes',
-    'in-45-min'   => 'In 45 minutes',
-    'in-1-hour'   => 'In 1 hour',
-    'in-1-5-hour' => 'In 1 hour 30 minutes',
-];
-?>
+date_default_timezone_set('Asia/Manila');
+
+function getPickupDisplay($pickup_value, $created_at) {
+    $pickup_value = trim($pickup_value);
+    $created_at_time = !empty($created_at) ? strtotime($created_at) : time();
+
+    if($pickup_value === 'asap') {
+        $start_time = date('g:i A', strtotime('+15 minutes', $created_at_time));
+        $end_time   = date('g:i A', strtotime('+30 minutes', $created_at_time));
+
+        return "ASAP ({$start_time} - {$end_time})";
+    }
+
+    $pickup_labels = [
+        'in-15-min'   => 'In 15 minutes',
+        'in-30-min'   => 'In 30 minutes',
+        'in-45-min'   => 'In 45 minutes',
+        'in-1-hour'   => 'In 1 hour',
+        'in-1-5-hour' => 'In 1 hour 30 minutes',
+    ];
+
+    return $pickup_labels[$pickup_value] ?? $pickup_value;
+}?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,8 +108,7 @@ $pickup_labels = [
             <?php else: ?>
                 <?php while ($order = mysqli_fetch_assoc($orders_q)):
                     $oid = $order['order_id'];
-                    $pickup_display = $pickup_labels[$order['pickup_time']] ?? $order['pickup_time'];
-
+                    $pickup_display = getPickupDisplay($order['pickup_time'], $order['created_at']);
                     $items_q = mysqli_query($conn,
                         "SELECT p.product_name, ps.size_name, oi.quantity, oi.unit_price, oi.addons
                          FROM order_items oi

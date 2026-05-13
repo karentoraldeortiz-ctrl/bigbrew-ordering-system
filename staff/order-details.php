@@ -49,16 +49,29 @@ while ($row = mysqli_fetch_assoc($items_q)) {
     $subtotal += $row['unit_price'] * $row['quantity'];
 }
 
-$pickup_labels = [
-    'asap'        => 'ASAP',
-    'in-15-min'   => 'In 15 minutes',
-    'in-30-min'   => 'In 30 minutes',
-    'in-45-min'   => 'In 45 minutes',
-    'in-1-hour'   => 'In 1 hour',
-    'in-1-5-hour' => 'In 1 hour 30 minutes',
-];
+date_default_timezone_set('Asia/Manila');
 
-$pickup_display = $pickup_labels[$order['pickup_time']] ?? $order['pickup_time'];
+$pickup_value = trim($order['pickup_time']);
+$created_at_time = !empty($order['created_at']) ? strtotime($order['created_at']) : time();
+
+if($pickup_value === 'asap') {
+    $start_time = date('g:i A', strtotime('+15 minutes', $created_at_time));
+    $end_time   = date('g:i A', strtotime('+30 minutes', $created_at_time));
+
+    $pickup_display = "ASAP ({$start_time} - {$end_time})";
+} else {
+    $pickup_labels = [
+        'in-15-min'   => 'In 15 minutes',
+        'in-30-min'   => 'In 30 minutes',
+        'in-45-min'   => 'In 45 minutes',
+        'in-1-hour'   => 'In 1 hour',
+        'in-1-5-hour' => 'In 1 hour 30 minutes',
+    ];
+
+    $pickup_display = $pickup_labels[$pickup_value] ?? $pickup_value;
+}
+
+// $pickup_display = $pickup_labels[$order['pickup_time']] ?? $order['pickup_time'];
 $order_date = date('m/d/Y, · g:i A', strtotime($order['created_at']));
 
 // UPDATE STATUS

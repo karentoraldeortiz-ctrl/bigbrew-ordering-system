@@ -321,7 +321,7 @@ if($isLoggedIn) {
                     <i class="fa-solid fa-clock"></i> Pickup Time
                 </div>
                 <select name="pickup_time" id="pick-up-time" class="summary-input">
-                    <option value="asap">ASAP</option>
+                    <option value="asap">ASAP (15-30mins)</option>
                     <option value="in-15-min">In 15 minutes</option>
                     <option value="in-30-min">In 30 minutes</option>
                     <option value="in-45-min">In 45 minutes</option>
@@ -383,7 +383,7 @@ if($isLoggedIn) {
             <p>We'll prepare it for pickup. Thank you, <?php echo htmlspecialchars($_SESSION['name']); ?>!</p>
             <div class="order-modal-actions">
                 <a href="receipt.php?order_id=<?php echo $order_id; ?>" class="btn-open-receipt">
-                    🧾 View Receipt
+                    🧾 View Order
                 </a>
                 <a href="menu.php" class="btn-order-again-modal">Order Again</a>
             </div>
