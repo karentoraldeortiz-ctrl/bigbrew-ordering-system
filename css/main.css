@@ -151,13 +151,13 @@ body {
   color: white;
   box-shadow: 0 8px 24px rgba(45, 30, 23, 0.18);
 }
-.home-hero-card::after {
+/* .home-hero-card::after {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom, transparent 65%, rgba(255,248,228,0.35));
   pointer-events: none;
-}
+} */
 
 .home-hero-text {
   position: relative;
