@@ -108,10 +108,14 @@ if($pickup_value === 'asap') {
         $receipt_title = 'Drink is Being Prepared!';
         $receipt_subtitle = 'Our staff is currently preparing your beverages.';
     }
-    elseif($status === 'completed') {
+    elseif($status === 'ready_for_pickup') {
         $receipt_title = 'Ready for Pickup!';
         $receipt_subtitle = 'Your order is ready. Please proceed to the store for pickup.';
     }
+    elseif($status === 'completed') {
+        $receipt_title = 'Order Completed';
+        $receipt_subtitle = 'This order has already been picked up.';
+    }    
     elseif($status === 'cancelled') {
         $receipt_title = 'Order Cancelled';
         $receipt_subtitle = 'This order has been cancelled.';

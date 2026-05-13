@@ -4,6 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const historyContainer = document.getElementById('order-history-list');
 
+  function formatStatus(status) {
+  const statusMap = {
+    pending: "Pending",
+    preparing: "Preparing",
+    ready_for_pickup: "Ready for Pickup",
+    completed: "Completed",
+    cancelled: "Cancelled"
+  };
+
+  return statusMap[status] || capitalizeFirst(status.replace(/_/g, " "));
+}
+
   function capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
@@ -94,7 +106,7 @@ accountSection.appendChild(reviewCard);
 
       let html = '';
       orders.forEach(order => {
-        const statusClass = `status-${order.order_status.toLowerCase()}`;
+        const statusClass = `status-${order.order_status.toLowerCase().replace(/_/g, '-')}`;
         const date = new Date(order.created_at).toLocaleDateString('en-PH', {
           month: 'short', day: 'numeric', year: 'numeric'
         });
@@ -118,7 +130,7 @@ accountSection.appendChild(reviewCard);
                 <span class="order-history-id">#${order.order_id}</span>
                 <span class="order-history-date">${date}</span>
               </div>
-              <span class="order-status-badge ${statusClass}">${capitalizeFirst(order.order_status)}</span>
+              <span class="order-status-badge ${statusClass}">${formatStatus(order.order_status)}</span>
             </div>
             <p class="order-history-items">${itemSummary}</p>
             <div class="order-history-bottom">

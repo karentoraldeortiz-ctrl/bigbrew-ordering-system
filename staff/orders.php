@@ -121,9 +121,10 @@ function getPickupDisplay($pickup_value, $created_at) {
                         $items[] = $item;
                     }
 
-                    $status_bg = $order['order_status'] === 'completed' ? 'rgba(136,214,108,0.5)' :
+                    $status_bg = $order['order_status'] === 'completed' ? 'rgba(180,180,180,0.35)' :
+                                ($order['order_status'] === 'ready_for_pickup' ? 'rgba(136,214,108,0.5)' :
                                 ($order['order_status'] === 'cancelled'  ? 'rgba(255,100,100,0.3)' :
-                                ($order['order_status'] === 'preparing'  ? 'rgba(100,150,255,0.3)' : 'rgba(255,220,100,0.5)'));
+                                ($order['order_status'] === 'preparing'  ? 'rgba(100,150,255,0.3)' : 'rgba(255,220,100,0.5)')));
                 ?>
 
                 <div class="order-card" data-order-id="<?php echo $oid; ?>">
@@ -147,6 +148,7 @@ function getPickupDisplay($pickup_value, $created_at) {
                                     <select name="status" onchange="this.form.submit()" style="background:<?php echo $status_bg; ?>">
                                         <option value="pending"   <?php echo $order['order_status'] === 'pending'   ? 'selected' : ''; ?>>Pending</option>
                                         <option value="preparing" <?php echo $order['order_status'] === 'preparing' ? 'selected' : ''; ?>>Preparing</option>
+                                        <option value="ready_for_pickup" <?php echo $order['order_status'] === 'ready_for_pickup' ? 'selected' : ''; ?>>Ready for Pickup</option>
                                         <option value="completed" <?php echo $order['order_status'] === 'completed' ? 'selected' : ''; ?>>Completed</option>
                                         <option value="cancelled" <?php echo $order['order_status'] === 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
                                     </select>

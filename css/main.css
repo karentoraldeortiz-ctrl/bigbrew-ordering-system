@@ -927,10 +927,30 @@ body {
   padding: 4px 12px;
   border-radius: 50px;
 }
-.status-pending { background-color: #FEF9C2; color: #A84B00; }
-.status-completed { background-color: #DCFCE7; color: #166534; }
-.status-cancelled { background-color: #FEE2E2; color: #991B1B; }
-.order-history-items {
+.status-preparing {
+  background: rgba(100,150,255,0.15);
+  color: #3b6edc;
+}
+
+.status-ready-for-pickup {
+  background: rgba(136,214,108,0.18);
+  color: #3d8b2c;
+}
+
+.status-completed {
+  background: rgba(180,180,180,0.18);
+  color: #666;
+}
+
+.status-cancelled {
+  background: rgba(255,100,100,0.15);
+  color: #d63b3b;
+}
+
+.status-pending {
+  background: rgba(255,220,100,0.2);
+  color: #b97a00;
+}.order-history-items {
   font-size: 0.88rem;
   color: #888;
   margin: 0 0 12px 0;
