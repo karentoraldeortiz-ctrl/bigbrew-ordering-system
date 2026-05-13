@@ -77,7 +77,7 @@ $unavail_q = mysqli_query($conn,
             <i class="fa fa-user"></i>
             <div>
                 <h5><?php echo htmlspecialchars($_SESSION['staff_name']); ?></h5>
-                <p>admin@bigbrew.com</p>
+                <p>staff@bigbrew.com</p>
             </div>
         </div>
     </aside>

@@ -260,10 +260,9 @@ if (isset($_GET['action'])) {
         <table class="menu-prod-table">
           <thead>
             <tr>
-              <th>Product Name</th>
-              <th>Category</th>
-              <th>Status</th>
-              <th>Action</th>
+              <th style="width: 45%;">Product Name</th>
+              <th style="width: 15%;">Status</th>
+              <th style="width: 40%;">Action</th>
             </tr>
           </thead>
           <tbody id="productTableBody">

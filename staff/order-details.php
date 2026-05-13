@@ -107,9 +107,6 @@ if (isset($_POST['update_status'])) {
             <div class="orders-tab active">
                 <a href="orders.php"><h3><i class="fa fa-shopping-cart"></i> Orders</h3></a>
             </div>
-            <div class="menu-tab">
-                <a href="menu.php"><h3><i class="fa fa-bars"></i> Menu Availability</h3></a>
-            </div>
         </div>
         <hr>
         <div class="acc">
@@ -240,11 +237,7 @@ if (isset($_POST['update_status'])) {
         <a href="orders.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'orders.php' || basename($_SERVER['PHP_SELF']) === 'order-details.php' ? 'active' : ''; ?>">
             <i class="fa fa-shopping-cart"></i>
             <span>Orders</span>
-        </a>
-        <a href="menu.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'menu.php' ? 'active' : ''; ?>">
-            <i class="fa fa-bars"></i>
-            <span>Menu</span>
-        </a>
+                        </a>
         <a href="logout.php">
             <i class="fa fa-sign-out"></i>
             <span>Logout</span>

@@ -125,7 +125,7 @@ hr {
 .settings-tab:not(.active):hover h3,
 .logout-tab:not(.active):hover h3 { background-color: rgba(255,255,255,0.08); }
 
-.acc { margin-top: auto; }
+.acc { margin-top: 0; }
 
 .staff-acc {
   display: flex;
@@ -133,7 +133,7 @@ hr {
   gap: 10px;
   padding: 1rem;
   border-top: 1px solid rgba(241,241,241,0.12);
-  margin-top: 8px;
+  margin-top: auto;
 }
 .staff-acc .fa-user {
   border: 1px solid white;
@@ -453,6 +453,9 @@ hr {
   font-size: 12px; font-weight: 600; color: #888;
   border-bottom: 1px solid var(--border);
 }
+.menu-prod-table th:nth-child(1) { width: 50%; }  /* Product Name */
+.menu-prod-table th:nth-child(2) { width: 15%; }  /* Status */
+.menu-prod-table th:nth-child(3) { width: 35%; }
 .menu-prod-table td {
   padding: 12px 20px; border-bottom: 1px solid #f5f0ea;
   color: var(--dark-color); vertical-align: middle;

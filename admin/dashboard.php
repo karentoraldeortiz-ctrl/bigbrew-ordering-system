@@ -69,15 +69,15 @@ if (isset($_GET['action'])) {
         $products = [];
         $res = mysqli_query($conn,
             "SELECT p.product_name, p.image, p.category,
-                    SUM(oi.quantity) AS total_sold,
-                    SUM(oi.quantity * oi.unit_price) AS total_revenue
-             FROM order_items oi
-             JOIN products p ON oi.product_id = p.product_id
-             JOIN orders o ON oi.order_id = o.order_id
-             WHERE o.order_status NOT IN ('cancelled', 'pending')
-             GROUP BY oi.product_id
-             ORDER BY total_sold DESC
-             LIMIT 5"
+            SUM(oi.quantity) AS total_sold,
+            SUM(oi.quantity * oi.unit_price) AS total_revenue
+     FROM order_items oi
+     JOIN products p ON oi.product_id = p.product_id
+     JOIN orders o ON oi.order_id = o.order_id
+     WHERE o.order_status NOT IN ('cancelled', 'pending')
+     GROUP BY oi.product_id
+     ORDER BY total_sold DESC, total_revenue DESC
+     LIMIT 5"
         );
         while ($r = mysqli_fetch_assoc($res)) $products[] = $r;
         echo json_encode($products);
