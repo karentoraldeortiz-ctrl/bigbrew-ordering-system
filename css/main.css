@@ -13,8 +13,8 @@ body {
 .home-hero-card {
   position: relative;
   width: min(80%, 1080px);
-  min-height: 250px;
-  margin: 7rem auto 35px;
+  min-height: 180px;
+  margin: 6.2rem auto 28px;
   background-image: url('../assets/pictures/gradient11.jpg');
   background-size: cover;
   background-position: center;
@@ -37,23 +37,23 @@ body {
 .home-hero-text {
   position: relative;
   z-index: 2;
-  max-width: 520px;
+  max-width: 460px;
   text-align: center;
-  padding: 40px 20px;
+  padding: 24px 18px;
 }
 
 .home-hero-text h1 {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
   line-height: 1.15;
-  margin-bottom: 14px;
+  margin-bottom: 9px;
   font-weight: 800;
 }
 
 .home-hero-text p {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  max-width: 430px;
-  margin: 0 auto 22px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  max-width: 360px;
+  margin: 0 auto 14px;
 }
 
 .hero-order-btn {
@@ -61,10 +61,10 @@ body {
   background-color: var(--pop-color);
   color: white;
   text-decoration: none;
-  padding: 10px 24px;
+  padding: 7px 18px;
   border-radius: 999px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
 }
 
 .hero-order-btn:hover {
@@ -75,20 +75,20 @@ body {
 .hero-drink {
   position: absolute;
   z-index: 1;
-  width: 210px;
-  max-width: 35%;
+  width: 170px;
+  max-width: 32%;
   height: auto;
   object-fit: contain;
-  bottom: -40px;
+  bottom: -32px;
 }
 
 .hero-drink-left {
-  left: 35px;
+  left: 45px;
   transform: rotate(-8deg);
 }
 
 .hero-drink-right {
-  right: 35px;
+  right: 45px;
   transform: rotate(8deg) scaleX(-1);
 }
 .home-menu-preview {
@@ -1835,8 +1835,8 @@ textarea {
 @media (max-width: 900px) {
   .home-hero-card {
     width: 90%;
-    min-height: 300px;
-    margin-top: 35px;
+    min-height: 165px;
+    margin-top: 5.5rem;
   }
 
   .hero-drink {
@@ -1855,12 +1855,12 @@ textarea {
   }
 
   .home-hero-text h1 {
-    font-size: 2rem;
+    font-size: 1.35rem;
   }
 
   .home-hero-text p {
-    font-size: 0.82rem;
-    max-width: 300px;
+    font-size: 0.72rem;
+    max-width: 260px;
   }
 }
 
@@ -1871,17 +1871,17 @@ textarea {
   }
 
   .hero-drink {
-    width: 185px;
+    width: 135px;
     max-width: 48%;
     bottom: -25px;
   }
 
   .hero-drink-left {
-    left: -70px;
+    left: -35px;
   }
 
   .hero-drink-right {
-    right: -70px;
+    right: -35px;
   }
 
   .home-hero-text {
