@@ -88,39 +88,51 @@ accountSection.appendChild(reviewCard);
   }
 
   // --- ORDERS FETCH ---
+function loadOrders() {
   fetch('get_orders.php')
     .then(res => res.json())
     .then(data => {
       if (!data.success) {
         historyContainer.innerHTML = `<p class="empty-history">Could not load orders: ${data.message || ''}</p>`;
-        renderReviewBox();
         return;
       }
 
       const orders = data.orders;
+
       if (orders.length === 0) {
         historyContainer.innerHTML = `<p class="empty-history">No orders yet. <a href="menu.php">Browse our menu!</a></p>`;
-        renderReviewBox();
         return;
       }
 
       let html = '';
+
       orders.forEach(order => {
         const statusClass = `status-${order.order_status.toLowerCase().replace(/_/g, '-')}`;
-        const date = new Date(order.created_at).toLocaleDateString('en-PH', {
-          month: 'short', day: 'numeric', year: 'numeric'
-        });
-        const total = parseFloat(order.total_amount).toFixed(2);
-        let itemSummary = 'No items';
-        if (order.items && order.items.length > 0) {
-        const shown = order.items.slice(0, 2).map(i => {
-          const category = i.category 
-            ? i.category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-            : 'No Category';
 
-          return `${i.product_name} - ${category} (${i.size_name})`;
-        });          itemSummary = shown.join(', ');
-          if (order.items.length > 2) itemSummary += ` & ${order.items.length - 2} more`;
+        const date = new Date(order.created_at).toLocaleDateString('en-PH', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+
+        const total = parseFloat(order.total_amount).toFixed(2);
+
+        let itemSummary = 'No items';
+
+        if (order.items && order.items.length > 0) {
+          const shown = order.items.slice(0, 2).map(i => {
+            const category = i.category
+              ? i.category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+              : 'No Category';
+
+            return `${i.product_name} - ${category} (${i.size_name})`;
+          });
+
+          itemSummary = shown.join(', ');
+
+          if (order.items.length > 2) {
+            itemSummary += ` & ${order.items.length - 2} more`;
+          }
         }
 
         html += `
@@ -130,13 +142,20 @@ accountSection.appendChild(reviewCard);
                 <span class="order-history-id">#${order.order_id}</span>
                 <span class="order-history-date">${date}</span>
               </div>
-              <span class="order-status-badge ${statusClass}">${formatStatus(order.order_status)}</span>
+              <span class="order-status-badge ${statusClass}">
+                ${formatStatus(order.order_status)}
+              </span>
             </div>
+
             <p class="order-history-items">${itemSummary}</p>
+
             <div class="order-history-bottom">
               <span class="order-history-total">P ${total}</span>
+
               <div style="display:flex;gap:8px;align-items:center;">
-                <a href="receipt.php?order_id=${order.order_id}" class="btn-view-receipt">View Receipt</a>
+                <a href="receipt.php?order_id=${order.order_id}" class="btn-view-receipt">
+                  View Receipt
+                </a>
               </div>
             </div>
           </div>
@@ -144,13 +163,15 @@ accountSection.appendChild(reviewCard);
       });
 
       historyContainer.innerHTML = html;
-      renderReviewBox();
     })
     .catch(() => {
       historyContainer.innerHTML = `<p class="empty-history">Failed to load orders.</p>`;
-      renderReviewBox();
     });
+}
 
+loadOrders();
+
+setInterval(loadOrders, 1000);
   // --- EDIT PROFILE MODAL ---
   const editBtn  = document.querySelector('.edit-profile');
   const modal    = document.getElementById('editProfileModal');

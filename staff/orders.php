@@ -37,11 +37,11 @@ function getPickupDisplay($pickup_value, $created_at) {
     }
 
     $pickup_labels = [
-        'in-15-min'   => 'In 15 minutes',
         'in-30-min'   => 'In 30 minutes',
         'in-45-min'   => 'In 45 minutes',
         'in-1-hour'   => 'In 1 hour',
         'in-1-5-hour' => 'In 1 hour 30 minutes',
+        'in-2-hours' => 'In 2 hours',
     ];
 
     return $pickup_labels[$pickup_value] ?? $pickup_value;

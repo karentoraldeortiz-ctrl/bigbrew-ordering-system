@@ -91,7 +91,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
     </nav>
   </header>
 
-  <div class="scallop"></div>
+  <!-- <div class="scallop"></div> -->
 
   <!-- Menu Section -->
   <section class="menu-section" id="menu-section">

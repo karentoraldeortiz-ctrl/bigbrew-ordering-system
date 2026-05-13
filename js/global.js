@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateCartBadge();
   setInterval(updateCartBadge, 5000);
   setActiveNavLink();
+  createActiveOrderBar();
 });
 
 function createMobileNav() {
@@ -138,4 +139,26 @@ function setActiveNavLink() {
       link.classList.add("active");
     }
   });
+}
+
+// ongoing order navbar notif
+function createActiveOrderBar() {
+  fetch("get_active_order.php")
+    .then(res => res.json())
+    .then(data => {
+      if (!data.success) return;
+
+      const bar = document.createElement("a");
+      bar.href = `receipt.php?order_id=${data.order_id}`;
+      bar.className = "active-order-bar";
+
+      bar.innerHTML = `
+        <span>Ongoing order: Pick-up (${data.pickup_display})</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      `;
+
+      document.body.appendChild(bar);
+      document.body.classList.add("has-active-order-bar");
+    })
+    .catch(() => {});
 }

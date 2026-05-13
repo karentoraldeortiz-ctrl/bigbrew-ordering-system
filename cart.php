@@ -5,11 +5,50 @@ date_default_timezone_set('Asia/Manila');
 
 $currentTime = date('H:i');
 $openingTime = '11:00';
-$closingTime = '21:00';
+$closingTime = '23:59';
 
 $isStoreOpen = ($currentTime >= $openingTime && $currentTime < $closingTime);
 $storeStatusText = $isStoreOpen ? 'Open' : 'Closed';
 $storeStatusClass = $isStoreOpen ? 'open' : 'closed';
+$now = time();
+$closingTimestamp = strtotime(date('Y-m-d') . ' ' . $closingTime);
+
+$pickup_options = [
+    'asap' => [
+        'label' => 'ASAP',
+        'minutes' => 30
+    ],
+    'in-30-min' => [
+        'label' => 'In 30 minutes',
+        'minutes' => 30
+    ],
+    'in-45-min' => [
+        'label' => 'In 45 minutes',
+        'minutes' => 45
+    ],
+    'in-1-hour' => [
+        'label' => 'In 1 hour',
+        'minutes' => 60
+    ],
+    'in-1-5-hour' => [
+        'label' => 'In 1 hour 30 minutes',
+        'minutes' => 90
+    ],
+    'in-2-hours' => [
+        'label' => 'In 2 hours',
+        'minutes' => 120
+    ],
+];
+$now = time();
+
+$asap_start = date('g:i A', strtotime('+15 minutes', $now));
+$asap_end   = date('g:i A', strtotime('+30 minutes', $now));
+
+$time_15 = date('g:i A', strtotime('+15 minutes', $now));
+$time_30 = date('g:i A', strtotime('+30 minutes', $now));
+$time_45 = date('g:i A', strtotime('+45 minutes', $now));
+$time_60 = date('g:i A', strtotime('+1 hour', $now));
+$time_90 = date('g:i A', strtotime('+1 hour 30 minutes', $now));
 
 $isLoggedIn = isset($_SESSION['user_id']);
 $user_id = $isLoggedIn ? $_SESSION['user_id'] : null;
@@ -320,16 +359,30 @@ if($isLoggedIn) {
                 <div class="display-time">
                     <i class="fa-solid fa-clock"></i> Pickup Time
                 </div>
-                <select name="pickup_time" id="pick-up-time" class="summary-input">
-                    <option value="asap">ASAP (15-30mins)</option>
-                    <option value="in-15-min">In 15 minutes</option>
-                    <option value="in-30-min">In 30 minutes</option>
-                    <option value="in-45-min">In 45 minutes</option>
-                    <option value="in-1-hour">In 1 hour</option>
-                    <option value="in-1-5-hour">In 1 hour 30 minutes</option>
-                </select>
+            <select name="pickup_time" id="pick-up-time" class="summary-input">
+                <?php foreach($pickup_options as $value => $option): ?>
+                    <?php
+                        if($value === 'asap') {
+                            $start = date('g:i A', strtotime('+15 minutes', $now));
+                            $end   = date('g:i A', strtotime('+30 minutes', $now));
+                            $display = "ASAP ({$start} - {$end})";
+                            $optionEndTime = strtotime('+30 minutes', $now);
+                        } else {
+                            $pickupTime = date('g:i A', strtotime('+' . $option['minutes'] . ' minutes', $now));
+                            $display = $option['label'] . " ({$pickupTime})";
+                            $optionEndTime = strtotime('+' . $option['minutes'] . ' minutes', $now);
+                        }
 
-                <div class="summary-label">Payment Method</div>
+                        $disabled = $optionEndTime > $closingTimestamp ? 'disabled' : '';
+                    ?>
+
+                    <option value="<?php echo $value; ?>" <?php echo $disabled; ?>>
+                        <?php echo $display; ?>
+                        <?php echo $disabled ? ' - Not Available' : ''; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>                
+            <div class="summary-label">Payment Method</div>
                 <div class="payment-fixed">
                     <span>Pay upon Pickup</span>
                 </div>
