@@ -299,3 +299,15 @@ function applyAvailability(availabilityMap) {
     });
 }
 
+// index filter into category
+document.addEventListener("DOMContentLoaded", () => {
+  const hash = window.location.hash.replace("#", "");
+
+  if (hash) {
+    const targetTab = document.querySelector(`.tab[data-category="${hash}"]`);
+
+    if (targetTab) {
+      targetTab.click();
+    }
+  }
+});

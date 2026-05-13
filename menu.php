@@ -99,11 +99,11 @@ while($row = mysqli_fetch_assoc($addons_result)) {
     <div class="tabs">
       <h1>MENU</h1>
       <button class="tab" data-category="all"><span>all</span></button>
-      <button class="tab" data-category="milk-tea"><span>milk tea</span></button>
-      <button class="tab" data-category="coffee"><span>coffee</span></button>
-      <button class="tab" data-category="fruit-tea"><span>fruit tea</span></button>
-      <button class="tab" data-category="praf"><span>praf</span></button>
-      <button class="tab" data-category="brosty"><span>brosty</span></button>
+      <button class="tab" id="milk-tea" data-category="milk-tea"><span>milk tea</span></button>
+      <button class="tab" id="coffee" data-category="coffee"><span>coffee</span></button>
+      <button class="tab" id="fruit-tea" data-category="fruit-tea"><span>fruit tea</span></button>
+      <button class="tab" id="praf" data-category="praf"><span>praf</span></button>
+      <button class="tab" id="brosty" data-category="brosty"><span>brosty</span></button>
     </div>
 
     <div id="no-results" style="display: none; text-align: center; padding: 50px; color: #231916;">

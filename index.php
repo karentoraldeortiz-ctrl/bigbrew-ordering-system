@@ -147,27 +147,27 @@ session_start();
             </div>
 
             <div class="category-preview-list">
-              <a href="menu.php?category=milk-tea" class="category-preview-card">
+              <a href="menu.php#milk-tea" class="category-preview-card">
                 <img src="assets/pictures/milktea.png" alt="Milk Tea">
                 <span>Milk Tea</span>
               </a>
               
-              <a href="menu.php?category=praf" class="category-preview-card">
+              <a href="menu.php#praf" class="category-preview-card">
                 <img src="assets/pictures/praf.png" alt="Praf">
                 <span>Praf</span>
               </a>
 
-              <a href="menu.php?category=fruit-tea" class="category-preview-card">
+              <a href="menu.php#fruit-tea" class="category-preview-card">
                 <img src="assets/pictures/fruittea.png" alt="Fruit Tea">
                 <span>Fruit Tea</span>
               </a>
 
-              <a href="menu.php?category=coffee" class="category-preview-card">
+              <a href="menu.php#coffee" class="category-preview-card">
                 <img src="assets/pictures/coffee.png" alt="Coffee">
                 <span>Coffee</span>
               </a>
 
-              <a href="menu.php?category=brosty" class="category-preview-card">
+              <a href="menu.php#brosty" class="category-preview-card">
                 <img src="assets/pictures/brosty.png" alt="Brosty">
                 <span>Brosty</span>
               </a>
