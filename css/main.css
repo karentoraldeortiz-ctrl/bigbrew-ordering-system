@@ -7,7 +7,132 @@ body {
 }
 
 /* ===== HOME PAGE ===== */
+/* ===== HOME HERO SLIDER ===== */
+.home-hero-slider {
+  width: min(80%, 1080px);
+  height: 180px;
+  margin: 6.2rem auto 28px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(45, 30, 23, 0.18);
+}
 
+.home-hero-card.hero-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: unset;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(18px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.home-hero-card.hero-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.home-hero-card {
+  background: var(--dark-color);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+/* Slide 1 */
+.price-side {
+  width: 25%;
+  text-align: center;
+  color: var(--pop-color);
+}
+
+.price-side h3 {
+  font-size: 1.45rem;
+  letter-spacing: 1px;
+}
+
+.price-side h2 {
+  font-size: 4rem;
+  line-height: 0.9;
+  color: white;
+  font-weight: 800;
+}
+
+.price-side p {
+  font-size: 1.45rem;
+  font-weight: 800;
+}
+
+.hero-center-text {
+  width: 50%;
+  text-align: center;
+}
+
+.hero-center-text img {
+  width: 42px;
+  margin-bottom: 8px;
+}
+
+.hero-center-text h1 {
+  font-size: 2.2rem;
+  line-height: 1.05;
+  letter-spacing: 1px;
+}
+
+/* Slide 2 */
+.image-slide {
+  background: transparent;
+}
+
+.image-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-main-slide {
+  background-image: url('../assets/pictures/gradient11.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-price-slide {
+  background: var(--dark-color);
+}
+@media (max-width: 600px) {
+  .home-hero-slider {
+    width: 90%;
+    height: 150px;
+    margin-top: 5.5rem;
+  }
+
+  .price-side h3 {
+    font-size: 0.8rem;
+  }
+
+  .price-side h2 {
+    font-size: 2.3rem;
+  }
+
+  .price-side p {
+    font-size: 0.9rem;
+  }
+
+  .hero-center-text img {
+    width: 28px;
+  }
+
+  .hero-center-text h1 {
+    font-size: 1.25rem;
+  }
+}
 /* Hero */
 /* Hero */
 .home-hero-card {

@@ -232,7 +232,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                   <button class="size-opt" data-size-id="2" data-price="39" value="grande">                </div> -->
                 
                       <button class="addons-toggle" type="button" aria-expanded="false">
-                          <span class="option-label">add ons</span>
+                          <span class="option-label"">add ons</span>
                           <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" 
                               width="16" height="16" viewBox="0 0 24 24" 
                               fill="none" stroke="currentColor" stroke-width="2.5" 
@@ -243,10 +243,10 @@ while($row = mysqli_fetch_assoc($addons_result)) {
                       <div class="addons-grid" hidden>                    <?php foreach($addons as $addon): ?>
                         <label>
                             <input type="checkbox" 
-       class="addon-check"
-       data-addon-id="<?php echo $addon['addon_id']; ?>"
-       data-price="<?php echo $addon['price']; ?>" 
-       value="<?php echo htmlspecialchars($addon['addon_name']); ?>">
+                              class="addon-check"
+                              data-addon-id="<?php echo $addon['addon_id']; ?>"
+                              data-price="<?php echo $addon['price']; ?>" 
+                              value="<?php echo htmlspecialchars($addon['addon_name']); ?>">
                             <span><?php echo htmlspecialchars($addon['addon_name']); ?></span>
                             <span class="addon-price">₱<?php echo $addon['price']; ?></span>
                         </label>

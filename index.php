@@ -71,27 +71,62 @@ session_start();
         </nav>
     </header>
 
-          <section class="home-hero-card"">
-            <img 
-              src="assets/pictures/milktea-hd.png" 
-              alt="BigBrew Drink" 
-              class="hero-drink hero-drink-left"
-            />
+      <section class="home-hero-slider">
 
-            <div class="home-hero-text">
-              <h1>Sip Your Favorites<br />Without the Wait.</h1>
-              <p>
-                Discover your favorite BigBrew drinks and order online for quick and easy pickup.
-              </p>
-              <a href="menu.php" class="hero-order-btn">Order Now</a>
-            </div>
+        <!-- SLIDE 1 -->
+        <div class="home-hero-card hero-slide active hero-main-slide">
 
-            <img 
-              src="assets/pictures/milktea-hd.png" 
-              alt="BigBrew Drink" 
-              class="hero-drink hero-drink-right"
-            />
-          </section>
+          <img 
+            src="assets/pictures/milktea-hd.png" 
+            alt="BigBrew Drink" 
+            class="hero-drink hero-drink-left"
+          />
+
+          <div class="home-hero-text">
+            <h1>Sip Your Favorites<br />Without the Wait.</h1>
+
+            <p>
+              Discover your favorite BigBrew drinks and order online for quick and easy pickup.
+            </p>
+
+            <a href="menu.php" class="hero-order-btn">Order Now</a>
+          </div>
+
+          <img 
+            src="assets/pictures/milktea-hd.png" 
+            alt="BigBrew Drink" 
+            class="hero-drink hero-drink-right"
+          />
+        </div>
+
+        <!-- SLIDE 2 -->
+        <div class="home-hero-card hero-slide hero-price-slide">
+
+          <div class="price-side left">
+            <h3>MEDIO</h3>
+            <h2>29</h2>
+            <p>16oz</p>
+          </div>
+
+          <div class="hero-center-text">
+            <img src="assets/logo/logo-white.png" alt="BigBrew Logo">
+            <h1>BIG IN TASTE.<br>BIT IN PRICE.</h1>
+          </div>
+
+          <div class="price-side right">
+            <h3>GRANDE</h3>
+            <h2>39</h2>
+            <p>22oz</p>
+          </div>
+
+        </div>
+
+        <!-- SLIDE 3 -->
+        <div class="home-hero-card hero-slide image-slide">
+          <img src="assets/pictures/add-ons.png" alt="Add Ons Banner">
+        </div>
+
+      </section>   
 
           <section class="home-menu-preview">
             <div class="home-section-header">
