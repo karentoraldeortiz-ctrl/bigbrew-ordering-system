@@ -1,7 +1,6 @@
 document.querySelectorAll('.flip-btn').forEach(button => {
     button.addEventListener('click', function (e) {
         e.stopPropagation();
-
         const card = this.closest('.card');
         card.classList.toggle('flip');
     });
@@ -13,15 +12,15 @@ const noResultsMessage = document.getElementById('no-results');
 document.querySelector('.tab[data-category="all"]').classList.add('active');
 
 document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t =>
-      t.classList.remove('active', 'just-activated')
-    );
-    tab.classList.add('active');
-    void tab.offsetWidth; // force reflow
-    tab.classList.add('just-activated');
-    setTimeout(() => tab.classList.remove('just-activated'), 650);
-  });
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t =>
+            t.classList.remove('active', 'just-activated')
+        );
+        tab.classList.add('active');
+        void tab.offsetWidth;
+        tab.classList.add('just-activated');
+        setTimeout(() => tab.classList.remove('just-activated'), 650);
+    });
 });
 
 filterButtons.forEach(button => {
@@ -45,128 +44,120 @@ filterButtons.forEach(button => {
     });
 });
 
-// ========== END OF MENU PAGE JS =============
-
-// ================ POP UP WINDOW
+// ========== POP UP WINDOW ==========
 const modal = document.getElementById('productModal');
 const addBtns = document.querySelectorAll('.add-btn');
 const closeBtn = document.querySelector('.close-modal');
-let selectedProductId = null;   
+let selectedProductId = null;
 
-// dito b-base natin ung price sa selected size ng user
 let currentBasePrice = 0;
 let selectedSize = "";
 let selectedSizeId = null;
 
-// pag nagclick si user sa certain product, kukunin nya infoo
 addBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
-
-        // let selectedProductId = null;
         selectedProductId = btn.getAttribute('data-id');
 
         const category = btn.getAttribute('data-category');
-        document.getElementById('modalProductCategory').innerText = 
+        document.getElementById('modalProductCategory').innerText =
             category ? category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : '';
 
         const card = e.target.closest('.card-front');
         const img = card.querySelector('img').src;
         const name = card.querySelector('h3').innerText;
 
-        // ditooo, i-update nya yung content
         document.getElementById('modalProductImg').src = img;
         document.getElementById('modalProductName').innerText = name;
 
-        // dito naman, i-reset na nya everything
+        // Reset everything
         currentBasePrice = 0;
         selectedSize = "";
         selectedSizeId = null;
 
         document.querySelectorAll('.size-opt').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.addon-check').forEach(c => c.checked = false);
+        document.querySelectorAll('.addon-check').forEach(c => {
+            c.checked = false;
+            c.closest('label').style.display = 'none';
+        });
         document.getElementById('qtyVal').innerText = "1";
         document.getElementById('btnAddToCart').disabled = true;
+        document.getElementById('displayPrice').innerText = "0";
+        document.getElementById('selectionText').innerText = "Please select a size";
 
-        // I-build ang size buttons dynamically galing sa DB data
-            const sizesJSON   = btn.getAttribute('data-sizes');
-            const sizeContainer = document.querySelector('.size-container');
-            sizeContainer.innerHTML = ''; // clear muna
+        // Hide "no addons" message muna habang naglo-load
+        const noAddonsMsg = document.getElementById('noAddonsMsg');
+        if (noAddonsMsg) noAddonsMsg.style.display = 'none';
 
-            if (sizesJSON) {
-                const sizes = JSON.parse(sizesJSON);
-                sizes.forEach(size => {
-                    const sizeBtn = document.createElement('button');
-                    sizeBtn.classList.add('size-opt');
-                    sizeBtn.setAttribute('data-size-id', size.size_id);
-                    sizeBtn.setAttribute('data-price', size.price);
-                    sizeBtn.value = size.size_name;
-                    sizeBtn.innerHTML = `${size.size_name} <span>₱${size.price}</span>`;
+        // Build size buttons dynamically
+        const sizesJSON = btn.getAttribute('data-sizes');
+        const sizeContainer = document.querySelector('.size-container');
+        sizeContainer.innerHTML = '';
 
-                    sizeBtn.addEventListener('click', (e) => {
-                        document.querySelectorAll('.size-opt').forEach(b => b.classList.remove('active'));
-                        e.currentTarget.classList.add('active');
-                        currentBasePrice = parseInt(e.currentTarget.getAttribute('data-price'));
-                        selectedSize     = e.currentTarget.value;
-                        selectedSizeId   = e.currentTarget.getAttribute('data-size-id');
-                        document.getElementById('btnAddToCart').disabled = false;
-                        calculatePrice();
-                    });
+        if (sizesJSON) {
+            const sizes = JSON.parse(sizesJSON);
+            sizes.forEach(size => {
+                const sizeBtn = document.createElement('button');
+                sizeBtn.classList.add('size-opt');
+                sizeBtn.setAttribute('data-size-id', size.size_id);
+                sizeBtn.setAttribute('data-price', size.price);
+                sizeBtn.value = size.size_name;
+                sizeBtn.innerHTML = `${size.size_name} <span>&#8369;${size.price}</span>`;
 
-                    sizeContainer.appendChild(sizeBtn);
+                sizeBtn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.size-opt').forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    currentBasePrice = parseInt(e.currentTarget.getAttribute('data-price'));
+                    selectedSize = e.currentTarget.value;
+                    selectedSizeId = e.currentTarget.getAttribute('data-size-id');
+                    document.getElementById('btnAddToCart').disabled = false;
+                    calculatePrice();
                 });
-            }
 
-        // I-fetch kung anong add-ons lang ang assigned sa product na ito
-fetch(`admin/menu.php?action=get_product_addons&id=${selectedProductId}`)
-    .then(res => res.json())
-    .then(assignedAddons => {
-        const assignedIds = assignedAddons.map(a => parseInt(a.addon_id));
+                sizeContainer.appendChild(sizeBtn);
+            });
+        }
 
-        document.querySelectorAll('.addon-check').forEach(check => {
-            const label = check.closest('label');
-            // Kunin ang addon_id mula sa data attribute (idadagdag natin sa HTML)
-            const addonId = parseInt(check.dataset.addonId);
+        // Fetch assigned addons para sa product na ito
+        fetch(`admin/menu.php?action=get_product_addons&id=${selectedProductId}`)
+            .then(res => res.json())
+            .then(assignedAddons => {
+                const assignedIds = assignedAddons.map(a => parseInt(a.addon_id));
+                let visibleCount = 0;
 
-            if (assignedIds.length === 0 || assignedIds.includes(addonId)) {
-                label.style.display = '';
-            } else {
-                label.style.display = 'none';
-                check.checked = false; // i-uncheck para hindi ma-include sa price
-            }
-        });
+                document.querySelectorAll('.addon-check').forEach(check => {
+                    const label = check.closest('label');
+                    const addonId = parseInt(check.dataset.addonId);
+                    check.checked = false;
 
-        calculatePrice();
-    })
-    .catch(() => {
-        // Fallback: ipakita lahat
-        document.querySelectorAll('.addon-check').forEach(check => {
-            check.closest('label').style.display = '';
-        });
-        calculatePrice();
-    });
+                    if (assignedIds.includes(addonId)) {
+                        label.style.display = '';
+                        visibleCount++;
+                    } else {
+                        label.style.display = 'none';
+                    }
+                });
 
-modal.style.display = 'flex';
+                // Ipakita ang "no add ons" message kung walang assigned
+                if (noAddonsMsg) {
+                    noAddonsMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+                }
 
-        
-    });
-});
+                calculatePrice();
+            })
+            .catch(() => {
+                document.querySelectorAll('.addon-check').forEach(check => {
+                    check.checked = false;
+                    check.closest('label').style.display = 'none';
+                });
+                if (noAddonsMsg) noAddonsMsg.style.display = 'block';
+                calculatePrice();
+            });
 
-// size selection
-document.querySelectorAll('.size-opt').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.size-opt').forEach(b => b.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-
-        currentBasePrice = parseInt(e.currentTarget.getAttribute('data-price'));
-        selectedSize = e.currentTarget.value;
-        selectedSizeId = e.currentTarget.getAttribute('data-size-id');
-
-        document.getElementById('btnAddToCart').disabled = false;
-        calculatePrice();
+        modal.style.display = 'flex';
     });
 });
 
-// calculation
+// Calculation
 function calculatePrice() {
     let addonsTotal = 0;
     let names = [];
@@ -208,27 +199,22 @@ document.getElementById('btnMinus').addEventListener('click', () => {
     }
 });
 
-// add to cart
+// Add to cart
 document.getElementById('btnAddToCart').addEventListener('click', () => {
-
     let addonsTotal = 0;
 
     document.querySelectorAll('.addon-check:checked').forEach(check => {
-    addonsTotal += parseInt(check.getAttribute('data-price'));
-    
-});
+        addonsTotal += parseInt(check.getAttribute('data-price'));
+    });
 
-if (!selectedProductId || !selectedSizeId) {
-    alert("Please select product and size");
-    return;
-}
+    if (!selectedProductId || !selectedSizeId) {
+        alert("Please select product and size");
+        return;
+    }
 
-
-        fetch('add_to_cart.php', {
+    fetch('add_to_cart.php', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
             product_id: selectedProductId,
             size_id: selectedSizeId,
@@ -249,28 +235,15 @@ if (!selectedProductId || !selectedSizeId) {
             alert(data.message);
         }
     });
-
 });
-document.querySelector('.addons-toggle').addEventListener('click', function () {
-    const grid = document.querySelector('.addons-grid');
-    const isOpen = this.getAttribute('aria-expanded') === 'true';
 
-    this.setAttribute('aria-expanded', String(!isOpen));
-
-    if (isOpen) {
-        grid.setAttribute('hidden', '');
-    } else {
-        grid.removeAttribute('hidden');
-    }
-})
-// close modal
+// Close modal
 closeBtn.onclick = () => modal.style.display = 'none';
 window.onclick = (e) => {
     if (e.target == modal) modal.style.display = 'none';
 };
 
 // ========== CART TOAST + BADGE ==========
-
 function showCartToast(msg) {
     let container = document.getElementById('toastContainer');
     if (!container) {
@@ -293,12 +266,8 @@ function showCartToast(msg) {
 // ── Realtime availability polling ──────────────────────────
 function applyAvailability(availabilityMap) {
     document.querySelectorAll('.card').forEach(card => {
-        // Kuhanin ang pid mula sa data attribute ng card mismo, hindi sa btn
         const btn = card.querySelector('.add-btn');
-        const badge = card.querySelector('.unavailable-badge');
-        const pid = btn ? btn.dataset.id : (badge ? null : null);
 
-        // I-store ang product_id sa card mismo para hindi mawala kahit naka-hide ang btn
         if (btn && btn.dataset.id) {
             card.dataset.productId = btn.dataset.id;
         }
@@ -320,7 +289,6 @@ function applyAvailability(availabilityMap) {
                 newBadge.textContent = 'Not Available';
                 front.appendChild(newBadge);
             }
-
         } else if (isAvailable && alreadyUnavailable) {
             card.classList.remove('not-available');
             if (btn) btn.style.display = '';
