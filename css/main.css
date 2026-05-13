@@ -135,7 +135,28 @@ body {
 }
 /* Hero */
 /* Hero */
-.home-hero-card {
+.hero-price-slide-dark {
+  background: var(--dark-color);
+}
+
+.hero-price-slide-light {
+  background: var(--pop-color);
+}
+
+.hero-price-slide-light .hero-center-text h1,
+.hero-price-slide-light .price-side h2 {
+  color: white;
+}
+
+.hero-price-slide-light .price-side h3,
+.hero-price-slide-light .price-side p {
+  color: #2D1E17;
+}
+ 
+/* .hero-price-slide-light .hero-center-text img {
+  filter: brightness(0.2);
+} */
+/* .home-hero-card {
   position: relative;
   width: min(80%, 1080px);
   min-height: 180px;
@@ -150,7 +171,7 @@ body {
   align-items: center;
   color: white;
   box-shadow: 0 8px 24px rgba(45, 30, 23, 0.18);
-}
+} */
 /* .home-hero-card::after {
   content: "";
   position: absolute;
@@ -158,17 +179,21 @@ body {
   background: linear-gradient(to bottom, transparent 65%, rgba(255,248,228,0.35));
   pointer-events: none;
 } */
-
+.home-hero-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .home-hero-text {
   position: relative;
   z-index: 2;
   max-width: 460px;
   text-align: center;
-  padding: 24px 18px;
+  padding: 44px 18px;
 }
 
 .home-hero-text h1 {
-  font-size: clamp(1.55rem, 3vw, 2.35rem);
+  font-size: clamp(1.55rem, 3vw, 2rem);
   line-height: 1.15;
   margin-bottom: 9px;
   font-weight: 800;

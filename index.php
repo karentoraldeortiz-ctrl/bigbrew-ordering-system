@@ -71,63 +71,75 @@ session_start();
         </nav>
     </header>
 
-      <section class="home-hero-slider">
+<section class="home-hero-slider">
 
-        <!-- SLIDE 1 -->
-        <div class="home-hero-card hero-slide active hero-main-slide">
+  <!-- SLIDE 1 -->
+  <div class="home-hero-card hero-slide active hero-price-slide-dark">
 
-          <img 
-            src="assets/pictures/milktea-hd.png" 
-            alt="BigBrew Drink" 
-            class="hero-drink hero-drink-left"
-          />
+    <div class="price-side left">
+      <h3>MEDIO</h3>
+      <h2>29</h2>
+      <p>16oz</p>
+    </div>
 
-          <div class="home-hero-text">
-            <h1>Sip Your Favorites<br />Without the Wait.</h1>
+    <div class="hero-center-text">
+      <img src="assets/logo/logo-white.png" alt="BigBrew Logo">
+      <h1>BIG IN TASTE.<br>BIT IN PRICE.</h1>
+    </div>
 
-            <p>
-              Discover your favorite BigBrew drinks and order online for quick and easy pickup.
-            </p>
+    <div class="price-side right">
+      <h3>GRANDE</h3>
+      <h2>39</h2>
+      <p>22oz</p>
+    </div>
 
-            <a href="menu.php" class="hero-order-btn">Order Now</a>
-          </div>
+  </div>
 
-          <img 
-            src="assets/pictures/milktea-hd.png" 
-            alt="BigBrew Drink" 
-            class="hero-drink hero-drink-right"
-          />
-        </div>
+  <!-- SLIDE 2 -->
+  <div class="home-hero-card hero-slide  hero-main-slide">
 
-        <!-- SLIDE 2 -->
-        <div class="home-hero-card hero-slide hero-price-slide">
+    <img 
+      src="assets/pictures/milktea-hd.png" 
+      alt="BigBrew Drink" 
+      class="hero-drink hero-drink-left"
+    />
 
-          <div class="price-side left">
-            <h3>MEDIO</h3>
-            <h2>29</h2>
-            <p>16oz</p>
-          </div>
+    <div class="home-hero-text">
+      <h1>Sip Your Favorites<br />Without the Wait.</h1>
 
-          <div class="hero-center-text">
-            <img src="assets/logo/logo-white.png" alt="BigBrew Logo">
-            <h1>BIG IN TASTE.<br>BIT IN PRICE.</h1>
-          </div>
+      <a href="menu.php" class="hero-order-btn">Order Now</a>
+    </div>
 
-          <div class="price-side right">
-            <h3>GRANDE</h3>
-            <h2>39</h2>
-            <p>22oz</p>
-          </div>
+    <img 
+      src="assets/pictures/milktea-hd.png" 
+      alt="BigBrew Drink" 
+      class="hero-drink hero-drink-right"
+    />
+  </div>
 
-        </div>
+  <!-- SLIDE 3 -->
+  <div class="home-hero-card hero-slide  hero-price-slide-light">
 
-        <!-- SLIDE 3 -->
-        <div class="home-hero-card hero-slide image-slide">
-          <img src="assets/pictures/add-ons.png" alt="Add Ons Banner">
-        </div>
+    <div class="price-side left">
+      <h3>MEDIO</h3>
+      <h2>29</h2>
+      <p>16oz</p>
+    </div>
 
-      </section>   
+    <div class="hero-center-text">
+      <img src="assets/logo/logo-black.png" alt="BigBrew Logo">
+      <h1>BIG IN TASTE.<br>BIT IN PRICE.</h1>
+    </div>
 
+    <div class="price-side right">
+      <h3>GRANDE</h3>
+      <h2>39</h2>
+      <p>22oz</p>
+    </div>
+
+  </div>
+
+</section>
           <section class="home-menu-preview">
             <div class="home-section-header">
               <h2>Menu</h2>
@@ -169,7 +181,7 @@ session_start();
 
         <section class="best-seller">
           <div class="best-seller-header">
-            <h2>Good Afternoon!</h2>
+            <h2>What are you craving for?</h2>
             <p>Treat yourself with our best sellers!</p>
           </div>        
           <div class="products">
