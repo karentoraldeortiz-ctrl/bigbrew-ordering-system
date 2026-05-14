@@ -1940,3 +1940,44 @@ a
 .remove-unavailable-btn:hover {
     background: #fca5a5;
 }
+
+/* ===== STAGGERED CART ENTRANCE ===== */
+@keyframes cartItemEnter {
+    0% {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(-5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cart-item.animate-in {
+    animation: cartItemEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+/* Buy Again — extra highlight flash after entrance */
+@keyframes highlightFlash {
+    0%   { background: white; }
+    30%  { background: #fff3e0; box-shadow: 0 0 0 2px var(--pop-color); }
+    100% { background: white; box-shadow: none; }
+}
+
+.cart-item.buy-again-highlight {
+    animation: cartItemEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+               highlightFlash 1.2s ease 0.45s forwards !important;
+}
+
+.cart-item {
+    opacity: 0; /* default hidden */
+}
+
+.cart-item.animate-in,
+.cart-item.buy-again-highlight {
+    opacity: 1; /* ensure visible after animation */
+}

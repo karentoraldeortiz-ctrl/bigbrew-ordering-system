@@ -89,7 +89,7 @@ if($status === 'pending') {
     $receipt_subtitle = 'Your order is ready. Please proceed to the store for pickup.';
 } elseif($status === 'completed') {
     $receipt_title    = 'Order Completed';
-    $receipt_subtitle = 'Thank you, Brew! Buy again soon.';
+    $receipt_subtitle = 'Thank you, Brew! Buy again.';
 } elseif($status === 'cancelled') {
     $receipt_title    = 'Order Cancelled';
     $receipt_subtitle = 'This order has been cancelled.';
@@ -135,15 +135,23 @@ if($status === 'pending') {
     ?>
 </div>
 
-    <div>
-        <h2 class="receipt-title">
-            <?php echo $receipt_title; ?>
-        </h2>
-        <p class="receipt-subtitle">
-            <?php echo $receipt_subtitle; ?>
-        </p>
-    </div>
-</div>            
+        <div>
+            <h2 class="receipt-title">
+                <?php echo $receipt_title; ?>
+            </h2>
+
+            <?php if($status === 'preparing' || $status === 'ready_for_pickup'): ?>
+                <p class="receipt-pickup-time">
+                    <i class="fa-solid fa-clock"></i>
+                    Pick-up at: <?php echo htmlspecialchars($pickup_display ?? 'ASAP'); ?>
+                </p>
+            <?php endif; ?>
+
+            <p class="receipt-subtitle">
+                <?php echo $receipt_subtitle; ?>
+            </p>
+        </div>
+            </div>
 
     <div class="receipt-main-box">
         <div class="receipt-id-row">
@@ -237,11 +245,25 @@ if($status === 'pending') {
         <div class="receipt-actions">
             <?php if($status === 'pending'): ?>
                 <!-- PENDING: Cancel lang -->
-                <form method="POST" action="cancel_order.php" 
-                    onsubmit="return confirm('Are you sure you want to cancel this order?');">
-                    <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-                    <button type="submit" class="btn-cancel-order btn-full">Cancel Order</button>
-                </form>
+                <button class="btn-cancel-order btn-full" onclick="showCancelModal()">
+                    Cancel Order
+                </button>
+
+                <!-- Cancel Confirmation Modal -->
+<div id="cancelModal" class="auth-modal-overlay" style="display:none;">
+    <div class="auth-modal-card">
+        <div class="auth-modal-icon">🗑️</div>
+        <h3>Cancel Order?</h3>
+        <p>Are you sure you want to cancel this order? This cannot be undone.</p>
+        <div class="auth-modal-actions">
+            <button class="auth-btn-secondary" onclick="closeCancelModal()">Go Back</button>
+            <form method="POST" action="cancel_order.php" style="width:100%;">
+                <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+                <button type="submit" class="auth-btn-danger">Yes, Cancel Order</button>
+            </form>
+        </div>
+    </div>
+</div>
 
             <?php elseif($status === 'preparing' || $status === 'ready_for_pickup'): ?>
                 <!-- PREPARING / READY: disabled Cancel lang -->
@@ -271,8 +293,10 @@ if($status === 'pending') {
                             title="Completed orders cannot be cancelled.">
                         Cancel Order
                 </button>
-                    <a href="menu.php" class="btn-buy-again">Buy Again</a>
-                </div>
+<form method="POST" action="buy_again.php" style="flex:1;">
+    <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+    <button type="submit" class="btn-buy-again">Buy Again</button>
+</form>                </div>
 
             <?php elseif($status === 'cancelled'): ?>
                 <!-- CANCELLED: Buy Again lang -->
@@ -284,5 +308,45 @@ if($status === 'pending') {
         </div>
 
 </div>
+<script>
+const ORDER_ID  = <?php echo $order_id; ?>;
+const CURR_STATUS = '<?php echo $status; ?>';
+
+// I-poll lang kung hindi pa completed o cancelled
+if(CURR_STATUS !== 'completed' && CURR_STATUS !== 'cancelled') {
+    
+    let lastStatus = CURR_STATUS;
+
+    function pollStatus() {
+        fetch(`get_order_status.php?order_id=${ORDER_ID}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.error) return;
+
+                // Kung nagbago ang status — reload na para ma-update lahat ng UI
+                if(data.status !== lastStatus) {
+                    location.reload();
+                }
+            })
+            .catch(err => console.warn('Poll failed:', err));
+    }
+
+    // Poll every 5 seconds
+    setInterval(pollStatus, 1000);
+}
+
+function showCancelModal() {
+    document.getElementById('cancelModal').style.display = 'flex';
+}
+
+function closeCancelModal() {
+    document.getElementById('cancelModal').style.display = 'none';
+}
+
+// Close kapag nag-click sa overlay
+document.getElementById('cancelModal').addEventListener('click', function(e) {
+    if(e.target === this) closeCancelModal();
+});
+</script>
 </body>
 </html>

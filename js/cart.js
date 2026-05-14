@@ -130,7 +130,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if(subtotalDisplay) subtotalDisplay.textContent = `P ${grandTotal.toFixed(2)}`;
         if(totalDisplay)    totalDisplay.textContent    = `P ${grandTotal.toFixed(2)}`;
     }
+    // ===== STAGGERED CART ENTRANCE =====
+        
+            const cartItems = document.querySelectorAll('.cart-item');
 
+            cartItems.forEach((item, index) => {
+                const delay = index * 80;
+
+                setTimeout(() => {
+                    item.classList.add(
+                        window.IS_BUY_AGAIN ? 'buy-again-highlight' : 'animate-in'
+                    );
+                }, delay);
+            });
+    
     // ============================================================
     // CHECK IF EMPTY
     // ============================================================

@@ -1757,7 +1757,77 @@ textarea {
   transform: translateY(-2px);
 }
 
-@media (max-width: 600px) {
+/* ── ORDER HISTORY ACTION BUTTONS ──────────────────────────────────────────── */
+
+/* Wrapper for the buttons on the right side of each order card */
+.order-history-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Cancel button — active (pending) */
+.btn-cancel-order-history {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  border: 1.5px solid #e53e3e;
+  background: transparent;
+  color: #e53e3e;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-cancel-order-history.btn-cancel-active:hover {
+  background: #e53e3e;
+  color: #fff;
+}
+
+/* Cancel button — disabled (preparing) */
+.btn-cancel-order-history.btn-cancel-disabled {
+  border-color: #ccc;
+  color: #bbb;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Reorder button (cancelled orders) */
+.btn-reorder-history {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  border: 1.5px solid #6b7280;
+  background: #6b7280;
+  color: #fff;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.btn-reorder-history:hover {
+  opacity: 0.85;
+}
+.btn-buy-again-history {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  border: 1.5px solid #b36b21;
+  background: #b36b21;
+  color: #fff;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.btn-buy-again-history:hover {
+  opacity: 0.85;
+}@media (max-width: 600px) {
   .guest-account-card {
     padding: 35px 24px;
   }

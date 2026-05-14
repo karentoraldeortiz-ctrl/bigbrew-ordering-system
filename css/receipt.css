@@ -525,3 +525,87 @@ body {
 .btn-disabled-cancel:hover::before {
     opacity: 1;
 }
+
+.receipt-pickup-time {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--pop-color);
+    margin: 4px 0 2px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.auth-btn-danger {
+    width: 100%;
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.auth-btn-danger:hover {
+    background: #b91c1c;
+}
+
+/* Reuse modal styles — copied from auth.css */
+.auth-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.auth-modal-card {
+    background: white;
+    border-radius: 20px;
+    padding: 36px 28px;
+    max-width: 340px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    animation: modalPop 0.25s ease;
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+.auth-modal-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.auth-modal-card h3 { font-size: 1.2rem; color: var(--dark-color); margin-bottom: 8px; }
+.auth-modal-card p { font-size: 0.9rem; color: #666; margin-bottom: 24px; line-height: 1.5; }
+.auth-modal-actions { display: flex; flex-direction: column; gap: 10px; }
+
+.auth-btn-secondary {
+    background: transparent;
+    color: var(--pop-color);
+    border: 2px solid var(--pop-color);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.auth-btn-secondary:hover { background: #fff4e0; }
+
+.receipt-btn-row form {
+    flex: 1;
+    display: flex;
+}
+
+.receipt-btn-row form .btn-buy-again {
+    width: 100%;
+}

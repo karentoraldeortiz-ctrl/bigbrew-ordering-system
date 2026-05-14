@@ -302,7 +302,8 @@ if($isLoggedIn) {
                     data-cart-item-id="<?php echo htmlspecialchars($item['cart_item_id']); ?>"
                     data-product-id="<?php echo htmlspecialchars($item['product_id']); ?>"
                     data-unit-price="<?php echo $item['unit_price']; ?>"
-                    data-is-guest="<?php echo !$isLoggedIn ? '1' : '0'; ?>">
+                    data-is-guest="<?php echo !$isLoggedIn ? '1' : '0'; ?>"
+                    data-index="<?php echo $index; ?>">
 
                     <img src="assets/products/<?php echo htmlspecialchars($item['image']); ?>"
                          alt="<?php echo htmlspecialchars($item['product_name']); ?>">
@@ -466,6 +467,12 @@ window.__initialAvailability = <?php
     }
     echo json_encode($avail_data);
 ?>;
+</script>
+<script>
+    window.IS_BUY_AGAIN = <?php 
+        echo isset($_SESSION['buy_again_order']) ? 'true' : 'false'; 
+        unset($_SESSION['buy_again_order']); // clear after use
+    ?>;
 </script>
 <script src="js/global.js"></script>
 <script src="js/cart.js"></script>
