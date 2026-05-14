@@ -11,43 +11,56 @@ if (isset($_GET['action'])) {
 
     // ── Stats cards ──────────────────────────────────────────────────────
     if ($action === 'stats') {
-        // Total revenue (completed/delivered orders only)
         $rev = mysqli_fetch_assoc(mysqli_query($conn,
             "SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders
              WHERE order_status NOT IN ('cancelled', 'pending')"
         ));
 
-        // Total orders
+        $rev_month = mysqli_fetch_assoc(mysqli_query($conn,
+            "SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders
+             WHERE order_status NOT IN ('cancelled', 'pending')
+             AND MONTH(created_at) = MONTH(CURDATE())
+             AND YEAR(created_at) = YEAR(CURDATE())"
+        ));
+
         $ord = mysqli_fetch_assoc(mysqli_query($conn,
             "SELECT COUNT(*) AS total FROM orders"
         ));
 
-        // Total clients (registered users)
         $cli = mysqli_fetch_assoc(mysqli_query($conn,
             "SELECT COUNT(*) AS total FROM users"
         ));
 
-        // Active products
+        $cli_new = mysqli_fetch_assoc(mysqli_query($conn,
+            "SELECT COUNT(*) AS total FROM users
+             WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)"
+        ));
+
         $pro = mysqli_fetch_assoc(mysqli_query($conn,
             "SELECT COUNT(*) AS total FROM products WHERE is_available = 1"
         ));
 
         echo json_encode([
-            'revenue'  => (float) $rev['total'],
-            'orders'   => (int)   $ord['total'],
-            'clients'  => (int)   $cli['total'],
-            'products' => (int)   $pro['total'],
+            'revenue'       => (float) $rev['total'],
+            'revenue_month' => (float) $rev_month['total'],
+            'orders'        => (int)   $ord['total'],
+            'clients'       => (int)   $cli['total'],
+            'clients_new'   => (int)   $cli_new['total'],
+            'products'      => (int)   $pro['total'],
         ]);
         exit;
     }
 
-    // ── Sales chart — last 7 days ─────────────────────────────────────────
+    // ── Sales chart ───────────────────────────────────────────────────────
     if ($action === 'chart') {
+        $range = isset($_GET['range']) ? (int)$_GET['range'] : 7;
+        if (!in_array($range, [7, 14, 30])) $range = 7;
+
         $rows = [];
         $res  = mysqli_query($conn,
             "SELECT DATE(created_at) AS day, COALESCE(SUM(total_amount), 0) AS total
              FROM orders
-             WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+             WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL " . ($range - 1) . " DAY)
                AND order_status NOT IN ('cancelled', 'pending')
              GROUP BY DATE(created_at)
              ORDER BY day ASC"
@@ -55,8 +68,7 @@ if (isset($_GET['action'])) {
         $map = [];
         while ($r = mysqli_fetch_assoc($res)) $map[$r['day']] = (float)$r['total'];
 
-        // Fill in missing days with 0
-        for ($i = 6; $i >= 0; $i--) {
+        for ($i = $range - 1; $i >= 0; $i--) {
             $d = date('Y-m-d', strtotime("-$i days"));
             $rows[] = ['date' => $d, 'total' => $map[$d] ?? 0];
         }
@@ -69,18 +81,39 @@ if (isset($_GET['action'])) {
         $products = [];
         $res = mysqli_query($conn,
             "SELECT p.product_name, p.image, p.category,
-            SUM(oi.quantity) AS total_sold,
-            SUM(oi.quantity * oi.unit_price) AS total_revenue
-     FROM order_items oi
-     JOIN products p ON oi.product_id = p.product_id
-     JOIN orders o ON oi.order_id = o.order_id
-     WHERE o.order_status NOT IN ('cancelled', 'pending')
-     GROUP BY oi.product_id
-     ORDER BY total_sold DESC, total_revenue DESC
-     LIMIT 5"
+                    SUM(oi.quantity) AS total_sold,
+                    SUM(oi.quantity * oi.unit_price) AS total_revenue
+             FROM order_items oi
+             JOIN products p ON oi.product_id = p.product_id
+             JOIN orders o ON oi.order_id = o.order_id
+             WHERE o.order_status NOT IN ('cancelled', 'pending')
+             GROUP BY oi.product_id
+             ORDER BY total_sold DESC, total_revenue DESC
+             LIMIT 5"
         );
         while ($r = mysqli_fetch_assoc($res)) $products[] = $r;
         echo json_encode($products);
+        exit;
+    }
+
+    // ── Peak hours ────────────────────────────────────────────────────────
+    if ($action === 'peak_hours') {
+        $rows = [];
+        $res  = mysqli_query($conn,
+            "SELECT HOUR(created_at) AS hour, COUNT(*) AS total_orders
+             FROM orders
+             WHERE order_status NOT IN ('cancelled', 'pending')
+             GROUP BY HOUR(created_at)
+             ORDER BY hour ASC"
+        );
+        $map = [];
+        while ($r = mysqli_fetch_assoc($res)) $map[(int)$r['hour']] = (int)$r['total_orders'];
+
+        for ($h = 0; $h < 24; $h++) {
+            $label = date('g A', mktime($h, 0, 0));
+            $rows[] = ['hour' => $label, 'total' => $map[$h] ?? 0];
+        }
+        echo json_encode($rows);
         exit;
     }
 
@@ -152,6 +185,7 @@ if (isset($_GET['action'])) {
         <div class="stat-info">
           <h3 id="statRevenue"><i class="fa fa-spinner fa-spin"></i></h3>
           <p>Total Revenue</p>
+          <span id="statRevenueMonth" class="stat-badge"></span>
         </div>
       </div>
       <div class="stat-card orders">
@@ -166,6 +200,7 @@ if (isset($_GET['action'])) {
         <div class="stat-info">
           <h3 id="statClients"><i class="fa fa-spinner fa-spin"></i></h3>
           <p>Total Clients</p>
+          <span id="statClientsNew" class="stat-badge"></span>
         </div>
       </div>
       <div class="stat-card products">
@@ -184,7 +219,11 @@ if (isset($_GET['action'])) {
       <div class="panel">
         <div class="panel-header">
           <h4>Sales Report</h4>
-          <span class="panel-sub">Last 7 days</span>
+          <div class="chart-filters">
+            <button class="chart-filter-btn active" data-range="7">Last 7 days</button>
+            <button class="chart-filter-btn" data-range="14">Last 14 days</button>
+            <button class="chart-filter-btn" data-range="30">Last 30 days</button>
+          </div>
         </div>
         <div class="panel-body chart-body">
           <canvas id="salesChart"></canvas>
@@ -207,21 +246,38 @@ if (isset($_GET['action'])) {
           </div>
         </div>
       </div>
-
+        <!-- Peak Hours Chart — full width, outside dash-panels grid -->
+    <div class="panel panel-full">
+      <div class="panel-header">
+        <h4>Peak Hours</h4>
+        <span class="panel-sub">All time</span>
+      </div>
+      <div class="panel-body chart-body" style="height:280px;">
+        <canvas id="peakChart"></canvas>
+        <div id="peakEmpty" class="panel-empty" style="display:none;">
+          <i class="fa fa-clock"></i>
+          <p>No orders data yet.</p>
+        </div>
+      </div>
     </div>
+    </div>
+
+  
+
   </main>
-   <nav class="bottom-nav">
+
+  <nav class="bottom-nav">
     <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : ''; ?>">
-        <i class="fa fa-dashboard nav-icon"></i><span>Dashboard</span>
-    </a>
+      <i class="fa fa-dashboard nav-icon"></i><span>Dashboard</span>
     </a>
     <a href="menu.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'menu.php' ? 'active' : ''; ?>">
-        <i class="fa fa-bars nav-icon"></i><span>Menu</span>
+      <i class="fa fa-bars nav-icon"></i><span>Menu</span>
     </a>
     <a href="logout.php">
-        <i class="fa fa-sign-out nav-icon"></i><span>Logout</span>
+      <i class="fa fa-sign-out nav-icon"></i><span>Logout</span>
     </a>
-</nav>
+  </nav>
+
   <script src="dashboard.js"></script>
 </body>
 </html>

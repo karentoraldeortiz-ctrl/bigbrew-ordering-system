@@ -171,7 +171,7 @@ hr {
   flex-direction: column;
   padding: 2.5rem 3rem;
   gap: 1.8rem;
-  overflow: hidden;
+  overflow-y: auto;          /* ← scrollable na */
   background-color: var(--light-color);
 }
 
@@ -191,6 +191,17 @@ hr {
   grid-template-columns: repeat(4, 1fr);
   gap: 1.2rem;
   flex-shrink: 0;
+}
+
+.stat-badge {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-family: 'Poppins', sans-serif;
+  color: #7a5c3a;
+  background: #f5e6d0;
+  padding: 2px 8px;
+  border-radius: 20px;
 }
 
 .stat-card {
@@ -233,12 +244,31 @@ hr {
   margin-top: 2px;
 }
 
+/* Chart filter buttons */
+.chart-filters {
+  display: flex;
+  gap: 6px;
+}
+
+.chart-filter-btn {
+  padding: 4px 12px;
+  font-size: 11px;
+  font-family: 'Poppins', sans-serif;
+  border: 1px solid #d4a96a;
+  border-radius: 20px;
+  background: transparent;
+  color: #7a5c3a;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chart-filter-btn:hover  { background: #f5e6d0; }
+.chart-filter-btn.active { background: #b46418; color: #fff; border-color: #b46418; }
+
+/* Dashboard panels grid */
 .dash-panels {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 1.2rem;
-  flex: 1;
-  min-height: 0;
 }
 
 .panel {
@@ -250,7 +280,13 @@ hr {
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  min-height: 0;
+  min-height: 380px;         /* ← consistent height sa Sales + Top Products */
+}
+
+/* Peak hours — full width, fixed height */
+.panel-full {
+  grid-column: 1 / -1;
+  min-height: 320px;
 }
 
 .panel-header {
@@ -453,8 +489,8 @@ hr {
   font-size: 12px; font-weight: 600; color: #888;
   border-bottom: 1px solid var(--border);
 }
-.menu-prod-table th:nth-child(1) { width: 50%; }  /* Product Name */
-.menu-prod-table th:nth-child(2) { width: 15%; }  /* Status */
+.menu-prod-table th:nth-child(1) { width: 50%; }
+.menu-prod-table th:nth-child(2) { width: 15%; }
 .menu-prod-table th:nth-child(3) { width: 35%; }
 .menu-prod-table td {
   padding: 12px 20px; border-bottom: 1px solid #f5f0ea;
@@ -850,11 +886,10 @@ hr {
   .stat-card i       { font-size: 1.2rem; }
   .stat-info h3      { font-size: 1.1rem; }
   .stat-info p       { font-size: 0.68rem; }
-  .dash-panels       { grid-template-columns: 1fr; flex: none; min-height: auto; }
+  .dash-panels       { grid-template-columns: 1fr; }
   .panel             { min-height: 300px; }
   .chart-body        { min-height: 260px; }
-  .dash-panels       { padding-bottom: 70px; }
-  .panel             { border: 1px solid var(--border); border-style: solid; }
+  .panel-full        { min-height: 280px; }
 
   /* Menu Management header */
   .menu-main           { padding: 16px 16px 80px; overflow-y: auto; flex: none; }
@@ -900,52 +935,29 @@ hr {
     align-items: center;
   }
 
-  /* Name+image — left column, spans both rows */
   .menu-prod-table td.td-name {
-    grid-column: 1;
-    grid-row: 1 / 3;
-    display: flex;
-    align-items: center;
-    padding: 0 !important;
-    border: none !important;
+    grid-column: 1; grid-row: 1 / 3;
+    display: flex; align-items: center;
+    padding: 0 !important; border: none !important;
   }
-
-  /* Status badge — right top */
   .menu-prod-table td.td-status {
-    grid-column: 2;
-    grid-row: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0 !important;
-    border: none !important;
+    grid-column: 2; grid-row: 1;
+    display: flex; justify-content: flex-end; align-items: center;
+    padding: 0 !important; border: none !important;
   }
-
-  /* Actions — right bottom */
   .menu-prod-table td.td-actions {
-    grid-column: 2;
-    grid-row: 2;
-    display: flex;
-    gap: 6px;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0 !important;
-    border: none !important;
-    margin-top: 0;
+    grid-column: 2; grid-row: 2;
+    display: flex; gap: 6px; justify-content: flex-end; align-items: center;
+    padding: 0 !important; border: none !important; margin-top: 0;
   }
-
-  /* Hide Mark Available/Unavailable on mobile — Edit + Delete only */
   .menu-prod-table td.td-actions .tbl-btn-avail { display: none; }
 
   .td-name-wrap { gap: 10px; }
   .td-thumb     { width: 42px; height: 42px; flex-shrink: 0; }
-
   .td-name-wrap > div { display: flex; flex-direction: column; gap: 2px; }
   .td-product-name    { font-size: 13px; font-weight: 600; }
   .td-cat             { font-size: 11px; color: #aaa; padding: 0; }
-
   .status-badge { font-size: 11px; padding: 3px 10px; }
-
   .tbl-btn-edit { font-size: 11px; padding: 5px 10px; }
   .tbl-btn-del  { width: 32px; height: 32px; }
 
@@ -957,7 +969,6 @@ hr {
   .btn-delete-item { margin-right: 0; width: 100%; justify-content: center; }
 }
 
-/* Remove focus outlines on mobile */
 @media (max-width: 900px) {
   .bottom-nav a:focus, .cat-tab:focus, .btn-add-product:focus,
   .tbl-btn-edit:focus, .tbl-btn-avail:focus, .tbl-btn-del:focus,
