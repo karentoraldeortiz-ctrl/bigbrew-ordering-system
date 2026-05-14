@@ -1981,3 +1981,50 @@ a
 .cart-item.buy-again-highlight {
     opacity: 1; /* ensure visible after animation */
 }
+.card-front {
+    transition: all 0.3s ease;
+}
+.card-front:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 10px rgb(236, 236, 236),
+                0 0 15px rgb(236, 236, 236),
+                0 0 20px rgb(236, 236, 236),
+                0 0 25px rgb(236, 236, 236);
+    -webkit-box-shadow: 
+                0 0 10px rgb(236, 236, 236),
+                0 0 15px rgb(236, 236, 236),
+                0 0 20px rgb(236, 236, 236),
+                0 0 25px rgb(236, 236, 236);
+    animation: pulseGlow 1.5s ease-in-out infinite;
+        /* border-radius: 90px 90px 90px 90px;  */
+}
+.card-front:hover .add-btn {
+    background-color: var(--pop-color);
+}
+.card-front:hover .flip-btn {
+    transform: scale(1.09) rotate(70deg);
+    transition: all 0.2s ease;
+}
+
+/* .card-front:hover {
+    box-shadow: 0 0 10px rgb(236, 236, 236),
+                0 0 15px rgb(236, 236, 236),
+                0 0 20px rgb(236, 236, 236),
+                0 0 25px rgb(236, 236, 236);
+    -webkit-box-shadow: 
+                0 0 10px rgb(236, 236, 236),
+                0 0 15px rgb(236, 236, 236),
+                0 0 20px rgb(236, 236, 236),
+                0 0 25px rgb(236, 236, 236);
+    animation: pulseGlow 1.5s ease-in-out infinite;
+}
+.card-front:hover .flip-btn {
+    transform: scale(1.09) rotate(70deg);
+    transition: all 0.2s ease;
+}
+.card-front:hover .add-btn {
+    transform: scale(1.1);
+    transition: all 0.5s ease;
+    bottom: -16px;
+} */
+
