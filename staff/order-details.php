@@ -61,11 +61,12 @@ if($pickup_value === 'asap') {
     $pickup_display = "ASAP ({$start_time} - {$end_time})";
 } else {
     $pickup_labels = [
+        'in-15-min'   => 'In 15 minutes',
         'in-30-min'   => 'In 30 minutes',
         'in-45-min'   => 'In 45 minutes',
         'in-1-hour'   => 'In 1 hour',
         'in-1-5-hour' => 'In 1 hour 30 minutes',
-        'in-2-hours' => 'In 2 hours',
+         'in-2-hours' => 'In 2 hours',
     ];
 
     $pickup_display = $pickup_labels[$pickup_value] ?? $pickup_value;
@@ -77,7 +78,7 @@ $order_date = date('m/d/Y, · g:i A', strtotime($order['created_at']));
 // UPDATE STATUS
 if (isset($_POST['update_status'])) {
     $status = mysqli_real_escape_string($conn, $_POST['status']);
-    
+        
     if($status === 'completed') {
         mysqli_query($conn, 
             "UPDATE orders 
@@ -91,8 +92,8 @@ if (isset($_POST['update_status'])) {
              WHERE order_id = '$order_id'"
         );
     }
-    
-    header("Location: order-details.php?order_id=$order_id");
+
+      header("Location: order-details.php?order_id=$order_id");
     exit;
 }
 ?>
@@ -154,7 +155,7 @@ if (isset($_POST['update_status'])) {
                         <p class="od-meta">Date of Order: <?php echo $order_date; ?></p>
                         <p class="od-meta"><i class="fa fa-clock" style="color:var(--pop-color);margin-right:6px;"></i>Pickup: <?php echo htmlspecialchars($pickup_display); ?></p>
                     </div>
-                    <form method="POST">
+                     <form method="POST">
                         <select name="status" onchange="this.form.submit()" class="od-status-select"
                             style="background:<?php
                                 echo $order['order_status'] === 'completed' ? 'rgba(180,180,180,0.35)' : 

@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 if (!isset($_SESSION['staff_logged_in'])) {
@@ -37,11 +38,12 @@ function getPickupDisplay($pickup_value, $created_at) {
     }
 
     $pickup_labels = [
+        'in-15-min'   => 'In 15 minutes',
         'in-30-min'   => 'In 30 minutes',
         'in-45-min'   => 'In 45 minutes',
         'in-1-hour'   => 'In 1 hour',
         'in-1-5-hour' => 'In 1 hour 30 minutes',
-        'in-2-hours' => 'In 2 hours',
+         'in-2-hours' => 'In 2 hours',
     ];
 
     return $pickup_labels[$pickup_value] ?? $pickup_value;
@@ -84,7 +86,7 @@ function getPickupDisplay($pickup_value, $created_at) {
             <i class="fa fa-user"></i>
             <div>
                 <h5><?php echo htmlspecialchars($_SESSION['staff_name']); ?></h5>
-                <p>admin@bigbrew.com</p>
+                  <p>admin@bigbrew.com</p>
             </div>
         </div>
     </aside>
@@ -121,7 +123,7 @@ function getPickupDisplay($pickup_value, $created_at) {
                         $items[] = $item;
                     }
 
-                    $status_bg = $order['order_status'] === 'completed' ? 'rgba(180,180,180,0.35)' :
+                     $status_bg = $order['order_status'] === 'completed' ? 'rgba(180,180,180,0.35)' :
                                 ($order['order_status'] === 'ready_for_pickup' ? 'rgba(136,214,108,0.5)' :
                                 ($order['order_status'] === 'cancelled'  ? 'rgba(255,100,100,0.3)' :
                                 ($order['order_status'] === 'preparing'  ? 'rgba(100,150,255,0.3)' : 'rgba(255,220,100,0.5)')));
@@ -148,7 +150,7 @@ function getPickupDisplay($pickup_value, $created_at) {
                                     <select name="status" onchange="this.form.submit()" style="background:<?php echo $status_bg; ?>">
                                         <option value="pending"   <?php echo $order['order_status'] === 'pending'   ? 'selected' : ''; ?>>Pending</option>
                                         <option value="preparing" <?php echo $order['order_status'] === 'preparing' ? 'selected' : ''; ?>>Preparing</option>
-                                        <option value="ready_for_pickup" <?php echo $order['order_status'] === 'ready_for_pickup' ? 'selected' : ''; ?>>Ready for Pickup</option>
+                                           <option value="ready_for_pickup" <?php echo $order['order_status'] === 'ready_for_pickup' ? 'selected' : ''; ?>>Ready for Pickup</option>
                                         <option value="completed" <?php echo $order['order_status'] === 'completed' ? 'selected' : ''; ?>>Completed</option>
                                         <option value="cancelled" <?php echo $order['order_status'] === 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
                                     </select>
@@ -191,17 +193,18 @@ function getPickupDisplay($pickup_value, $created_at) {
         </section>
     </main>
 
-     <nav class="bottom-nav">
-    <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : ''; ?>">
-        <i class="fa fa-dashboard nav-icon"></i><span>Dashboard</span>
-    </a>
-    <a href="orders.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'orders.php' || basename($_SERVER['PHP_SELF']) === 'order-details.php' ? 'active' : ''; ?>">
-        <i class="fa fa-shopping-cart nav-icon"></i><span>Orders</span>
-    </a>
-    <a href="logout.php">
-        <i class="fa fa-sign-out nav-icon"></i><span>Logout</span>
-    </a>
-</nav>
+    <nav class="bottom-nav">
+        <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : ''; ?>">
+            <i class="fa fa-dashboard nav-icon"></i><span>Dashboard</span>
+        </a>
+        <a href="orders.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'orders.php' || basename($_SERVER['PHP_SELF']) === 'order-details.php' ? 'active' : ''; ?>">
+            <i class="fa fa-shopping-cart nav-icon"></i><span>Orders</span>
+        </a>
+        <a href="logout.php">
+            <i class="fa fa-sign-out nav-icon"></i><span>Logout</span>
+        </a>
+    </nav>
+
     <div class="new-order-toast" id="orderToast" onclick="goToOrders()">
         🛎️ New Order Alert!
     </div>
@@ -215,6 +218,15 @@ function getPickupDisplay($pickup_value, $created_at) {
                 window.location.href = 'order-details.php?order_id=' + this.dataset.orderId;
             });
         });
+
+        // Auto-refresh orders every 15 seconds
+        // Hindi mag-refresh kung naka-focus ang staff sa status dropdown
+        setInterval(() => {
+            const activeSelect = document.querySelector('select:focus');
+            if (!activeSelect) {
+                location.reload();
+            }
+        }, 15000);
     </script>
 </body>
 </html>
