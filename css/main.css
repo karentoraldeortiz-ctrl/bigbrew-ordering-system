@@ -247,7 +247,7 @@ body {
 }
 
 .home-section-header h2 {
-  font-size: 2rem;
+  font-size: 1.6rem;
   margin-bottom: 6px;
 }
 
@@ -1808,7 +1808,7 @@ textarea {
   /* Best Seller */
   .best-seller { padding: 1rem 0;}
   .best-seller h2 { font-size: 1.6rem; }
-  .best-seller p { padding: 0 5%; font-size: 0.8rem; }
+  .best-seller p { padding: 0; font-size: 0.95rem; }
   .products { padding: 20px 5px; gap: 15px; }
   
 

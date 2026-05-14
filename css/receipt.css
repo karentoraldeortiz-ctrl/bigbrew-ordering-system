@@ -214,18 +214,24 @@ body {
 }
 
 .btn-cancel-order {
-  width: 100%;
-  padding: 14px;
-  border: 1.5px solid #ff4b3e;
-  border-radius: 8px;
-  background: white;
-  color: #ff3b2f;
-  font-size: 18px;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  margin-bottom: 14px;
-  transition: 0.2s ease;
+    width: 100%;
+    padding: 14px;
+    border: 1.5px solid #ff4b3e;
+    border-radius: 10px;        /* same as btn-buy-again */
+    background: white;
+    color: #ff3b2f;
+    font-size: 0.95rem;         /* same as btn-buy-again */
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 0;           /* tanggalin yung margin */
+    transition: 0.2s ease;
+}
+
+/* Override margin kapag nasa row */
+.receipt-btn-row .btn-cancel-order {
+    margin-bottom: 0;
+    width: auto;                /* huwag full width, flex na mag-hahandle */
 }
 
 .btn-cancel-order:hover {
@@ -295,4 +301,227 @@ body {
   .btn-cancel-order {
     font-size: 16px;
   }
+}
+
+.item-category {
+    display: block;
+    font-size: 0.78rem;
+    color: #888;
+    font-style: normal;
+    margin-top: 2px;
+}
+
+/* ===== RECEIPT ACTIONS ===== */
+.receipt-actions {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.receipt-btn-row {
+    display: flex;
+    gap: 10px;
+}
+
+.receipt-btn-row .btn-cancel-order,
+.receipt-btn-row .btn-buy-again {
+    flex: 1;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-buy-again {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 14px;
+    border-radius: 10px;
+    background: var(--dark-color);
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+    box-sizing: border-box;
+}
+.receipt-btn-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch; /* pareho ang height ng dalawa */
+}
+
+.receipt-btn-row .btn-cancel-order,
+.receipt-btn-row .btn-buy-again {
+    flex: 1;
+    box-sizing: border-box;
+}
+.btn-buy-again:hover {
+    background: #4a2c1f;
+}
+
+/* ===== REVIEW BOX ===== */
+.review-box {
+    background: #f0faf0;
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.review-box h4 {
+    font-size: 1rem;
+    color: var(--dark-color);
+    margin-bottom: 4px;
+}
+
+.review-box p {
+    font-size: 0.82rem;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.review-box .star-rating {
+    font-size: 1.8rem;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.review-box .star {
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.review-box .star.selected,
+.review-box .star:hover {
+    color: var(--pop-color);
+}
+
+.review-box .feedback-input {
+    width: 100%;
+    border: 1px solid #d4edda;
+    border-radius: 10px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    resize: none;
+    height: 75px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    background: #fafffa;
+}
+
+.btn-submit-review {
+    background: var(--pop-color);
+    color: white;
+    border: none;
+    padding: 10px 36px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.btn-submit-review:hover {
+    background: #8e551a;
+}
+
+/* Disabled cancel button */
+.btn-cancel-order:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ===== CHECK CIRCLE — per status ===== */
+.check-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.check-circle.pending {
+    background: #FFF3CD;
+    color: #B8860B;
+}
+
+.check-circle.preparing {
+    background: #FFE8CC;
+    color: #B86D25;
+}
+
+.check-circle.ready_for_pickup {
+    background: #CCE5FF;
+    color: #0056b3;
+}
+
+.check-circle.completed {
+    background: #D4EDDA;
+    color: #1a7a34;
+}
+
+.check-circle.cancelled {
+    background: #F8D7DA;
+    color: #991B1B;
+}
+
+/* ===== DISABLED CANCEL WITH TOOLTIP ===== */
+.btn-disabled-cancel {
+    position: relative;
+    opacity: 0.45;
+    cursor: not-allowed !important;
+    pointer-events: all !important; /* override para makita tooltip */
+}
+
+.btn-disabled-cancel::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #231916;
+    color: white;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+/* Arrow ng tooltip */
+.btn-disabled-cancel::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #231916;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+.btn-disabled-cancel:hover::after,
+.btn-disabled-cancel:hover::before {
+    opacity: 1;
 }

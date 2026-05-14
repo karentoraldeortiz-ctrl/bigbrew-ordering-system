@@ -25,15 +25,16 @@ if(mysqli_num_rows($order_q) === 0) {
 }
 
 $order = mysqli_fetch_assoc($order_q);
+
 $user_q = mysqli_query($conn,
     "SELECT full_name FROM users WHERE user_id = '$user_id' LIMIT 1"
 );
-
 $user = mysqli_fetch_assoc($user_q);
 $customer_name = $user ? $user['full_name'] : ($_SESSION['name'] ?? 'Customer');
+
 $items_q = mysqli_query($conn,
     "SELECT oi.quantity, oi.unit_price, oi.addons,
-            p.product_name,
+            p.product_name, p.category,
             ps.size_name
      FROM order_items oi
      JOIN products p       ON oi.product_id = p.product_id
@@ -48,13 +49,23 @@ while($row = mysqli_fetch_assoc($items_q)) {
 
 date_default_timezone_set('Asia/Manila');
 
-$pickup_value = trim($order['pickup_time']);
-$created_at = !empty($order['created_at']) ? strtotime($order['created_at']) : time();
+// DEFINE $status MUNA bago gamitin kahit saan
+$status = strtolower($order['order_status']);
 
-if($pickup_value === 'asap') {
+$pickup_value = trim($order['pickup_time']);
+$created_at   = !empty($order['created_at']) ? strtotime($order['created_at']) : time();
+
+// NGAYON safe na gamitin $status dito
+if($status === 'completed') {
+    if(!empty($order['completed_at'])) {
+        $pickup_display = date('g:i A', strtotime($order['completed_at']));
+    } else {
+        // Fallback — older orders na wala pang completed_at
+        $pickup_display = date('g:i A', strtotime($order['created_at']));
+    }
+} elseif($pickup_value === 'asap') {
     $start_time = date('g:i A', strtotime('+15 minutes', $created_at));
     $end_time   = date('g:i A', strtotime('+30 minutes', $created_at));
-
     $pickup_display = "ASAP ({$start_time} - {$end_time})";
 } else {
     $pickup_labels = [
@@ -62,11 +73,31 @@ if($pickup_value === 'asap') {
         'in-45-min'   => 'In 45 minutes',
         'in-1-hour'   => 'In 1 hour',
         'in-1-5-hour' => 'In 1 hour 30 minutes',
-        'in-2-hours' => 'In 2 hours',
+        'in-2-hours'  => 'In 2 hours',
     ];
-
     $pickup_display = $pickup_labels[$pickup_value] ?? $pickup_value;
-}?>
+}
+// RECEIPT TITLE — define dito na rin para malinis
+if($status === 'pending') {
+    $receipt_title    = 'Order Confirmed!';
+    $receipt_subtitle = 'Your order has been received and is waiting to be prepared.';
+} elseif($status === 'preparing') {
+    $receipt_title    = 'Drink is Being Prepared!';
+    $receipt_subtitle = 'Our staff is currently preparing your beverages.';
+} elseif($status === 'ready_for_pickup') {
+    $receipt_title    = 'Ready for Pickup!';
+    $receipt_subtitle = 'Your order is ready. Please proceed to the store for pickup.';
+} elseif($status === 'completed') {
+    $receipt_title    = 'Order Completed';
+    $receipt_subtitle = 'Thank you, Brew! Buy again soon.';
+} elseif($status === 'cancelled') {
+    $receipt_title    = 'Order Cancelled';
+    $receipt_subtitle = 'This order has been cancelled.';
+} else {
+    $receipt_title    = 'Order Updated';
+    $receipt_subtitle = 'Your order status has been updated.';
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -93,38 +124,16 @@ if($pickup_value === 'asap') {
 <div class="receipt-card">
             
 <div class="receipt-header">
-    <div class="check-circle">
-        <i class="fa-solid fa-check"></i>
-    </div>
-
+<div class="check-circle <?php echo $status; ?>">
     <?php
-    $status = strtolower($order['order_status']);
-
-    if($status === 'pending') {
-        $receipt_title = 'Order Confirmed!';
-        $receipt_subtitle = 'Your order has been received and is waiting to be prepared.';
-    }
-    elseif($status === 'preparing') {
-        $receipt_title = 'Drink is Being Prepared!';
-        $receipt_subtitle = 'Our staff is currently preparing your beverages.';
-    }
-    elseif($status === 'ready_for_pickup') {
-        $receipt_title = 'Ready for Pickup!';
-        $receipt_subtitle = 'Your order is ready. Please proceed to the store for pickup.';
-    }
-    elseif($status === 'completed') {
-        $receipt_title = 'Order Completed';
-        $receipt_subtitle = 'This order has already been picked up.';
-    }    
-    elseif($status === 'cancelled') {
-        $receipt_title = 'Order Cancelled';
-        $receipt_subtitle = 'This order has been cancelled.';
-    }
-    else {
-        $receipt_title = 'Order Updated';
-        $receipt_subtitle = 'Your order status has been updated.';
-    }
+    if($status === 'pending')           echo '<i class="fa-solid fa-clock"></i>';
+    elseif($status === 'preparing')     echo '<i class="fa-solid fa-blender"></i>';
+    elseif($status === 'ready_for_pickup') echo '<i class="fa-solid fa-bell"></i>';
+    elseif($status === 'completed')     echo '<i class="fa-solid fa-circle-check"></i>';
+    elseif($status === 'cancelled')     echo '<i class="fa-solid fa-circle-xmark"></i>';
+    else                                echo '<i class="fa-solid fa-check"></i>';
     ?>
+</div>
 
     <div>
         <h2 class="receipt-title">
@@ -151,15 +160,20 @@ if($pickup_value === 'asap') {
 
         <div class="detail-line">
             <span>Mode of Payment:</span>
-            <strong>Pay on Pickup</strong>
+            <strong>Pay upon Pickup</strong>
         </div>
 
         <div class="detail-line">
-            <span>Self Pick-up:</span>
+            <span>
+                <?php 
+                if($status === 'completed') echo 'Picked up at:';
+                else echo 'Self Pick-up:';
+                ?>
+            </span>            
             <strong><?php echo htmlspecialchars($pickup_display ?? 'ASAP'); ?></strong>
-        </div>
+        </div> 
 
-        <?php if(!empty($order['notes'])): ?>
+       <?php if(!empty($order['notes'])): ?>
         <div class="detail-line">
             <span>Notes:</span>
             <strong><?php echo htmlspecialchars($order['notes']); ?></strong>
@@ -171,22 +185,25 @@ if($pickup_value === 'asap') {
         <p class="section-label">Items</p>
 
         <?php foreach($order_items as $item): ?>
-        <div class="receipt-item-row">
-            <span>
-                <?php echo htmlspecialchars($item['product_name']); ?>
-                x <?php echo $item['quantity']; ?>
-            </span>
+            <div class="receipt-item-row">
+                <span>
+                    <strong><?php echo htmlspecialchars($item['product_name']); ?></strong>
+                    <em class="item-category">
+                        <?php echo ucwords(str_replace('-', ' ', $item['category'])); ?> 
+                        · <?php echo htmlspecialchars($item['size_name']); ?>
+                    </em>
+                    x<?php echo $item['quantity']; ?>
+                </span>
+                <strong>
+                    P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?>
+                </strong>
+            </div>
 
-            <strong>
-                P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?>
-            </strong>
-        </div>
-
-        <?php if(!empty($item['addons'])): ?>
-            <p class="item-addons">
-                Add-ons: <?php echo htmlspecialchars($item['addons']); ?>
-            </p>
-        <?php endif; ?>
+            <?php if(!empty($item['addons'])): ?>
+                <p class="item-addons">
+                    Add-ons: <?php echo htmlspecialchars($item['addons']); ?>
+                </p>
+            <?php endif; ?>        
         <?php endforeach; ?>
 
         <div class="total-row">
@@ -217,17 +234,54 @@ if($pickup_value === 'asap') {
         </ol>
     </div>
 
-    <?php if($order['order_status'] === 'pending'): ?>
-        <form method="POST" action="cancel_order.php" onsubmit="return confirm('Are you sure you want to cancel this order?');">
-            <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-            <button type="submit" class="btn-cancel-order">Cancel Order</button>
-        </form>
-    <?php else: ?>
-        <p class="order-status-note">
-            Order status: <?php echo htmlspecialchars(ucfirst($order['order_status'])); ?>
-        </p>
-    <?php endif; ?>
+        <div class="receipt-actions">
+            <?php if($status === 'pending'): ?>
+                <!-- PENDING: Cancel lang -->
+                <form method="POST" action="cancel_order.php" 
+                    onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                    <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+                    <button type="submit" class="btn-cancel-order btn-full">Cancel Order</button>
+                </form>
 
+            <?php elseif($status === 'preparing' || $status === 'ready_for_pickup'): ?>
+                <!-- PREPARING / READY: disabled Cancel lang -->
+                <button class="btn-cancel-order btn-full btn-disabled-cancel" 
+                            disabled
+                            title="Order cannot be cancelled once preparation has started.">
+                        Cancel Order
+                </button>
+            <?php elseif($status === 'completed'): ?>
+                <!-- COMPLETED: Review box + Buy Again + disabled Cancel -->
+                <div class="review-box">
+                    <h4>Enjoyed our service? Let us know!</h4>
+                    <p>Your feedback helps us improve our service.</p>
+                    <div class="star-rating" id="starRating">
+                        <?php for($i = 1; $i <= 5; $i++): ?>
+                            <span class="star" data-value="<?php echo $i; ?>">★</span>
+                        <?php endfor; ?>
+                    </div>
+                    <textarea class="feedback-input" id="feedbackText" 
+                            placeholder="Write your feedback here..."></textarea>
+                    <button class="btn-submit-review" id="btnSubmitReview">Submit</button>
+                </div>
+
+                <div class="receipt-btn-row">
+                <button class="btn-cancel-order btn-disabled-cancel" 
+                            disabled
+                            title="Completed orders cannot be cancelled.">
+                        Cancel Order
+                </button>
+                    <a href="menu.php" class="btn-buy-again">Buy Again</a>
+                </div>
+
+            <?php elseif($status === 'cancelled'): ?>
+                <!-- CANCELLED: Buy Again lang -->
+                <div class="receipt-btn-row">
+                    <a href="menu.php" class="btn-buy-again btn-full">Buy Again</a>
+                </div>
+
+            <?php endif; ?>
+        </div>
 
 </div>
 </body>

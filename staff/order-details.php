@@ -77,7 +77,21 @@ $order_date = date('m/d/Y, · g:i A', strtotime($order['created_at']));
 // UPDATE STATUS
 if (isset($_POST['update_status'])) {
     $status = mysqli_real_escape_string($conn, $_POST['status']);
-    mysqli_query($conn, "UPDATE orders SET order_status = '$status' WHERE order_id = '$order_id'");
+    
+    if($status === 'completed') {
+        mysqli_query($conn, 
+            "UPDATE orders 
+             SET order_status = '$status', completed_at = NOW() 
+             WHERE order_id = '$order_id'"
+        );
+    } else {
+        mysqli_query($conn, 
+            "UPDATE orders 
+             SET order_status = '$status', completed_at = NULL
+             WHERE order_id = '$order_id'"
+        );
+    }
+    
     header("Location: order-details.php?order_id=$order_id");
     exit;
 }
