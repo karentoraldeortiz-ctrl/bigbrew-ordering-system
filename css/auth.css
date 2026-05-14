@@ -213,3 +213,221 @@ input {
         align-items: center;
     }
 }
+
+
+.pass-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pass-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+    box-sizing: border-box;
+}
+
+.eye-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    font-size: 0.9rem;
+    user-select: none;
+    transition: color 0.2s;
+    line-height: 1; /* prevent icon mismatch */
+    z-index: 2;
+}
+
+.eye-toggle:hover {
+    color: var(--pop-color, #4a2c1f);
+}
+.terms {
+    font-size: 0.75rem;
+    color: rgba(67, 55, 55, 0.67);
+    margin-top: 15px;
+}
+
+/* ===== AUTH ERROR MODAL ===== */
+.auth-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.auth-modal-card {
+    background: white;
+    border-radius: 20px;
+    padding: 36px 28px;
+    max-width: 340px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    animation: modalPop 0.25s ease;
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+}
+
+.auth-modal-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+}
+
+.auth-modal-card h3 {
+    font-size: 1.2rem;
+    color: var(--dark-color);
+    margin-bottom: 8px;
+}
+
+.auth-modal-card p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.auth-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.auth-btn-primary {
+    background: var(--pop-color);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+
+.auth-btn-primary:hover { background: #8e551a; }
+
+.auth-btn-secondary {
+    background: transparent;
+    color: var(--pop-color);
+    border: 2px solid var(--pop-color);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.auth-btn-secondary:hover { background: #fff4e0; }
+
+/* ====================== RESPONSIVE ====================== */
+
+@media (max-width: 768px) {
+    .signup-box {
+        width: 90%;
+        margin: 1rem;
+    }
+
+    .signup-content,
+    .login-content {
+        margin: 1rem 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        align-items: flex-start;
+        padding: 1.5rem 0;
+    }
+
+    /* LOGIN */
+    .login-box {
+        width: 90%;
+        border-radius: 16px;
+    }
+
+    .login-content {
+        margin: 1rem 1.2rem;
+    }
+
+    .login-content h2 {
+        font-size: 1.1rem;
+    }
+
+    .input-text input {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .login-btn button,
+    .create-acc-btn button {
+        width: 100%;
+    }
+
+    /* SIGNUP */
+    .signup-box {
+        width: 92%;
+        margin: 1rem auto;
+        border-radius: 16px;
+    }
+
+    .signup-content {
+        margin: 1rem 1.2rem;
+    }
+
+    .outer-prac1 {
+        flex-direction: column;
+    }
+
+    .last .info-grp input,
+    .partner input,
+    .outer-prac1 input {
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    .signup-btn button {
+        width: 100%;
+        font-size: 0.95rem;
+    }
+
+    /* EYE TOGGLE — bigger tap target sa mobile */
+    .eye-toggle {
+        right: 10px;
+        font-size: 1rem;
+        padding: 5px;
+    }
+
+    /* AUTH MODAL */
+    .auth-modal-card {
+        padding: 28px 20px;
+        border-radius: 16px;
+    }
+
+    .auth-modal-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .auth-modal-card p {
+        font-size: 0.85rem;
+    }
+
+    .auth-btn-primary,
+    .auth-btn-secondary {
+        padding: 11px;
+        font-size: 0.9rem;
+    }
+}

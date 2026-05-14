@@ -159,12 +159,12 @@ if(isset($_POST['login'])){
           </div>
 
           <div class="input-text">
-            <input
-              type="password"
-              placeholder="password"
-              id="password"
-              name="password"
-            />
+            <div class="pass-wrapper">
+              <input type="password" placeholder="password" id="password" name="password" />
+              <span class="eye-toggle" data-target="password">
+                  <i class="fa fa-eye-slash"></i>
+              </span>
+          </div>
             <span class="error-text" id="passwordError"
               >Password is required</span
             >
@@ -184,6 +184,6 @@ if(isset($_POST['login'])){
       </div>
     </div>
 
-    <!-- <script src="js/auth.js"></script> -->
+    <script src="js/auth.js"></script>
   </body>
 </html>

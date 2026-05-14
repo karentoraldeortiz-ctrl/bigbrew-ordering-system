@@ -21,6 +21,9 @@ $email = $_POST['email'];
 $password = $_POST['password'];
 $confirm_pass = $_POST['confirm_password'];
 
+if(!preg_match('/^(09|\+639)\d{9}$/', $phone)) {
+    $message = "Invalid phone number format (e.g. 09XX-XXX-XXXX)";
+}
 
 $check = mysqli_query($conn,"SELECT * FROM users WHERE email='$email'");
 
@@ -90,8 +93,26 @@ else{
         </div>
 
         <?php if($message != ""): ?>
-        <p><?php echo $message; ?></p>
-        <?php endif; ?>
+      <script>
+          document.addEventListener('DOMContentLoaded', () => {
+              document.getElementById('errorModal').style.display = 'flex';
+              document.getElementById('authModalMsg').textContent = "<?php echo addslashes($message); ?>";
+              
+              <?php if($message === "Email already exists!"): ?>
+              document.getElementById('authModalTitle').textContent = "Email Already Exists";
+              document.querySelector('.auth-modal-actions').innerHTML = `
+                  <button class="auth-btn-secondary" onclick="closeAuthModal()">Try Another Email</button>
+                  <a href="login.php" class="auth-btn-primary">Go to Login</a>
+              `;
+              <?php else: ?>
+              document.getElementById('authModalTitle').textContent = "Something went wrong";
+              document.querySelector('.auth-modal-actions').innerHTML = `
+                  <button class="auth-btn-primary" onclick="closeAuthModal()">Try Again</button>
+              `;
+              <?php endif; ?>
+          });
+      </script>
+      <?php endif; ?>
 
         <form id="signForm" method="POST" action="">
           <div class="first">
@@ -114,8 +135,9 @@ else{
 
             <div class="prac partner">
               <label>Phone No.</label><br />
-              <input type="text" class="partner-no" name="phone" />
-            </div>
+              <input type="tel" id="phone" class="partner-no" name="phone" 
+                    placeholder="09XX-XXX-XXXX" required />
+              <span class="error-text" id="phoneError">Valid PH number required.</span>            </div>
           </div>
 
           <div class="last">
@@ -129,12 +151,12 @@ else{
 
             <div class="info-grp">
               <label>Password*</label><br />
-              <input
-                type="password"
-                name="password"
-                id="password"
-                minlength="6"
-              />
+              <div class="pass-wrapper">
+                  <input type="password" name="password" id="password" minlength="6" />
+                  <span class="eye-toggle" data-target="password">
+                      <i class="fa fa-eye-slash"></i>
+                  </span>
+              </div>             
               <span class="error-text" id="passwordError"
                 >This field is required.</span
               >
@@ -142,11 +164,12 @@ else{
 
             <div class="info-grp">
               <label>Confirm Password*</label><br />
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirm_password"
-              />
+              <div class="pass-wrapper">
+                  <input type="password" id="confirmPassword" name="confirm_password" />
+                  <span class="eye-toggle" data-target="confirmPassword">
+                      <i class="fa fa-eye-slash"></i>
+                  </span>
+              </div>              
               <span class="error-text" id="confirmError"
                 >This field is required.</span
               >
@@ -162,14 +185,26 @@ else{
           Already has account? <a href="login.php">Login here.</a>
         </div>
         <hr />
-        <p>
+        <p class="terms">
           By proceeding you agree to our
           <a href="terms.php">Terms and Conditions</a> and confirm you have
           read and understand our <a href="privacy.php">Privacy Policy</a>.
         </p>
+
+        <!-- Error Modal -->
+<div id="errorModal" class="auth-modal-overlay" style="display:none;">
+    <div class="auth-modal-card">
+        <div class="auth-modal-icon">✉️</div>
+        <h3 id="authModalTitle">Email Already Exists</h3>
+        <div class="auth-modal-actions">
+            <button class="auth-btn-secondary" onclick="closeAuthModal()">Try Another Email</button>
+            <a href="login.php" class="auth-btn-primary">Go to Login</a>
+        </div>
+    </div>
+</div>
       </div>
     </div>
 
-    <!-- <script src="js/auth.js"></script> -->
+    <script src="js/auth.js"></script>
   </body>
 </html>
