@@ -134,9 +134,9 @@ else{
             </div>
 
             <div class="prac partner">
-              <label>Phone No.</label><br />
+              <label>Phone No.*</label><br />
               <input type="tel" id="phone" class="partner-no" name="phone" 
-                    placeholder="09XX-XXX-XXXX" required />
+                    placeholder="09XX-XXX-XXXX" />
               <span class="error-text" id="phoneError">Valid PH number required.</span>            </div>
           </div>
 

@@ -140,40 +140,45 @@ if(isset($_POST['login'])){
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
   </head>
-  <body>
+<body>
     <div class="login-box">
       <div class="login-content">
         <div class="header">
           <img src="assets/logo/logo-black.png" alt="" />
           <div><h2>Welcome back, Brew!</h2></div>
-          <?php if($message != ""): ?>
-          <p class="error-msg"><?php echo $message; ?></p>
-        <?php endif; ?>
         </div>
+
         <form id="loginForm" method="POST" action="">
+          <input type="hidden" name="login" value="1">
+
           <div class="input-text">
-            <input type="email" placeholder="email" id="email" name="email" />
-            <span class="error-text" id="emailError" name="password"
-              >Email is required.</span
-            >
+            <input type="email" placeholder="email" id="email" name="email"
+              <?php if($message != "") echo 'class="error"'; ?> />
+            <span class="error-text" id="emailError">Email is required.</span>
           </div>
 
           <div class="input-text">
             <div class="pass-wrapper">
-              <input type="password" placeholder="password" id="password" name="password" />
+              <input type="password" placeholder="password" id="password" name="password"
+                <?php if($message != "") echo 'class="error"'; ?> />
               <span class="eye-toggle" data-target="password">
-                  <i class="fa fa-eye-slash"></i>
+                <i class="fa fa-eye-slash"></i>
               </span>
+            </div>
+            <span class="error-text" id="passwordError">Password is required.</span>
+            
           </div>
-            <span class="error-text" id="passwordError"
-              >Password is required</span
-            >
-          </div>
+                    <?php if($message != ""): ?>
+              <span class="error-text" id="serverError" style="display:block;">
+                <?php echo htmlspecialchars($message); ?>
+              </span>
+            <?php endif; ?>
 
           <div class="login-btn">
-            <button type="submit" name="login"><h4>Login</h4></button>
+            <button type="submit"><h4>Login</h4></button>
           </div>
         </form>
+
         <div class="forgot-pass"><a href="#">Forgot password?</a></div>
         <div class="divider"><span>or</span></div>
         <div class="create-acc-btn">
@@ -185,5 +190,5 @@ if(isset($_POST['login'])){
     </div>
 
     <script src="js/auth.js"></script>
-  </body>
+</body>
 </html>

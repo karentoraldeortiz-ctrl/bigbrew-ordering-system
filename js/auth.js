@@ -1,35 +1,55 @@
 // ===== LOGIN FORM VALIDATION =====
+// ===== LOGIN FORM VALIDATION =====
 const loginForm = document.getElementById('loginForm');
 
 if (loginForm) {
-    loginForm.addEventListener('submit', function (e) {
-        const emailInput    = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
+    const emailInput    = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
 
+    // Real-time: mawawala error kapag nag-type na
+    emailInput.addEventListener('input', function () {
+        if (this.value.trim() !== '') clearError(this);
+    });
+
+    passwordInput.addEventListener('input', function () {
+        if (this.value.trim() !== '') clearError(this);
+        // Kung may PHP server error (invalid credentials), i-clear din yung server error span
+        const serverErr = document.getElementById('serverError');
+        if (serverErr) serverErr.style.display = 'none';
+        // I-clear din yung red border ng email pag nag-type sa password
+        // (kasi parehong nag-eered kapag wrong credentials)
+    });
+
+    emailInput.addEventListener('input', function () {
+        const serverErr = document.getElementById('serverError');
+        if (serverErr) serverErr.style.display = 'none';
+        // I-clear din yung red border ng password
+        clearError(passwordInput);
+    });
+
+    loginForm.addEventListener('submit', function (e) {
         let valid = true;
 
         if (emailInput.value.trim() === '') {
-            markError(emailInput);
+            markError(emailInput, 'Email is required.');
             valid = false;
         } else {
             clearError(emailInput);
         }
 
         if (passwordInput.value.trim() === '') {
-            markError(passwordInput);
+            markError(passwordInput, 'Password is required.');
             valid = false;
         } else if (passwordInput.value.length < 6) {
-            markError(passwordInput, 'Password must be at least 6 characters');
+            markError(passwordInput, 'Password must be at least 6 characters.');
             valid = false;
         } else {
             clearError(passwordInput);
         }
 
-        if (!valid) e.preventDefault(); // block lang kung may error, otherwise tuloy ang PHP
+        if (!valid) e.preventDefault();
     });
-}
-
-// ===== SIGNUP FORM VALIDATION =====
+}// ===== SIGNUP FORM VALIDATION =====
 const signForm = document.getElementById('signForm');
 
 if (signForm) {
@@ -59,7 +79,7 @@ if (signForm) {
         // Phone — required + PH format
         const rawPhone = phoneInput.value.replace(/\D/g, '');
         if (rawPhone === '') {
-            markError(phoneInput, 'Phone number is required.');
+            markError(phoneInput, 'This field is required.');
             valid = false;
         } else if (!/^09\d{9}$/.test(rawPhone)) {
             markError(phoneInput, 'Invalid PH format (e.g. 09XX-XXX-XXXX)');
