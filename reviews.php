@@ -3,7 +3,7 @@ session_start();
 include "db.php";
 
 $reviews_q = mysqli_query($conn,
-    "SELECT r.rating, r.comment, r.created_at, u.full_name
+    "SELECT r.review_id, r.rating, r.comment, r.created_at, u.full_name
      FROM reviews r
      JOIN users u ON r.user_id = u.user_id
      ORDER BY r.created_at DESC"
@@ -17,6 +17,7 @@ while ($row = mysqli_fetch_assoc($reviews_q)) {
 $can_review = false;
 $already_reviewed = false;
 $is_logged_in = isset($_SESSION['user_id']);
+$user_review = null; // para i-store ang review ng current user
 
 if ($is_logged_in) {
     $user_id = (int) $_SESSION['user_id'];
@@ -25,10 +26,15 @@ if ($is_logged_in) {
     );
     if (mysqli_num_rows($order_check) > 0) {
         $rev_check = mysqli_query($conn,
-            "SELECT review_id FROM reviews WHERE user_id = '$user_id'"
+            "SELECT review_id, rating, comment FROM reviews WHERE user_id = '$user_id'"
         );
         $already_reviewed = mysqli_num_rows($rev_check) > 0;
         $can_review = !$already_reviewed;
+
+        // Kunin ang existing review ng user para sa edit modal
+        if ($already_reviewed) {
+            $user_review = mysqli_fetch_assoc($rev_check);
+        }
     }
 }
 ?>
@@ -54,7 +60,7 @@ if ($is_logged_in) {
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="menu.php">Our Menu</a></li>
-                    <li><a href="about.php_logo_guid">About Us</a></li>
+                    <li><a href="about.php">About Us</a></li>
                     <li>
                         <a href="cart.php" class="cart-link">
                             <img src="assets/icons/icons8-cart-24.png" alt="">
@@ -88,7 +94,10 @@ if ($is_logged_in) {
                     </div>
                     <p class="revcard-text"><?php echo htmlspecialchars($review['comment']); ?></p>
                     <hr>
-                    <small><?php echo htmlspecialchars($review['full_name']); ?> · <?php echo date('M j, Y', strtotime($review['created_at'])); ?></small>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <small><?php echo htmlspecialchars($review['full_name']); ?> · <?php echo date('M j, Y', strtotime($review['created_at'])); ?></small>
+                        
+                    </div>
                 </div>
                 <?php endforeach; ?>
             </section>
@@ -101,7 +110,7 @@ if ($is_logged_in) {
                 <?php if (!$is_logged_in): ?>
                     <button onclick="window.location.href='login.php'">Login to Review</button>
                 <?php elseif ($already_reviewed): ?>
-                    <button disabled style="opacity:0.5;cursor:not-allowed;">✅ Already Reviewed</button>
+                    <button id="openEditBtn2">✏️ Edit My Review</button>
                 <?php elseif (!$can_review): ?>
                     <button disabled style="opacity:0.5;cursor:not-allowed;">Order first to leave a review</button>
                 <?php else: ?>
@@ -110,6 +119,7 @@ if ($is_logged_in) {
             </div>
         </div>
 
+        <!-- SUBMIT REVIEW MODAL (existing) -->
         <div class="modal" id="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
@@ -127,6 +137,28 @@ if ($is_logged_in) {
                 <button id="submitBtn">Submit</button>
             </div>
         </div>
+
+        <!-- EDIT REVIEW MODAL (bago) -->
+        <?php if ($is_logged_in && $already_reviewed && $user_review): ?>
+        <div class="modal" id="editModal">
+            <div class="modal-content">
+                <span class="close" id="closeEditModal">&times;</span>
+                <h3>Edit Your Review</h3>
+                <p>Update your rating and comment.</p>
+                <div class="star-rating-large" id="editStarContainer">
+                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <span class="star <?php echo $i <= $user_review['rating'] ? 'selected' : ''; ?>"
+                              data-value="<?php echo $i; ?>">★</span>
+                    <?php endfor; ?>
+                </div>
+                <p id="edit-error-msg" style="color:red;"></p>
+                <input type="text" id="editReviewInput"
+                       value="<?php echo htmlspecialchars($user_review['comment']); ?>"
+                       placeholder="update your feedback." /><br/>
+                <button id="saveEditBtn">Save</button>
+            </div>
+        </div>
+        <?php endif; ?>
     </main>
 
     <footer class="main-footer">
