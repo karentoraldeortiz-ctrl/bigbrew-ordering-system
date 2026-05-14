@@ -147,7 +147,7 @@ function getPickupDisplay($pickup_value, $created_at) {
                             <div class="card-status">
                                 <form method="POST" onclick="event.stopPropagation()">
                                     <input type="hidden" name="order_id" value="<?php echo $oid; ?>">
-                                    <select name="status" onchange="this.form.submit()" style="background:<?php echo $status_bg; ?>">
+                                    <select name="status" onchange="dismissToast(); this.form.submit();" style="background:<?php echo $status_bg; ?>">
                                         <option value="pending"   <?php echo $order['order_status'] === 'pending'   ? 'selected' : ''; ?>>Pending</option>
                                         <option value="preparing" <?php echo $order['order_status'] === 'preparing' ? 'selected' : ''; ?>>Preparing</option>
                                            <option value="ready_for_pickup" <?php echo $order['order_status'] === 'ready_for_pickup' ? 'selected' : ''; ?>>Ready for Pickup</option>
@@ -226,7 +226,7 @@ function getPickupDisplay($pickup_value, $created_at) {
             if (!activeSelect) {
                 location.reload();
             }
-        }, 15000);
+        }, 2000);
     </script>
 </body>
 </html>
