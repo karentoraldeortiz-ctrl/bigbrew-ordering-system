@@ -10,10 +10,19 @@ include "../db.php";
 // UPDATE ORDER STATUS
 if (isset($_POST['update_status'])) {
     $order_id = (int) $_POST['order_id'];
-    $status = mysqli_real_escape_string($conn, $_POST['status']);
-    mysqli_query($conn, "UPDATE orders SET order_status = '$status' WHERE order_id = '$order_id'");
-}
 
+    $current_q = mysqli_query($conn, "SELECT order_status FROM orders WHERE order_id = '$order_id'");
+    $current = mysqli_fetch_assoc($current_q);
+
+    if (!in_array($current['order_status'], ['completed', 'cancelled'])) {
+        $status = mysqli_real_escape_string($conn, $_POST['status']);
+        if ($status === 'completed') {
+            mysqli_query($conn, "UPDATE orders SET order_status = '$status', completed_at = NOW() WHERE order_id = '$order_id'");
+        } else {
+            mysqli_query($conn, "UPDATE orders SET order_status = '$status', completed_at = NULL WHERE order_id = '$order_id'");
+        }
+    }
+}
 // FETCH ORDERS
 $filter = isset($_GET['filter']) && $_GET['filter'] === 'pending' ? "WHERE o.order_status = 'pending'" : "";
 $orders_q = mysqli_query($conn,
@@ -147,7 +156,9 @@ function getPickupDisplay($pickup_value, $created_at) {
                             <div class="card-status">
                                 <form method="POST" onclick="event.stopPropagation()">
                                     <input type="hidden" name="order_id" value="<?php echo $oid; ?>">
-                                    <select name="status" onchange="dismissToast(); this.form.submit();" style="background:<?php echo $status_bg; ?>">
+                                    <select name="status" onchange="dismissToast(); this.form.submit();"
+                                        <?php if (in_array($order['order_status'], ['completed', 'cancelled'])): echo 'disabled'; endif; ?>
+                                        style="background:<?php echo $status_bg; ?>">                                        
                                         <option value="pending"   <?php echo $order['order_status'] === 'pending'   ? 'selected' : ''; ?>>Pending</option>
                                         <option value="preparing" <?php echo $order['order_status'] === 'preparing' ? 'selected' : ''; ?>>Preparing</option>
                                            <option value="ready_for_pickup" <?php echo $order['order_status'] === 'ready_for_pickup' ? 'selected' : ''; ?>>Ready for Pickup</option>
@@ -209,24 +220,49 @@ function getPickupDisplay($pickup_value, $created_at) {
         🛎️ New Order Alert!
     </div>
 
-    <script src="notif.js"></script>
-    <script>
-        // Click card → dismiss toast + go to order details
-        document.querySelectorAll('.order-card').forEach(card => {
-            card.addEventListener('click', function () {
-                dismissToast();
-                window.location.href = 'order-details.php?order_id=' + this.dataset.orderId;
-            });
+<script src="notif.js"></script>
+<script>
+    document.querySelectorAll('.order-card').forEach(card => {
+        card.addEventListener('click', function () {
+            dismissToast();
+            window.location.href = 'order-details.php?order_id=' + this.dataset.orderId;
         });
+    });
 
-        // Auto-refresh orders every 15 seconds
-        // Hindi mag-refresh kung naka-focus ang staff sa status dropdown
-        setInterval(() => {
-            const activeSelect = document.querySelector('select:focus');
-            if (!activeSelect) {
-                location.reload();
+    let knownOrderIds = new Set(
+        [...document.querySelectorAll('.order-card')].map(c => c.dataset.orderId)
+    );
+
+    async function refreshOrders() {
+        const activeSelect = document.querySelector('select:focus');
+        if (activeSelect) return;
+
+        const filter = new URLSearchParams(window.location.search).get('filter') || '';
+        const res = await fetch('fetch-orders.php' + (filter ? '?filter=' + filter : ''));
+        const orders = await res.json();
+
+        orders.forEach(order => {
+            const card = document.querySelector(`.order-card[data-order-id="${order.order_id}"]`);
+            if (!card) return;
+
+            const select = card.querySelector('select');
+            if (select && document.activeElement !== select) {
+                select.value = order.order_status;
+
+                const colors = {
+                    completed:        'rgba(180,180,180,0.35)',
+                    ready_for_pickup: 'rgba(136,214,108,0.5)',
+                    cancelled:        'rgba(255,100,100,0.3)',
+                    preparing:        'rgba(100,150,255,0.3)',
+                    pending:          'rgba(255,220,100,0.5)'
+                };
+                select.style.background = colors[order.order_status] || colors.pending;
+                select.disabled = ['completed', 'cancelled'].includes(order.order_status);
             }
-        }, 2000);
-    </script>
+        });
+    }
+
+    setInterval(refreshOrders, 5000);
+</script>
 </body>
 </html>

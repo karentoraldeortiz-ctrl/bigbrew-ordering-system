@@ -77,6 +77,10 @@ $order_date = date('m/d/Y, · g:i A', strtotime($order['created_at']));
 
 // UPDATE STATUS
 if (isset($_POST['update_status'])) {
+    if (in_array($order['order_status'], ['completed', 'cancelled'])) {
+        header("Location: order-details.php?order_id=$order_id");
+        exit;
+    }
     $status = mysqli_real_escape_string($conn, $_POST['status']);
         
     if($status === 'completed') {
@@ -154,10 +158,16 @@ if (isset($_POST['update_status'])) {
                         <h2>ORDER ID: ORD-<?php echo str_pad($order_id, 3, '0', STR_PAD_LEFT); ?></h2>
                         <p class="od-meta">Date of Order: <?php echo $order_date; ?></p>
                         <p class="od-meta"><i class="fa fa-clock" style="color:var(--pop-color);margin-right:6px;"></i>Pickup: <?php echo htmlspecialchars($pickup_display); ?></p>
+                        <?php if ($order['order_status'] === 'completed' && !empty($order['completed_at'])): ?>
+                        <p class="od-meta" style="color:#4caf50; margin-top:4px;">
+                            <i class="fa fa-check-circle" style="margin-right:6px;"></i>Picked up: <?php echo date('m/d/Y, · g:i A', strtotime($order['completed_at'])); ?>
+                        </p>
+                        <?php endif; ?>
                     </div>
                      <form method="POST">
-                        <select name="status" onchange="this.form.submit()" class="od-status-select"
-                            style="background:<?php
+                            <select name="status" onchange="this.form.submit()" class="od-status-select"
+                                <?php if (in_array($order['order_status'], ['completed', 'cancelled'])): echo 'disabled'; endif; ?>
+                                style="background:<?php                                
                                 echo $order['order_status'] === 'completed' ? 'rgba(180,180,180,0.35)' : 
                                     ($order['order_status'] === 'ready_for_pickup' ? 'rgba(136,214,108,0.5)' :
                                     ($order['order_status'] === 'cancelled' ? 'rgba(255,100,100,0.3)' :
