@@ -64,7 +64,7 @@ function applyFilters() {
 function renderTable(products) {
   const tbody = document.getElementById('productTableBody');
   if (!products.length) {
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#aaa;padding:24px;">No products found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:24px;">No products found.</td></tr>';
     return;
   }
   tbody.innerHTML = products.map(p => {
@@ -296,12 +296,35 @@ async function saveProduct() {
   const cat   = document.getElementById('editCategory').value.trim();
   const desc  = document.getElementById('editDesc').value.trim();
   const avail = document.getElementById('availabilityToggle').checked ? 1 : 0;
-  // ✅ editImagePath stores filename only (e.g. "product_123.png")
   const image = document.getElementById('editImagePath').value;
   const sizes = getSizeRows();
 
-  if (!name) { showToast('Product name is required.', 'error'); return; }
+  // ── Validation ──────────────────────────────────────────────────────────
+  if (!name) {
+    showToast('⚠️ Product name is required.', 'error');
+    document.getElementById('editName').focus();
+    return;
+  }
 
+  if (!cat) {
+    showToast('⚠️ Category is required.', 'error');
+    document.getElementById('editCategory').focus();
+    return;
+  }
+
+  if (sizes.length === 0) {
+    showToast('⚠️ Add at least one size variant.', 'error');
+    return;
+  }
+
+  // Check kung may size na walang price o zero price
+  const invalidSize = sizes.find(s => !s.price || s.price <= 0);
+  if (invalidSize) {
+    showToast(`⚠️ "${invalidSize.size_name}" must have a valid price.`, 'error');
+    return;
+  }
+
+  // ── Proceed sa save ─────────────────────────────────────────────────────
   const payload = { product_name: name, description: desc, category: cat, image, is_available: avail, sizes };
   try {
     let res;
@@ -314,7 +337,6 @@ async function saveProduct() {
     const data = await res.json();
     if (data.error) { showToast(data.error, 'error'); return; }
 
-    // ── Save selected add-ons ──────────────────────────────────────────────
     const productId   = data.product_id || parseInt(id);
     const selectedIds = [...document.querySelectorAll('.addon-checkbox:checked')]
                           .map(cb => parseInt(cb.value));
@@ -330,7 +352,6 @@ async function saveProduct() {
     loadProducts();
   } catch { showToast('Save failed. Try again.', 'error'); }
 }
-
 // ── Delete ────────────────────────────────────────────────────────────────
 async function confirmDelete(productId) {
   if (!confirm('Delete this product?')) return;
