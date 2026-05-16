@@ -216,11 +216,18 @@ if ($is_logged_in) {
 
         // Slight delay para makita muna yung scroll bago mag-pulse
         setTimeout(() => {
-    target.classList.add('pulse');
+    const target = document.getElementById('write-box');
+    if (!target) return;
+
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
     setTimeout(() => {
-        target.classList.remove('pulse');
-    }, 0.8 * 3 * 1000); // 0.8s × 3 iterations = 2.4s
-}, 500);
+        target.classList.add('pulse');
+        setTimeout(() => {
+            target.classList.remove('pulse');
+        }, 2400);
+    }, 800);
+}, 100);
     }
 });
     </script>

@@ -27,11 +27,16 @@ if(isset($_POST['login'])){
 
   // ✅ CHECK USER SA DATABASE
   $result = mysqli_query($conn,
-    "SELECT * FROM users WHERE email='$email' AND password='$password'"
-  );
+  "SELECT * FROM users WHERE email='$email'"
+);
 
-  if(mysqli_num_rows($result) > 0) {
-    $user = mysqli_fetch_assoc($result);
+if(mysqli_num_rows($result) > 0) {
+  $user = mysqli_fetch_assoc($result);
+
+  // Tapos i-verify yung password:
+  if(!password_verify($password, $user['password'])) {
+    $message = "Invalid email or password!";
+  } else {
 
     $_SESSION['user_id'] = $user['user_id'];
     $_SESSION['name'] = $user['full_name'];
@@ -104,6 +109,7 @@ if(isset($_POST['login'])){
 
     header("Location: index.php");
     exit;
+    } // close ng is_verified else block
   } else {
     $message = "Invalid email or password!";
   }
@@ -179,7 +185,7 @@ if(isset($_POST['login'])){
           </div>
         </form>
 
-        <div class="forgot-pass"><a href="#">Forgot password?</a></div>
+        <div class="forgot-pass"><a href="forgot_password.php">Forgot password?</a></div>
         <div class="divider"><span>or</span></div>
         <div class="create-acc-btn">
           <button>
