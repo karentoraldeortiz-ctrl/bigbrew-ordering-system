@@ -16,6 +16,15 @@ if(!isset($_GET['order_id']) || !is_numeric($_GET['order_id'])) {
 $user_id  = $_SESSION['user_id'];
 $order_id = (int)$_GET['order_id'];
 
+// Check if already reviewed — gawin AFTER $user_id is defined
+$already_reviewed = false;
+$rev_check = mysqli_query($conn,
+    "SELECT review_id FROM reviews WHERE user_id = '$user_id' LIMIT 1"
+);
+if (mysqli_num_rows($rev_check) > 0) {
+    $already_reviewed = true;
+}
+
 $order_q = mysqli_query($conn,
     "SELECT * FROM orders WHERE order_id = '$order_id' AND user_id = '$user_id'"
 );
@@ -50,18 +59,15 @@ while($row = mysqli_fetch_assoc($items_q)) {
 
 date_default_timezone_set('Asia/Manila');
 
-// DEFINE $status MUNA bago gamitin kahit saan
 $status = strtolower($order['order_status']);
 
 $pickup_value = trim($order['pickup_time']);
 $created_at   = !empty($order['created_at']) ? strtotime($order['created_at']) : time();
 
-// NGAYON safe na gamitin $status dito
 if($status === 'completed') {
     if(!empty($order['completed_at'])) {
         $pickup_display = date('g:i A', strtotime($order['completed_at']));
     } else {
-        // Fallback — older orders na wala pang completed_at
         $pickup_display = date('g:i A', strtotime($order['created_at']));
     }
 } elseif($pickup_value === 'asap') {
@@ -78,7 +84,7 @@ if($status === 'completed') {
     ];
     $pickup_display = $pickup_labels[$pickup_value] ?? $pickup_value;
 }
-// RECEIPT TITLE — define dito na rin para malinis
+
 if($status === 'pending') {
     $receipt_title    = 'Order Confirmed!';
     $receipt_subtitle = 'Your order has been received and is waiting to be prepared.';
@@ -95,7 +101,6 @@ if($status === 'pending') {
     $receipt_title    = 'Order Cancelled';
 
     if (!empty($order['cancelled_by']) && $order['cancelled_by'] === 'staff' && $order['cancel_reason'] === 'no_show') {
-        // Fetch no_show_count
         $ns_q = mysqli_query($conn, "SELECT no_show_count FROM users WHERE user_id = '$user_id'");
         $ns_row = mysqli_fetch_assoc($ns_q);
         $ns_count = (int)($ns_row['no_show_count'] ?? 0);
@@ -108,7 +113,7 @@ if($status === 'pending') {
             $receipt_subtitle = '🚫 Your order was cancelled due to no-show. Your account has been <strong>permanently suspended</strong>. Please contact us to appeal.';
         }
     } elseif (!empty($order['cancelled_by']) && $order['cancelled_by'] === 'staff') {
-        $receipt_subtitle = 'Your order was cancelled by the store. Please contact us for details.';
+        $receipt_subtitle = 'Your order was cancelled by the store. This may be due to an out-of-stock item or other reasons. You may try ordering again or contact us for details.';
     } else {
         $receipt_subtitle = 'You cancelled this order.';
     }
@@ -128,7 +133,6 @@ if($status === 'pending') {
     <link rel="shortcut icon" href="assets/logo/logo-black.png" type="image/x-icon" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-
 </head>
 <body>
 
@@ -136,131 +140,139 @@ if($status === 'pending') {
     <div class="topbar">
         <a href="javascript:history.back()" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i>
-</a>
+        </a>
     </div>
 
     <!-- RECEIPT CARD -->
-<div class="receipt-card">
-            
-<div class="receipt-header">
-<div class="check-circle <?php echo $status; ?>">
-    <?php
-    if($status === 'pending')           echo '<i class="fa-solid fa-clock"></i>';
-    elseif($status === 'preparing')     echo '<i class="fa-solid fa-blender"></i>';
-    elseif($status === 'ready_for_pickup') echo '<i class="fa-solid fa-bell"></i>';
-    elseif($status === 'completed')     echo '<i class="fa-solid fa-circle-check"></i>';
-    elseif($status === 'cancelled')     echo '<i class="fa-solid fa-circle-xmark"></i>';
-    else                                echo '<i class="fa-solid fa-check"></i>';
-    ?>
-</div>
+    <div class="receipt-card">
 
-        <div>
-            <h2 class="receipt-title">
-                <?php echo $receipt_title; ?>
-            </h2>
+        <div class="receipt-header">
+            <div class="check-circle <?php echo $status; ?>">
+                <?php
+                if($status === 'pending')              echo '<i class="fa-solid fa-clock"></i>';
+                elseif($status === 'preparing')        echo '<i class="fa-solid fa-blender"></i>';
+                elseif($status === 'ready_for_pickup') echo '<i class="fa-solid fa-bell"></i>';
+                elseif($status === 'completed')        echo '<i class="fa-solid fa-circle-check"></i>';
+                elseif($status === 'cancelled')        echo '<i class="fa-solid fa-circle-xmark"></i>';
+                else                                   echo '<i class="fa-solid fa-check"></i>';
+                ?>
+            </div>
 
-            <?php if($status === 'preparing' || $status === 'ready_for_pickup'): ?>
-                <p class="receipt-pickup-time">
-                    <i class="fa-solid fa-clock"></i>
-                    Pick-up at: <?php echo htmlspecialchars($pickup_display ?? 'ASAP'); ?>
+            <div>
+                <h2 class="receipt-title">
+                    <?php echo $receipt_title; ?>
+                </h2>
+
+                <?php if($status === 'preparing' || $status === 'ready_for_pickup'): ?>
+                    <p class="receipt-pickup-time">
+                        <i class="fa-solid fa-clock"></i>
+                        Pick-up at: <?php echo htmlspecialchars($pickup_display ?? 'ASAP'); ?>
+                    </p>
+                <?php endif; ?>
+
+                <p class="receipt-subtitle">
+                    <?php echo $receipt_subtitle; ?>
                 </p>
+            </div>
+        </div>
+
+        <div class="receipt-main-box">
+            <div class="receipt-id-row">
+                <span>Order ID</span>
+                <strong># <?php echo $order_id; ?></strong>
+            </div>
+
+            <p class="section-label">Customer Details</p>
+
+            <div class="detail-line">
+                <span>Name:</span>
+                <strong><?php echo htmlspecialchars($customer_name); ?></strong>
+            </div>
+
+            <div class="detail-line">
+                <span>Mode of Payment:</span>
+                <strong>Pay upon Pickup</strong>
+            </div>
+
+            <div class="detail-line">
+                <span>
+                    <?php
+                    if($status === 'completed') echo 'Picked up at:';
+                    else echo 'Self Pick-up:';
+                    ?>
+                </span>
+                <strong><?php echo htmlspecialchars($pickup_display ?? 'ASAP'); ?></strong>
+            </div>
+
+            <?php if(!empty($order['notes'])): ?>
+                <div class="detail-line">
+                    <span>Notes:</span>
+                    <strong><?php echo htmlspecialchars($order['notes']); ?></strong>
+                </div>
             <?php endif; ?>
 
-            <p class="receipt-subtitle">
-                <?php echo $receipt_subtitle; ?>
-            </p>
-        </div>
+            <hr>
+
+            <p class="section-label">Items</p>
+
+            <?php foreach($order_items as $item): ?>
+                <div class="receipt-item-row">
+                    <span>
+                        <strong><?php echo htmlspecialchars($item['product_name']); ?></strong>
+                        <em class="item-category">
+                            <?php echo ucwords(str_replace('-', ' ', $item['category'])); ?>
+                            · <?php echo htmlspecialchars($item['size_name']); ?>
+                        </em>
+                        x<?php echo $item['quantity']; ?>
+                    </span>
+                    <strong>
+                        P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?>
+                    </strong>
+                </div>
+
+                <?php if(!empty($item['addons'])): ?>
+                    <p class="item-addons">
+                        Add-ons: <?php echo htmlspecialchars($item['addons']); ?>
+                    </p>
+                <?php endif; ?>
+            <?php endforeach; ?>
+
+            <div class="total-row">
+                <span>Total</span>
+                <strong>P <?php echo number_format($order['total_amount'], 2); ?></strong>
             </div>
-
-    <div class="receipt-main-box">
-        <div class="receipt-id-row">
-            <span>Order ID</span>
-            <strong># <?php echo $order_id; ?></strong>
         </div>
 
-        <p class="section-label">Customer Details</p>
-
-        <div class="detail-line">
-            <span>Name:</span>
-            <strong><?php echo htmlspecialchars($customer_name); ?></strong>
-        </div>
-
-        <div class="detail-line">
-            <span>Mode of Payment:</span>
-            <strong>Pay upon Pickup</strong>
-        </div>
-
-        <div class="detail-line">
-            <span>
-                <?php 
-                if($status === 'completed') echo 'Picked up at:';
-                else echo 'Self Pick-up:';
-                ?>
-            </span>            
-            <strong><?php echo htmlspecialchars($pickup_display ?? 'ASAP'); ?></strong>
-        </div> 
-
-       <?php if(!empty($order['notes'])): ?>
-        <div class="detail-line">
-            <span>Notes:</span>
-            <strong><?php echo htmlspecialchars($order['notes']); ?></strong>
-        </div>
+        <!--
+            SECTION LOGIC:
+            pending / preparing / ready_for_pickup → pickup instructions ONLY
+            completed + !already_reviewed          → review box ONLY
+            completed + already_reviewed           → nothing here (clean)
+            cancelled                              → nothing here
+        -->
+        <?php if(in_array($status, ['pending', 'preparing', 'ready_for_pickup'])): ?>
+            <div class="pickup-box">
+                <h4>Pickup Instructions</h4>
+                <ol>
+                    <li>
+                        <span>Pick up your order at <?php echo htmlspecialchars($pickup_display ?? 'ASAP'); ?></span>
+                        <p>
+                            Please claim your order within 30 minutes. Should you arrive late,
+                            beverages may not be remade.
+                        </p>
+                    </li>
+                    <li>
+                        <span>Show your order ID at the counter</span>
+                    </li>
+                    <li>
+                        <span>Enjoy your drinks!</span>
+                    </li>
+                </ol>
+            </div>
+        
         <?php endif; ?>
 
-        <hr>
-
-        <p class="section-label">Items</p>
-
-        <?php foreach($order_items as $item): ?>
-            <div class="receipt-item-row">
-                <span>
-                    <strong><?php echo htmlspecialchars($item['product_name']); ?></strong>
-                    <em class="item-category">
-                        <?php echo ucwords(str_replace('-', ' ', $item['category'])); ?> 
-                        · <?php echo htmlspecialchars($item['size_name']); ?>
-                    </em>
-                    x<?php echo $item['quantity']; ?>
-                </span>
-                <strong>
-                    P <?php echo number_format($item['unit_price'] * $item['quantity'], 2); ?>
-                </strong>
-            </div>
-
-            <?php if(!empty($item['addons'])): ?>
-                <p class="item-addons">
-                    Add-ons: <?php echo htmlspecialchars($item['addons']); ?>
-                </p>
-            <?php endif; ?>        
-        <?php endforeach; ?>
-
-        <div class="total-row">
-            <span>Total</span>
-            <strong>P <?php echo number_format($order['total_amount'], 2); ?></strong>
-        </div>
-    </div>
-
-    <div class="pickup-box">
-        <h4>Pickup Instructions</h4>
-
-        <ol>
-            <li>
-                <span>Pick up your order at <?php echo htmlspecialchars($pickup_display ?? 'ASAP'); ?></span>
-                <p>
-                    Please claim your order within 30 minutes. Should you arrive late,
-                    beverages may not be remade.
-                </p>
-            </li>
-
-            <li>
-                <span>Show your order ID at the counter</span>
-            </li>
-
-            <li>
-                <span>Enjoy your drinks!</span>
-            </li>
-        </ol>
-    </div>
-
+        <!-- ACTION BUTTONS -->
         <div class="receipt-actions">
             <?php if($status === 'pending'): ?>
                 <!-- PENDING: Cancel lang -->
@@ -269,75 +281,48 @@ if($status === 'pending') {
                 </button>
 
                 <!-- Cancel Confirmation Modal -->
-<div id="cancelModal" class="auth-modal-overlay" style="display:none;">
-    <div class="auth-modal-card">
-        <div class="auth-modal-icon">🗑️</div>
-        <h3>Cancel Order?</h3>
-        <p>Are you sure you want to cancel this order? This cannot be undone.</p>
-        <div class="auth-modal-actions">
-            <button class="auth-btn-secondary" onclick="closeCancelModal()">Go Back</button>
-            <form method="POST" action="cancel_order.php" style="width:100%;">
-                <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-                <button type="submit" class="auth-btn-danger">Yes, Cancel Order</button>
-            </form>
-        </div>
-    </div>
-</div>
+                <div id="cancelModal" class="auth-modal-overlay" style="display:none;">
+                    <div class="auth-modal-card">
+                        <div class="auth-modal-icon">🗑️</div>
+                        <h3>Cancel Order?</h3>
+                        <p>Are you sure you want to cancel this order? This cannot be undone.</p>
+                        <div class="auth-modal-actions">
+                            <button class="auth-btn-secondary" onclick="closeCancelModal()">Go Back</button>
+                            <form method="POST" action="cancel_order.php" style="width:100%;">
+                                <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+                                <button type="submit" class="auth-btn-danger">Yes, Cancel Order</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
             <?php elseif($status === 'preparing' || $status === 'ready_for_pickup'): ?>
                 <!-- PREPARING / READY: disabled Cancel lang -->
-                <button class="btn-cancel-order btn-full btn-disabled-cancel" 
-                            disabled
-                            title="Order cannot be cancelled once preparation has started.">
-                        Cancel Order
+                <button class="btn-cancel-order btn-full btn-disabled-cancel"
+                        disabled
+                        title="Order cannot be cancelled once preparation has started.">
+                    Cancel Order
                 </button>
+
             <?php elseif($status === 'completed'): ?>
-                <!-- COMPLETED: Review box + Buy Again + disabled Cancel -->
-                <div class="review-box">
-                    <h4>Enjoyed our service? Let us know!</h4>
-                    <p>Your feedback helps us improve our service.</p>
-                    <div class="star-rating" id="starRating">
-                        <?php for($i = 1; $i <= 5; $i++): ?>
-                            <span class="star" data-value="<?php echo $i; ?>">★</span>
-                        <?php endfor; ?>
-                    </div>
-                    <textarea class="feedback-input" id="feedbackText" 
-                            placeholder="Write your feedback here..."></textarea>
-                    <button class="btn-submit-review" id="btnSubmitReview">Submit</button>
-                </div>
-
                 <div class="receipt-btn-row">
-                <button class="btn-cancel-order btn-disabled-cancel" 
-                            disabled
-                            title="Completed orders cannot be cancelled.">
-                        Cancel Order
-                </button>
-                    <form method="POST" action="buy_again.php" style="flex:1;">
-                        <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-                        <button type="submit" class="btn-buy-again">Buy Again</button>
-                    </form>                
-                </div>
-
-            <?php elseif($status === 'cancelled'): ?>
-                <!-- CANCELLED: Buy Again lang -->
-                <div class="receipt-btn-row">
+                    <a href="reviews.php#write-box" class="btn-rate-us">Rate Us</a>
                     <form method="POST" action="buy_again.php" style="flex:1;">
                         <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
                         <button type="submit" class="btn-buy-again">Buy Again</button>
                     </form>
                 </div>
-
             <?php endif; ?>
         </div>
 
-</div>
+    </div><!-- end .receipt-card -->
+
 <script>
-const ORDER_ID  = <?php echo $order_id; ?>;
+const ORDER_ID    = <?php echo $order_id; ?>;
 const CURR_STATUS = '<?php echo $status; ?>';
 
-// I-poll lang kung hindi pa completed o cancelled
+// Poll lang kung hindi pa completed o cancelled
 if(CURR_STATUS !== 'completed' && CURR_STATUS !== 'cancelled') {
-    
     let lastStatus = CURR_STATUS;
 
     function pollStatus() {
@@ -345,8 +330,6 @@ if(CURR_STATUS !== 'completed' && CURR_STATUS !== 'cancelled') {
             .then(res => res.json())
             .then(data => {
                 if(data.error) return;
-
-                // Kung nagbago ang status — reload na para ma-update lahat ng UI
                 if(data.status !== lastStatus) {
                     location.reload();
                 }
@@ -354,7 +337,6 @@ if(CURR_STATUS !== 'completed' && CURR_STATUS !== 'cancelled') {
             .catch(err => console.warn('Poll failed:', err));
     }
 
-    // Poll every 5 seconds
     setInterval(pollStatus, 1000);
 }
 
@@ -366,10 +348,14 @@ function closeCancelModal() {
     document.getElementById('cancelModal').style.display = 'none';
 }
 
-// Close kapag nag-click sa overlay
-document.getElementById('cancelModal').addEventListener('click', function(e) {
-    if(e.target === this) closeCancelModal();
-});
+const cancelModal = document.getElementById('cancelModal');
+if(cancelModal) {
+    cancelModal.addEventListener('click', function(e) {
+        if(e.target === this) closeCancelModal();
+    });
+}
 </script>
-<?php $ban_check_render = true; include "ban-check.php"; ?></body>
+
+<?php $ban_check_render = true; include "ban-check.php"; ?>
+</body>
 </html>

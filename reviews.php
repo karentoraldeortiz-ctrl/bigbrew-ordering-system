@@ -103,8 +103,8 @@ if ($is_logged_in) {
             </section>
         <?php endif; ?>
 
-        <div class="write-box">
-            <div class="write-review">
+        <div class="write-box" >
+            <div class="write-review" id="write-box">
                 <h3>Love BigBrew? Share Your Experience!</h3>
                 <p>Your feedback helps us serve you better and helps others find great drinks.</p>
                 <?php if (!$is_logged_in): ?>
@@ -206,5 +206,23 @@ if ($is_logged_in) {
 
     <script src="js/global.js"></script>
     <script src="js/review.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+    if(window.location.hash === '#write-box') {
+        const target = document.getElementById('write-box');
+        if(!target) return;
+
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Slight delay para makita muna yung scroll bago mag-pulse
+        setTimeout(() => {
+    target.classList.add('pulse');
+    setTimeout(() => {
+        target.classList.remove('pulse');
+    }, 0.8 * 3 * 1000); // 0.8s × 3 iterations = 2.4s
+}, 500);
+    }
+});
+    </script>
 </body>
 </html>
