@@ -1,5 +1,7 @@
 <?php
 session_start();
+include "db.php";  
+include "ban-check.php";
 ?>
 
 
@@ -408,8 +410,7 @@ session_start();
             </div>
             
     </section>
-
-  </body>
+<?php $ban_check_render = true; include "ban-check.php"; ?>  </body>
 
   <footer class="main-footer">
     <div class="footer-container">

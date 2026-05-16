@@ -81,23 +81,72 @@ if (isset($_POST['update_status'])) {
         header("Location: order-details.php?order_id=$order_id");
         exit;
     }
+
     $status = mysqli_real_escape_string($conn, $_POST['status']);
-        
-    if($status === 'completed') {
-        mysqli_query($conn, 
-            "UPDATE orders 
-             SET order_status = '$status', completed_at = NOW() 
+    $cancel_reason = isset($_POST['cancel_reason']) 
+        ? mysqli_real_escape_string($conn, $_POST['cancel_reason']) 
+        : null;
+
+    if ($status === 'completed') {
+        mysqli_query($conn,
+            "UPDATE orders SET order_status = 'completed', completed_at = NOW(),
+             cancelled_by = NULL, cancel_reason = NULL
              WHERE order_id = '$order_id'"
         );
+
+    } elseif ($status === 'cancelled') {
+        $cancelled_by = 'staff';
+        $reason = $cancel_reason ?? 'other';
+
+        mysqli_query($conn,
+            "UPDATE orders SET order_status = 'cancelled',
+             cancelled_by = '$cancelled_by', cancel_reason = '$reason',
+             completed_at = NULL
+             WHERE order_id = '$order_id'"
+        );
+
+        // If no-show, increment strike
+        if ($reason === 'no_show') {
+            $user_id = $order['user_id'];
+
+            // Get current count
+            $user_q = mysqli_query($conn, "SELECT no_show_count FROM users WHERE user_id = '$user_id'");
+            $user = mysqli_fetch_assoc($user_q);
+            $new_count = $user['no_show_count'] + 1;
+
+            if ($new_count === 1) {
+                // 1st strike — warning lang
+                mysqli_query($conn,
+                    "UPDATE users SET no_show_count = $new_count WHERE user_id = '$user_id'"
+                );
+            } elseif ($new_count === 2) {
+                // 2nd strike — 7-day temp ban
+                mysqli_query($conn,
+                    "UPDATE users SET no_show_count = $new_count,
+                     ban_status = 'temp_banned',
+                     ban_until = DATE_ADD(NOW(), INTERVAL 7 DAY)
+                     WHERE user_id = '$user_id'"
+                );
+            } else {
+                // 3rd+ — permanent ban
+                mysqli_query($conn,
+                    "UPDATE users SET no_show_count = $new_count,
+                     ban_status = 'banned',
+                     ban_until = NULL
+                     WHERE user_id = '$user_id'"
+                );
+            }
+        }
+
     } else {
-        mysqli_query($conn, 
-            "UPDATE orders 
-             SET order_status = '$status', completed_at = NULL
+        mysqli_query($conn,
+            "UPDATE orders SET order_status = '$status', completed_at = NULL,
+             cancelled_by = NULL, cancel_reason = NULL
              WHERE order_id = '$order_id'"
         );
     }
 
-      header("Location: order-details.php?order_id=$order_id");
+    header("Location: order-details.php?order_id=$order_id");
     exit;
 }
 ?>
@@ -164,24 +213,29 @@ if (isset($_POST['update_status'])) {
                         </p>
                         <?php endif; ?>
                     </div>
-                     <form method="POST">
-                            <select name="status" onchange="this.form.submit()" class="od-status-select"
-                                <?php if (in_array($order['order_status'], ['completed', 'cancelled'])): echo 'disabled'; endif; ?>
-                                style="background:<?php                                
-                                echo $order['order_status'] === 'completed' ? 'rgba(180,180,180,0.35)' : 
-                                    ($order['order_status'] === 'ready_for_pickup' ? 'rgba(136,214,108,0.5)' :
-                                    ($order['order_status'] === 'cancelled' ? 'rgba(255,100,100,0.3)' :
-                                    ($order['order_status'] === 'preparing' ? 'rgba(100,150,255,0.3)' : 'rgba(255,220,100,0.5)')));
-                            ?>">
-                            <option value="pending"   <?php echo $order['order_status'] === 'pending'   ? 'selected' : ''; ?>>Pending</option>
-                            <option value="preparing" <?php echo $order['order_status'] === 'preparing' ? 'selected' : ''; ?>>Preparing</option>
-                            <option value="ready_for_pickup" <?php echo $order['order_status'] === 'ready_for_pickup' ? 'selected' : ''; ?>>Ready for Pickup</option>
-                            <option value="completed"<?php echo $order['order_status'] === 'completed' ? 'selected' : ''; ?>>Completed</option>
-                            <option value="cancelled" <?php echo $order['order_status'] === 'cancelled' ? 'selected' : ''; ?>>Cancelled</option>
-                        </select>
-                        <input type="hidden" name="update_status" value="1">
-                    </form>
-                </div>
+<form method="POST" id="odStatusForm">
+    <select name="status" id="statusSelect"
+        <?php if (in_array($order['order_status'], ['completed', 'cancelled'])): echo 'disabled'; endif; ?>
+        onchange="handleOdStatusChange(this)"
+        class="od-status-select"
+        style="background:<?php
+            echo $order['order_status'] === 'completed' ? 'rgba(180,180,180,0.35)' :
+                ($order['order_status'] === 'ready_for_pickup' ? 'rgba(136,214,108,0.5)' :
+                ($order['order_status'] === 'cancelled' ? 'rgba(255,100,100,0.3)' :
+                ($order['order_status'] === 'preparing' ? 'rgba(100,150,255,0.3)' : 'rgba(255,220,100,0.5)')));
+        ?>">
+        <option value="pending"          <?php echo $order['order_status'] === 'pending'          ? 'selected' : ''; ?>>Pending</option>
+        <option value="preparing"        <?php echo $order['order_status'] === 'preparing'        ? 'selected' : ''; ?>>Preparing</option>
+        <option value="ready_for_pickup" <?php echo $order['order_status'] === 'ready_for_pickup' ? 'selected' : ''; ?>>Ready for Pickup</option>
+        <option value="completed"        <?php echo $order['order_status'] === 'completed'        ? 'selected' : ''; ?>>Completed</option>
+        <option value="cancelled"        <?php echo $order['order_status'] === 'cancelled'        ? 'selected' : ''; ?>>Cancelled</option>
+    </select>
+    <input type="hidden" name="status" id="odHiddenStatus">
+    <input type="hidden" name="cancel_reason" id="odHiddenReason">
+    <input type="hidden" name="update_status" value="1">
+</form>
+           
+</div>
 
                 <?php if (!empty($order['notes'])): ?>
                 <div class="od-notes">
@@ -254,6 +308,48 @@ if (isset($_POST['update_status'])) {
                 </div>
             </div>
         </div>
+
+        <!-- CANCEL REASON MODAL (order-details) -->
+<div id="odCancelModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+     z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#1e1e1e; border-radius:16px; padding:28px 24px; width:90%; max-width:380px;
+                font-family:Poppins; box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+        <h3 style="margin:0 0 6px; font-size:16px; color:#fff;">Cancel Order</h3>
+        <p style="margin:0 0 18px; font-size:13px; color:#aaa;">Select a reason for cancellation:</p>
+
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;" id="odReasonOptions">
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;
+                          background:#2a2a2a; border-radius:10px; padding:12px 14px;">
+                <input type="radio" name="od_reason" value="no_show">
+                <span style="font-size:13px; color:#fff;">🕐 No-show — Customer did not pick up</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;
+                          background:#2a2a2a; border-radius:10px; padding:12px 14px;">
+                <input type="radio" name="od_reason" value="out_of_stock">
+                <span style="font-size:13px; color:#fff;">📦 Out of Stock</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;
+                          background:#2a2a2a; border-radius:10px; padding:12px 14px;">
+                <input type="radio" name="od_reason" value="other">
+                <span style="font-size:13px; color:#fff;">✏️ Other</span>
+            </label>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+            <button type="button" onclick="closeOdCancelModal()"
+                style="flex:1; padding:10px; border:1px solid #444; background:transparent;
+                       color:#aaa; border-radius:10px; cursor:pointer; font-family:Poppins; font-size:13px;">
+                Go Back
+            </button>
+            <button type="button" onclick="submitOdCancel()"
+                style="flex:1; padding:10px; border:none; background:#e74c3c;
+                       color:#fff; border-radius:10px; cursor:pointer; font-family:Poppins; font-size:13px; font-weight:600;">
+                Confirm Cancel
+            </button>
+        </div>
+    </div>
+</div>
+
     </main>
 
     <nav class="bottom-nav">
@@ -270,5 +366,37 @@ if (isset($_POST['update_status'])) {
             <span>Logout</span>
         </a>
     </nav>
-</body>
+
+<script>
+function handleOdStatusChange(select) {
+    if (select.value === 'cancelled') {
+        document.getElementById('odCancelModal').style.display = 'flex';
+        // I-reset muna ang select para hindi agad mag-reflect ng cancelled
+        select.value = '<?php echo $order['order_status']; ?>';
+    } else {
+        document.getElementById('odHiddenStatus').value = select.value;
+        document.getElementById('odStatusForm').submit();
+    }
+}
+
+function closeOdCancelModal() {
+    document.getElementById('odCancelModal').style.display = 'none';
+    document.querySelectorAll('input[name="od_reason"]').forEach(r => r.checked = false);
+}
+
+function submitOdCancel() {
+    const selected = document.querySelector('input[name="od_reason"]:checked');
+    if (!selected) {
+        alert('Please select a reason.');
+        return;
+    }
+    document.getElementById('odHiddenStatus').value = 'cancelled';
+    document.getElementById('odHiddenReason').value = selected.value;
+    document.getElementById('odStatusForm').submit();
+}
+
+document.getElementById('odCancelModal').addEventListener('click', function(e) {
+    if (e.target === this) closeOdCancelModal();
+});
+</script></body>
 </html>

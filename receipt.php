@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "db.php";
+include "ban-check.php";
 
 if(!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -92,7 +93,25 @@ if($status === 'pending') {
     $receipt_subtitle = 'Thank you, Brew! Buy again.';
 } elseif($status === 'cancelled') {
     $receipt_title    = 'Order Cancelled';
-    $receipt_subtitle = 'This order has been cancelled.';
+
+    if (!empty($order['cancelled_by']) && $order['cancelled_by'] === 'staff' && $order['cancel_reason'] === 'no_show') {
+        // Fetch no_show_count
+        $ns_q = mysqli_query($conn, "SELECT no_show_count FROM users WHERE user_id = '$user_id'");
+        $ns_row = mysqli_fetch_assoc($ns_q);
+        $ns_count = (int)($ns_row['no_show_count'] ?? 0);
+
+        if ($ns_count === 1) {
+            $receipt_subtitle = '⚠️ Your order was cancelled because you did not pick it up in time. This is your <strong>1st warning</strong> — a 2nd no-show will result in a 7-day suspension.';
+        } elseif ($ns_count === 2) {
+            $receipt_subtitle = '🚫 Your order was cancelled due to no-show. Your account has been <strong>suspended for 7 days</strong> due to repeated no-shows.';
+        } else {
+            $receipt_subtitle = '🚫 Your order was cancelled due to no-show. Your account has been <strong>permanently suspended</strong>. Please contact us to appeal.';
+        }
+    } elseif (!empty($order['cancelled_by']) && $order['cancelled_by'] === 'staff') {
+        $receipt_subtitle = 'Your order was cancelled by the store. Please contact us for details.';
+    } else {
+        $receipt_subtitle = 'You cancelled this order.';
+    }
 } else {
     $receipt_title    = 'Order Updated';
     $receipt_subtitle = 'Your order status has been updated.';
@@ -293,15 +312,19 @@ if($status === 'pending') {
                             title="Completed orders cannot be cancelled.">
                         Cancel Order
                 </button>
-<form method="POST" action="buy_again.php" style="flex:1;">
-    <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-    <button type="submit" class="btn-buy-again">Buy Again</button>
-</form>                </div>
+                    <form method="POST" action="buy_again.php" style="flex:1;">
+                        <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+                        <button type="submit" class="btn-buy-again">Buy Again</button>
+                    </form>                
+                </div>
 
             <?php elseif($status === 'cancelled'): ?>
                 <!-- CANCELLED: Buy Again lang -->
                 <div class="receipt-btn-row">
-                    <a href="menu.php" class="btn-buy-again btn-full">Buy Again</a>
+                    <form method="POST" action="buy_again.php" style="flex:1;">
+                        <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+                        <button type="submit" class="btn-buy-again">Buy Again</button>
+                    </form>
                 </div>
 
             <?php endif; ?>
@@ -348,5 +371,5 @@ document.getElementById('cancelModal').addEventListener('click', function(e) {
     if(e.target === this) closeCancelModal();
 });
 </script>
-</body>
+<?php $ban_check_render = true; include "ban-check.php"; ?></body>
 </html>

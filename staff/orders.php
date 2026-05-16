@@ -11,15 +11,36 @@ include "../db.php";
 if (isset($_POST['update_status'])) {
     $order_id = (int) $_POST['order_id'];
 
-    $current_q = mysqli_query($conn, "SELECT order_status FROM orders WHERE order_id = '$order_id'");
+    $current_q = mysqli_query($conn, "SELECT o.order_status, o.user_id FROM orders o WHERE o.order_id = '$order_id'");
     $current = mysqli_fetch_assoc($current_q);
 
     if (!in_array($current['order_status'], ['completed', 'cancelled'])) {
         $status = mysqli_real_escape_string($conn, $_POST['status']);
+        $cancel_reason = isset($_POST['cancel_reason'])
+            ? mysqli_real_escape_string($conn, $_POST['cancel_reason'])
+            : 'other';
+
         if ($status === 'completed') {
-            mysqli_query($conn, "UPDATE orders SET order_status = '$status', completed_at = NOW() WHERE order_id = '$order_id'");
+            mysqli_query($conn, "UPDATE orders SET order_status = 'completed', completed_at = NOW(), cancelled_by = NULL, cancel_reason = NULL WHERE order_id = '$order_id'");
+        } elseif ($status === 'cancelled') {
+            mysqli_query($conn, "UPDATE orders SET order_status = 'cancelled', cancelled_by = 'staff', cancel_reason = '$cancel_reason', completed_at = NULL WHERE order_id = '$order_id'");
+
+            if ($cancel_reason === 'no_show') {
+                $uid = $current['user_id'];
+                $uq = mysqli_query($conn, "SELECT no_show_count FROM users WHERE user_id = '$uid'");
+                $urow = mysqli_fetch_assoc($uq);
+                $new_count = $urow['no_show_count'] + 1;
+
+                if ($new_count === 1) {
+                    mysqli_query($conn, "UPDATE users SET no_show_count = $new_count WHERE user_id = '$uid'");
+                } elseif ($new_count === 2) {
+                    mysqli_query($conn, "UPDATE users SET no_show_count = $new_count, ban_status = 'temp_banned', ban_until = DATE_ADD(NOW(), INTERVAL 7 DAY) WHERE user_id = '$uid'");
+                } else {
+                    mysqli_query($conn, "UPDATE users SET no_show_count = $new_count, ban_status = 'banned', ban_until = NULL WHERE user_id = '$uid'");
+                }
+            }
         } else {
-            mysqli_query($conn, "UPDATE orders SET order_status = '$status', completed_at = NULL WHERE order_id = '$order_id'");
+            mysqli_query($conn, "UPDATE orders SET order_status = '$status', completed_at = NULL, cancelled_by = NULL, cancel_reason = NULL WHERE order_id = '$order_id'");
         }
     }
 }
@@ -156,7 +177,7 @@ function getPickupDisplay($pickup_value, $created_at) {
                             <div class="card-status">
                                 <form method="POST" onclick="event.stopPropagation()">
                                     <input type="hidden" name="order_id" value="<?php echo $oid; ?>">
-                                    <select name="status" onchange="dismissToast(); this.form.submit();"
+                                    <select name="status" onchange="handleOrderStatusChange(this, <?php echo $oid; ?>)"
                                         <?php if (in_array($order['order_status'], ['completed', 'cancelled'])): echo 'disabled'; endif; ?>
                                         style="background:<?php echo $status_bg; ?>">                                        
                                         <option value="pending"   <?php echo $order['order_status'] === 'pending'   ? 'selected' : ''; ?>>Pending</option>
@@ -204,6 +225,53 @@ function getPickupDisplay($pickup_value, $created_at) {
         </section>
     </main>
 
+        <!-- CANCEL REASON MODAL -->
+        <div id="cancelModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);
+            z-index:9999; align-items:center; justify-content:center;">
+            <div style="background:#1e1e1e; border-radius:16px; padding:28px 24px; width:90%; max-width:380px;
+                        font-family:Poppins; box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+                <h3 style="margin:0 0 6px; font-size:16px; color:#fff;">Cancel Order</h3>
+                <p style="margin:0 0 18px; font-size:13px; color:#aaa;">Select a reason for cancellation:</p>
+
+                <form method="POST" id="cancelForm">
+                    <input type="hidden" name="order_id" id="cancelOrderId">
+                    <input type="hidden" name="status" value="cancelled">
+                    <input type="hidden" name="update_status" value="1">
+
+                    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+                        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;
+                                    background:#2a2a2a; border-radius:10px; padding:12px 14px;">
+                            <input type="radio" name="cancel_reason" value="no_show" required>
+                            <span style="font-size:13px; color:#fff;">🕐 No-show — Customer did not pick up</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;
+                                    background:#2a2a2a; border-radius:10px; padding:12px 14px;">
+                            <input type="radio" name="cancel_reason" value="out_of_stock">
+                            <span style="font-size:13px; color:#fff;">📦 Out of Stock</span>
+                        </label>
+                        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;
+                                    background:#2a2a2a; border-radius:10px; padding:12px 14px;">
+                            <input type="radio" name="cancel_reason" value="other">
+                            <span style="font-size:13px; color:#fff;">✏️ Other</span>
+                        </label>
+                    </div>
+
+                    <div style="display:flex; gap:10px;">
+                        <button type="button" onclick="closeCancelModal()"
+                            style="flex:1; padding:10px; border:1px solid #444; background:transparent;
+                                color:#aaa; border-radius:10px; cursor:pointer; font-family:Poppins; font-size:13px;">
+                            Go Back
+                        </button>
+                        <button type="submit"
+                            style="flex:1; padding:10px; border:none; background:#e74c3c;
+                                color:#fff; border-radius:10px; cursor:pointer; font-family:Poppins; font-size:13px; font-weight:600;">
+                            Confirm Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     <nav class="bottom-nav">
         <a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) === 'dashboard.php' ? 'active' : ''; ?>">
             <i class="fa fa-dashboard nav-icon"></i><span>Dashboard</span>
@@ -223,11 +291,36 @@ function getPickupDisplay($pickup_value, $created_at) {
 <script src="notif.js"></script>
 <script>
     document.querySelectorAll('.order-card').forEach(card => {
-        card.addEventListener('click', function () {
-            dismissToast();
-            window.location.href = 'order-details.php?order_id=' + this.dataset.orderId;
-        });
+    card.addEventListener('click', function () {
+        dismissToast();
+        window.location.href = 'order-details.php?order_id=' + this.dataset.orderId;
     });
+});
+
+function handleOrderStatusChange(select, orderId) {
+    dismissToast();
+    if (select.value === 'cancelled') {
+        event.stopPropagation();
+        document.getElementById('cancelOrderId').value = orderId;
+        document.getElementById('cancelModal').style.display = 'flex';
+    } else {
+        select.form.submit();
+    }
+}
+
+function closeCancelModal() {
+    document.getElementById('cancelModal').style.display = 'none';
+    // I-reset ang select sa previous value
+    document.querySelectorAll('.order-card select').forEach(s => {
+        const card = s.closest('.order-card');
+        // Hindi natin alam ang prev value, i-reload na lang
+    });
+}
+
+// Close kapag nag-click sa overlay
+document.getElementById('cancelModal').addEventListener('click', function(e) {
+    if (e.target === this) closeCancelModal();
+});
 
     let knownOrderIds = new Set(
         [...document.querySelectorAll('.order-card')].map(c => c.dataset.orderId)

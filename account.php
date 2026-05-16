@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "db.php";
+include "ban-check.php";
 
 $isLoggedIn = isset($_SESSION['user_id']);
 $user = null;
@@ -9,12 +10,15 @@ if($isLoggedIn){
     $user_id = $_SESSION['user_id'];
 
     $query = mysqli_query($conn,
-      "SELECT full_name, email, phone_num, birthday
+      "SELECT full_name, email, phone_num, birthday, no_show_count, ban_status, ban_until
       FROM users
       WHERE user_id = '$user_id'"
     );
 
     $user = mysqli_fetch_assoc($query);
+    $ban_status  = $user['ban_status']  ?? 'active';
+    $ban_until   = $user['ban_until']   ?? null;
+    $no_show_count = (int)($user['no_show_count'] ?? 0);
 }
 
 ?>
@@ -142,8 +146,9 @@ if($isLoggedIn){
         </div>
         
         <?php else: ?>
-      
-      <div class="account-content">
+
+
+<div class="account-content">
         <div class="account-container1">
           <div class="acc-info">
             <div class="acc-info-header">
@@ -179,11 +184,53 @@ if($isLoggedIn){
                 </div>
               </div>
             </div>
-            <div class="acc-info-footer">
-              <a href="logout.php">
-                <button class="logout-btn">Logout</button>
-              </a>
+              <div class="acc-info-footer">
+    <a href="logout.php">
+        <button class="logout-btn">Logout</button>
+    </a>
+</div>
+
+<!-- NO-SHOW STATUS — i-add dito -->
+<?php if ($no_show_count > 0 || $ban_status !== 'active'): ?>
+<div id="noshow-status" style="margin-top:16px; background:#2a2a2a; border-radius:12px; padding:16px 18px;">
+    <h5 style="margin:0 0 10px; font-size:13px; color:#aaa; text-transform:uppercase; letter-spacing:0.5px;">
+        No-Show Record
+    </h5>
+
+    <?php if ($ban_status === 'active' && $no_show_count === 1): ?>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:22px;">⚠️</span>
+            <div>
+                <p style="margin:0; font-size:13px; color:#f39c12; font-weight:600;">1st Warning</p>
+                <p style="margin:2px 0 0; font-size:12px; color:#aaa;">One more no-show will result in a 7-day suspension.</p>
             </div>
+        </div>
+
+    <?php elseif ($ban_status === 'temp_banned'): ?>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:22px;">🚫</span>
+            <div>
+                <p style="margin:0; font-size:13px; color:#e74c3c; font-weight:600;">Account Suspended</p>
+                <p style="margin:2px 0 0; font-size:12px; color:#aaa;">
+                    Suspended until <strong style="color:#fff;"><?php echo date('F j, Y', strtotime($ban_until)); ?></strong>
+                </p>
+                <p style="margin:2px 0 0; font-size:12px; color:#aaa;">No-shows: <?php echo $no_show_count; ?></p>
+            </div>
+        </div>
+
+    <?php elseif ($ban_status === 'banned'): ?>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:22px;">🚫</span>
+            <div>
+                <p style="margin:0; font-size:13px; color:#e74c3c; font-weight:600;">Permanently Suspended</p>
+                <p style="margin:2px 0 0; font-size:12px; color:#aaa;">Please contact the store to appeal.</p>
+                <p style="margin:2px 0 0; font-size:12px; color:#aaa;">No-shows: <?php echo $no_show_count; ?></p>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
+          
           </div>
         </div>
         <div class="account-container2">
@@ -294,7 +341,17 @@ if($isLoggedIn){
 <?php endif; ?>
     </section>
 
-    <footer class="main-footer">
+    
+    <script>
+  window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+</script>
+    <script src="js/account.js"></script>
+    <script src="js/global.js"></script>
+<?php $ban_check_render = true; include "ban-check.php"; ?>
+  </body>
+
+
+<footer class="main-footer">
       <div class="footer-container">
         <div class="footer-brand">
           <div class="footer-logo">
@@ -310,7 +367,6 @@ if($isLoggedIn){
           <h3>Contact</h3>
           <ul>
             <li>0929 563 4350</li>
-            <li>info@bigbrew.com</li>
             <li>094 Maysan Rd, Valenzuela, 1442 Metro Manila</li>
           </ul>
         </div>
@@ -349,10 +405,5 @@ if($isLoggedIn){
         <p>© 2026. BigBrew Maysan. All Rights Reserved.</p>
       </div>
     </footer>
-    <script>
-  window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
-</script>
-    <script src="js/account.js"></script>
-    <script src="js/global.js"></script>
-  </body>
+
 </html>

@@ -1,10 +1,12 @@
 <?php
 session_start();
 include "db.php";
+include "ban-check.php";
+
 date_default_timezone_set('Asia/Manila');
 
 $currentTime = date('H:i');
-$openingTime = '11:00';
+$openingTime = '01:00';
 $closingTime = '23:59';
 
 $isStoreOpen = ($currentTime >= $openingTime && $currentTime < $closingTime);
@@ -52,6 +54,28 @@ $time_90 = date('g:i A', strtotime('+1 hour 30 minutes', $now));
 
 $isLoggedIn = isset($_SESSION['user_id']);
 $user_id = $isLoggedIn ? $_SESSION['user_id'] : null;
+// Ban check
+$is_banned = false;
+$ban_message = '';
+
+if ($isLoggedIn) {
+    $ban_q = mysqli_query($conn, "SELECT ban_status, ban_until FROM users WHERE user_id = '$user_id'");
+    $ban_info = mysqli_fetch_assoc($ban_q);
+
+    if ($ban_info['ban_status'] === 'temp_banned') {
+        $ban_until_ts = strtotime($ban_info['ban_until']);
+        if (time() < $ban_until_ts) {
+            $is_banned = true;
+            $ban_message = '🚫 Your account is suspended until <strong>' . date('F j, Y', $ban_until_ts) . '</strong> due to repeated no-shows. You cannot place orders during this period.';
+        } else {
+            // Expired na, lift na
+            mysqli_query($conn, "UPDATE users SET ban_status = 'active', ban_until = NULL WHERE user_id = '$user_id'");
+        }
+    } elseif ($ban_info['ban_status'] === 'banned') {
+        $is_banned = true;
+        $ban_message = '🚫 Your account has been <strong>permanently suspended</strong> due to repeated no-shows. Please contact the store to appeal.';
+    }
+}
 
 $order_success = false;
 $order_id      = null;
@@ -65,7 +89,7 @@ if(isset($_SESSION['order_success'])) {
     unset($_SESSION['order_id']);
 }
 
-if(isset($_POST['place_order']) && $isLoggedIn) {
+if(isset($_POST['place_order']) && $isLoggedIn && !$is_banned) {
     $pickup_time = $_POST['pickup_time'];
     $notes       = mysqli_real_escape_string($conn, $_POST['notes']);
     if(!$isStoreOpen) {
@@ -404,12 +428,24 @@ if($isLoggedIn) {
                 </div>
 
                 <?php if($isLoggedIn): ?>
-                    <button type="submit" name="place_order" class="checkout-btn"
-                        <?php echo !$isStoreOpen ? 'disabled title="Store is currently closed"' : ''; ?>>
-                        <?php echo $isStoreOpen ? 'Checkout' : '🔒 Store Closed'; ?>
-                    </button>
-                    <?php if(!$isStoreOpen): ?>
-                        <p class="store-closed-msg">We're closed right now. Come back between 11:00 AM - 9:00 PM!</p>
+                    <?php if($is_banned): ?>
+                        <button type="button" class="checkout-btn" disabled>
+                            🔒 Account Suspended
+                        </button>
+                        <p class="store-closed-msg">
+                            <?php echo $ban_message; ?>
+                            <br><a href="account.php#noshow-status" style="color:#f39c12; font-size:12px; text-decoration:underline;">
+                                View your no-show record →
+                            </a>
+                        </p>
+                    <?php else: ?>
+                        <button type="submit" name="place_order" class="checkout-btn"
+                            <?php echo !$isStoreOpen ? 'disabled title="Store is currently closed"' : ''; ?>>
+                            <?php echo $isStoreOpen ? 'Checkout' : '🔒 Store Closed'; ?>
+                        </button>
+                        <?php if(!$isStoreOpen): ?>
+                            <p class="store-closed-msg">We're closed right now. Come back between 11:00 AM - 9:00 PM!</p>
+                        <?php endif; ?>
                     <?php endif; ?>
                 <?php else: ?>
 
@@ -456,6 +492,8 @@ if($isLoggedIn) {
         </div>
     </div>
 </div>
+
+<?php $ban_check_render = true; include "ban-check.php"; ?>
 <script>
   window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
 

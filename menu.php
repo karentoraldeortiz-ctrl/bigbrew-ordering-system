@@ -2,6 +2,7 @@
 
 session_start();
 include "db.php";
+include "ban-check.php";
 
 $isLoggedIn = isset($_SESSION['user_id']);
 
@@ -253,8 +254,7 @@ while($row = mysqli_fetch_assoc($addons_result)) {
       </div>
     </div>
   </div>
-
-  <script>
+<?php $ban_check_render = true; include "ban-check.php"; ?>  <script>
     window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
   </script>
   <script src="js/order.js"></script>
