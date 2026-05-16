@@ -126,24 +126,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const subtotalDisplay = document.getElementById('subtotal-amount');
         const totalDisplay    = document.getElementById('total-amount');
-
         if(subtotalDisplay) subtotalDisplay.textContent = `P ${grandTotal.toFixed(2)}`;
         if(totalDisplay)    totalDisplay.textContent    = `P ${grandTotal.toFixed(2)}`;
+
+        // ── Update GCash badge + checkout button dynamically ──
+        const requiresGcash = grandTotal >= 100;
+        const downpayment   = requiresGcash ? (grandTotal * 0.5).toFixed(2) : 0;
+        const checkoutBtn   = document.querySelector('.checkout-btn');
+        const gcashBadge    = document.querySelector('.gcash-required-badge');
+        const gcashModal    = document.getElementById('gcashModal');
+
+        // Update badge
+        if (gcashBadge) {
+            gcashBadge.style.display = requiresGcash ? 'block' : 'none';
+            gcashBadge.innerHTML = `💙 <strong>GCash Downpayment Required</strong>
+                Min. downpayment: <strong>₱${parseFloat(downpayment).toLocaleString('en-PH', {minimumFractionDigits:2})}</strong>
+                (50% of ₱${grandTotal.toFixed(2)} total)`;
+        }
+
+        // Update amount inside modal
+        const amountValue = document.querySelector('.gcash-amount-value');
+        const amountSub   = document.querySelector('.gcash-amount-sub');
+        if (amountValue) amountValue.textContent = `₱${parseFloat(downpayment).toFixed(2)}`;
+        if (amountSub)   amountSub.textContent   = `out of ₱${grandTotal.toFixed(2)} total`;
+
+        // Update checkout button
+        if (checkoutBtn && !checkoutBtn.disabled) {
+            if (requiresGcash) {
+                checkoutBtn.textContent = 'Checkout & Pay GCash';
+                checkoutBtn.classList.add('gcash');
+                checkoutBtn.type = 'button';
+
+                // ✅ FIX: Check kung naka-render ang gcashModal sa DOM
+                // Kung wala (dahil PHP ay hindi nag-render — subtotal < 100 sa page load),
+                // i-reload ang page para ma-render ng PHP ang modal kasama ang tamang amounts.
+                if (gcashModal) {
+                    checkoutBtn.onclick = () => {
+                        if (typeof openGCashModal === 'function') {
+                            openGCashModal();
+                        }
+                    };
+                    // Show modal container if it was hidden
+                    gcashModal.style.display = '';
+                } else {
+                    // Modal hindi naka-render — reload para ma-generate ng PHP
+                    checkoutBtn.onclick = () => {
+                        window.location.reload();
+                    };
+                }
+
+            } else {
+                checkoutBtn.textContent = 'Checkout';
+                checkoutBtn.classList.remove('gcash');
+                checkoutBtn.type = 'submit';
+                checkoutBtn.onclick = null;
+
+                // Hide modal if total dropped below 100
+                if (gcashModal) gcashModal.style.display = 'none';
+            }
+        }
     }
-    // ===== STAGGERED CART ENTRANCE =====
-        
-            const cartItems = document.querySelectorAll('.cart-item');
 
-            cartItems.forEach((item, index) => {
-                const delay = index * 80;
-
-                setTimeout(() => {
-                    item.classList.add(
-                        window.IS_BUY_AGAIN ? 'buy-again-highlight' : 'animate-in'
-                    );
-                }, delay);
-            });
-    
     // ============================================================
     // CHECK IF EMPTY
     // ============================================================

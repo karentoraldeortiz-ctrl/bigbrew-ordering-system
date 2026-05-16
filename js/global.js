@@ -4,7 +4,9 @@ const hamburger = document.getElementById("hamburger");
 document.addEventListener("DOMContentLoaded", () => {
   createMobileNav();
   updateCartBadge();
+  fetchNotifications();
   setInterval(updateCartBadge, 5000);
+  setInterval(fetchNotifications, 30000);
   setActiveNavLink();
   createActiveOrderBar();
 });
@@ -125,7 +127,6 @@ function updateCartBadge() {
     .catch(() => {});
 }
 
-
 /* ===== DESKTOP NAV ACTIVE LINK ===== */
 function setActiveNavLink() {
   const currentPage = window.location.pathname.split("/").pop() || "index.php";
@@ -141,7 +142,7 @@ function setActiveNavLink() {
   });
 }
 
-// ongoing order navbar notif
+/* ===== ONGOING ORDER BAR ===== */
 function createActiveOrderBar() {
   fetch("get_active_order.php")
     .then(res => res.json())
@@ -159,6 +160,33 @@ function createActiveOrderBar() {
 
       document.body.appendChild(bar);
       document.body.classList.add("has-active-order-bar");
+    })
+    .catch(() => {});
+}
+
+/* ===== NOTIFICATIONS ===== */
+function fetchNotifications() {
+  fetch('get_notifications.php')
+    .then(r => r.json())
+    .then(data => {
+      if (data.count === 0) return;
+      if (sessionStorage.getItem('notif_alerted')) return;
+
+      const notif = data.notifications.find(n => n.is_read == 0);
+      if (!notif) return;
+
+     const goToPage = notif.title.includes('Rejected')
+  ? `receipt.php?order_id=${notif.order_id}`
+  : `receipt.php?order_id=${notif.order_id}`;
+
+      const confirmed = confirm(`🔔 ${notif.title}\n\n${notif.message}\n\nTap OK to view.`);
+
+      sessionStorage.setItem('notif_alerted', '1');
+      fetch('mark_notifications_read.php');
+
+      if (confirmed) {
+        window.location.href = goToPage;
+      }
     })
     .catch(() => {});
 }

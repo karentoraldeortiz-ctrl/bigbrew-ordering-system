@@ -60,6 +60,7 @@ include "ban-check.php";
                     <span id="cartBadge" class="cart-badge">0</span>
                   </a>
                 </li>
+                </li>
                 <li><a href="account.php"> <img src="assets/icons/icons8-profile-24.png" alt=""></a></li>
                 </ul>
             </div>
