@@ -16,6 +16,15 @@ if(!isset($_GET['order_id']) || !is_numeric($_GET['order_id'])) {
 $user_id  = $_SESSION['user_id'];
 $order_id = (int)$_GET['order_id'];
 
+// Check if already reviewed — gawin AFTER $user_id is defined
+$already_reviewed = false;
+$rev_check = mysqli_query($conn,
+    "SELECT review_id FROM reviews WHERE user_id = '$user_id' LIMIT 1"
+);
+if (mysqli_num_rows($rev_check) > 0) {
+    $already_reviewed = true;
+}
+
 $order_q = mysqli_query($conn,
     "SELECT * FROM orders WHERE order_id = '$order_id' AND user_id = '$user_id'"
 );
@@ -76,6 +85,7 @@ if($status === 'completed') {
     $pickup_display = $pickup_labels[$pickup_value] ?? $pickup_value;
 }
 
+
 if($status === 'pending') {
     $receipt_title    = 'Order Confirmed!';
     $receipt_subtitle = 'Your order has been received and is waiting to be prepared.';
@@ -102,7 +112,7 @@ if($status === 'pending') {
             $receipt_subtitle = '🚫 Your order was cancelled due to no-show. Your account has been <strong>permanently suspended</strong>. Please contact us to appeal.';
         }
     } elseif (!empty($order['cancelled_by']) && $order['cancelled_by'] === 'staff') {
-        $receipt_subtitle = 'Your order was cancelled by the store. Please contact us for details.';
+        $receipt_subtitle = 'Your order was cancelled by the store. This may be due to an out-of-stock item or other reasons. You may try ordering again or contact us for details.';
     } else {
         $receipt_subtitle = 'You cancelled this order.';
     }
@@ -201,9 +211,23 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
         <a href="javascript:history.back()" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
+        </a>
     </div>
 
     <!-- RECEIPT CARD -->
+    <div class="receipt-card">
+
+        <div class="receipt-header">
+            <div class="check-circle <?php echo $status; ?>">
+                <?php
+                if($status === 'pending')              echo '<i class="fa-solid fa-clock"></i>';
+                elseif($status === 'preparing')        echo '<i class="fa-solid fa-blender"></i>';
+                elseif($status === 'ready_for_pickup') echo '<i class="fa-solid fa-bell"></i>';
+                elseif($status === 'completed')        echo '<i class="fa-solid fa-circle-check"></i>';
+                elseif($status === 'cancelled')        echo '<i class="fa-solid fa-circle-xmark"></i>';
+                else                                   echo '<i class="fa-solid fa-check"></i>';
+                ?>
+            </div>
     <div class="receipt-card">
 
         <div class="receipt-header">
@@ -227,6 +251,12 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
                         Pick-up at: <?php echo htmlspecialchars($pickup_display ?? 'ASAP'); ?>
                     </p>
                 <?php endif; ?>
+                <?php if($status === 'preparing' || $status === 'ready_for_pickup'): ?>
+                    <p class="receipt-pickup-time">
+                        <i class="fa-solid fa-clock"></i>
+                        Pick-up at: <?php echo htmlspecialchars($pickup_display ?? 'ASAP'); ?>
+                    </p>
+                <?php endif; ?>
 
                 <p class="receipt-subtitle"><?php echo $receipt_subtitle; ?></p>
             </div>
@@ -237,14 +267,28 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
                 <span>Order ID</span>
                 <strong># <?php echo $order_id; ?></strong>
             </div>
+        <div class="receipt-main-box">
+            <div class="receipt-id-row">
+                <span>Order ID</span>
+                <strong># <?php echo $order_id; ?></strong>
+            </div>
 
+            <p class="section-label">Customer Details</p>
             <p class="section-label">Customer Details</p>
 
             <div class="detail-line">
                 <span>Name:</span>
                 <strong><?php echo htmlspecialchars($customer_name); ?></strong>
             </div>
+            <div class="detail-line">
+                <span>Name:</span>
+                <strong><?php echo htmlspecialchars($customer_name); ?></strong>
+            </div>
 
+            <div class="detail-line">
+                <span>Mode of Payment:</span>
+                <strong>Pay upon Pickup</strong>
+            </div>
             <div class="detail-line">
                 <span>Mode of Payment:</span>
                 <strong>Pay upon Pickup</strong>
@@ -263,7 +307,9 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
             <?php endif; ?>
 
             <hr>
+            <hr>
 
+            <p class="section-label">Items</p>
             <p class="section-label">Items</p>
 
             <?php foreach($order_items as $item): ?>
@@ -360,6 +406,7 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
                     Cancel Order
                 </button>
 
+
             <?php elseif($status === 'completed'): ?>
                 <div class="review-box">
                     <h4>Enjoyed our service? Let us know!</h4>
@@ -398,6 +445,7 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
 
 <script>
 const ORDER_ID    = <?php echo $order_id; ?>;
+const ORDER_ID    = <?php echo $order_id; ?>;
 const CURR_STATUS = '<?php echo $status; ?>';
 const CURR_GCASH_STATUS = '<?php echo $gcash_receipt_status; ?>';
 
@@ -432,6 +480,9 @@ document.getElementById('cancelModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeCancelModal();
 });
 </script>
+
+<?php $ban_check_render = true; include "ban-check.php"; ?>
+</body>
 
 <?php $ban_check_render = true; include "ban-check.php"; ?>
 </body>

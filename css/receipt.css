@@ -609,3 +609,26 @@ body {
 .receipt-btn-row form .btn-buy-again {
     width: 100%;
 }
+
+.btn-rate-us {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    border-radius: 10px;
+    background: white;
+    color: var(--pop-color);
+    border: 1.5px solid var(--pop-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+    box-sizing: border-box;
+}
+
+.btn-rate-us:hover {
+    background: var(--pop-color);
+    color: white;
+}
