@@ -74,7 +74,8 @@ if (isset($_POST['place_order']) && $isLoggedIn && !$is_banned) {
             "SELECT p.product_name FROM cart_items ci
              JOIN cart c ON ci.cart_id = c.cart_id
              JOIN products p ON ci.product_id = p.product_id
-             WHERE c.user_id = '$user_id' AND p.is_available = 0"
+             WHERE c.user_id = '$user_id' 
+            AND (p.is_available = 0 OR p.is_archived = 1)"
         );
         if (mysqli_num_rows($unavail_q) > 0) {
             $unavail_names = [];
