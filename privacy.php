@@ -34,7 +34,7 @@
     <header>
       <nav class="navbar">
         <div class="navlogo">
-          <a href="index.html">
+          <a href="index.php">
             <img src="assets/logo/bb-maysan-logo-1.png" alt="" />
           </a>
         </div>
@@ -139,9 +139,9 @@
             <li><a href="about.html">About</a></li>
           </ul>
           <ul>
-            <li><a href="reviews.html">Reviews</a></li>
-            <li><a href="terms.html">Terms & Conditions</a></li>
-            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="reviews.php">Reviews</a></li>
+            <li><a href="terms.php">Terms & Conditions</a></li>
+            <li><a href="privacy.php">Privacy Policy</a></li>
           </ul>
         </div>
       </div>

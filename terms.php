@@ -35,7 +35,7 @@
     <header>
       <nav class="navbar">
         <div class="navlogo">
-          <a href="index.html">
+          <a href="index.php">
             <img src="assets/logo/bb-maysan-logo-1.png" alt="" />
           </a>
         </div>
