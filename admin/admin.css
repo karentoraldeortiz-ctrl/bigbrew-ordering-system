@@ -988,7 +988,7 @@ hr {
 .menu-view-tabs {
   display: flex;
   gap: 10px;
-  margin: 22px 0 16px;
+  margin: 0;
 }
 
 .view-tab {

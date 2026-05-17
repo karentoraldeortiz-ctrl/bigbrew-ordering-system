@@ -66,6 +66,29 @@ function applyFilters() {
   renderTable(filtered);
 }
 
+    async function restoreProduct(productId) {
+      if (!confirm("Restore this product? It will appear again in the menu.")) return;
+
+      try {
+        const res = await fetch('menu.php?action=restore', {
+          method: 'PUT',
+          body: JSON.stringify({ product_id: productId })
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          showToast(data.error, 'error');
+          return;
+        }
+
+        showToast('Product restored.');
+        loadProducts();
+      } catch {
+        showToast('Restore failed.', 'error');
+      }
+    }
+    
 function renderTable(products) {
   const tbody = document.getElementById('productTableBody');
   if (!products.length) {

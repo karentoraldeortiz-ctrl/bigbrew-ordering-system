@@ -12,6 +12,7 @@ $products_result = mysqli_query($conn,
             ps.size_id, ps.size_name, ps.price
      FROM products p
      JOIN product_sizes ps ON p.product_id = ps.product_id
+     WHERE p.is_archived = 0
      ORDER BY p.category, p.product_name, ps.price ASC"
 );
 

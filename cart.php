@@ -76,9 +76,9 @@ if (isset($_POST['place_order']) && $isLoggedIn && !$is_banned) {
     } else {
         $unavail_q = mysqli_query($conn,
             "SELECT p.product_name FROM cart_items ci
-             JOIN cart c ON ci.cart_id = c.cart_id
-             JOIN products p ON ci.product_id = p.product_id
-             WHERE c.user_id = '$user_id' 
+            JOIN cart c ON ci.cart_id = c.cart_id
+            JOIN products p ON ci.product_id = p.product_id
+            WHERE c.user_id = '$user_id' 
             AND (p.is_available = 0 OR p.is_archived = 1)"
         );
         if (mysqli_num_rows($unavail_q) > 0) {
@@ -95,10 +95,11 @@ if (isset($_POST['place_order']) && $isLoggedIn && !$is_banned) {
 
                 $items_q = mysqli_query($conn,
                     "SELECT ci.*, p.product_name, ps.size_name, ps.price as size_price
-                     FROM cart_items ci
-                     JOIN products p       ON ci.product_id = p.product_id
-                     JOIN product_sizes ps ON ci.size_id    = ps.size_id
-                     WHERE ci.cart_id = '$cart_id'"
+                    FROM cart_items ci
+                    JOIN products p       ON ci.product_id = p.product_id
+                    JOIN product_sizes ps ON ci.size_id    = ps.size_id
+                    WHERE ci.cart_id = '$cart_id'
+                    AND p.is_archived = 0"
                 );
 
                 if (mysqli_num_rows($items_q) === 0) {
@@ -220,10 +221,11 @@ if ($isLoggedIn) {
             "SELECT ci.cart_item_id, ci.product_id, ci.quantity, ci.addons, ci.unit_price,
                     p.product_name, p.image, p.category, p.is_available,
                     COALESCE(ps.size_name, 'Unknown Size') as size_name
-             FROM cart_items ci
-             JOIN products p            ON ci.product_id = p.product_id
-             LEFT JOIN product_sizes ps ON ci.size_id    = ps.size_id
-             WHERE ci.cart_id = '$cart_id'"
+            FROM cart_items ci
+            JOIN products p            ON ci.product_id = p.product_id
+            LEFT JOIN product_sizes ps ON ci.size_id    = ps.size_id
+            WHERE ci.cart_id = '$cart_id'
+            AND p.is_archived = 0"
         );
         while ($row = mysqli_fetch_assoc($items_q)) {
             $cart_items[] = $row;
@@ -231,7 +233,44 @@ if ($isLoggedIn) {
         }
     }
 }
+else {
+    if (isset($_SESSION['guest_cart']) && !empty($_SESSION['guest_cart'])) {
+        foreach ($_SESSION['guest_cart'] as $key => $guestItem) {
+            $product_id = intval($guestItem['product_id']);
+            $size_id    = intval($guestItem['size_id']);
 
+            $item_q = mysqli_query($conn,
+                "SELECT p.product_name, p.image, p.category, p.is_available, ps.size_name
+                 FROM products p
+                 JOIN product_sizes ps ON p.product_id = ps.product_id
+                 WHERE p.product_id = '$product_id'
+                 AND ps.size_id = '$size_id'
+                 AND p.is_archived = 0
+                 LIMIT 1"
+            );
+
+            if (mysqli_num_rows($item_q) > 0) {
+                $info = mysqli_fetch_assoc($item_q);
+
+                $cart_items[] = [
+                    'cart_item_id' => $key,
+                    'quantity'     => $guestItem['quantity'],
+                    'addons'       => $guestItem['addons'],
+                    'unit_price'   => $guestItem['unit_price'],
+                    'product_name' => $info['product_name'],
+                    'image'        => $info['image'],
+                    'category'     => $info['category'],
+                    'size_name'    => $info['size_name'],
+                    'is_available' => $info['is_available'],
+                    'product_id'   => $product_id,
+                    'is_guest'     => true
+                ];
+
+                $subtotal += $guestItem['unit_price'] * $guestItem['quantity'];
+            }
+        }
+    }
+}
 $requires_gcash_downpayment = $subtotal >= 100;
 $downpayment                = $requires_gcash_downpayment ? round($subtotal * 0.5, 2) : 0;
 ?>
@@ -433,7 +472,9 @@ $downpayment                = $requires_gcash_downpayment ? round($subtotal * 0.
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php else: ?>
-                        <button type="button" class="checkout-btn login-required-btn">Login to Checkout</button>
+                        <button type="button" class="checkout-btn login-required-btn" onclick="window.location.href='login.php'">
+                            Login to Checkout
+                        </button>
                     <?php endif; ?>
                 </div>
             </form>
