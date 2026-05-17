@@ -35,8 +35,10 @@ if(isset($_POST['submit']) && $valid_token) {
         $email = $reset_data['email'];
 
         // I-update yung password
+       $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+
         mysqli_query($conn, 
-            "UPDATE users SET password='$new_password' WHERE email='$email'"
+            "UPDATE users SET password='$hashed_password' WHERE email='$email'"
         );
 
         // I-delete na yung token
