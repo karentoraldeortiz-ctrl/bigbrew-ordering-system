@@ -205,7 +205,7 @@ if(isset($_POST['signup'])){
 
             <div class="outer-prac1">
               <div class="info-grp">
-                <label>Birthday <p style="font-size: 7px; color: #888;">(optional)</p> </label> <br />
+                <label>Birthday</label><br />
                 <input type="date" name="birthday" />
               </div>
             </div>
