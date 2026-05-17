@@ -10,24 +10,23 @@ if(isset($_POST['login'])){
   $password = $_POST['password'];
 
   // CHECK ADMIN FIRST
-  if($email === 'admin@bigbrew.com' && $password === 'bigbrew2026') {
-    $_SESSION['staff_logged_in'] = true;
-    $_SESSION['staff_name'] = 'BigBrew Admin';
-    header("Location: admin/dashboard.php");
-    exit;
-  }
+  // CHECK STAFF/ADMIN FROM DATABASE
+    $safe_email = mysqli_real_escape_string($conn, $email);
+    $staff_q = mysqli_query($conn, "SELECT * FROM staff WHERE email = '$safe_email' LIMIT 1");
 
-  // CHECK STAFF
-  if($email === 'staff@bigbrew.com' && $password === 'staff2026') {
-    $_SESSION['staff_logged_in'] = true;
-    $_SESSION['staff_name'] = 'BigBrew Staff';
-    header("Location: Staff/dashboard.php");
-    exit;
-  }
+    if (mysqli_num_rows($staff_q) > 0) {
+        $staff = mysqli_fetch_assoc($staff_q);
+        if (password_verify($password, $staff['password'])) {
+            $_SESSION['staff_logged_in'] = true;
+            $_SESSION['staff_name'] = $staff['full_name'];
+            $_SESSION['staff_role'] = $staff['role'];
+            header("Location: " . $staff['redirect']);
+            exit;
+        }
+    }
+
 
   // CHECK USER DATABASE
-  $safe_email = mysqli_real_escape_string($conn, $email);
-
   $result = mysqli_query($conn,
     "SELECT * FROM users WHERE email='$safe_email' LIMIT 1"
   );
