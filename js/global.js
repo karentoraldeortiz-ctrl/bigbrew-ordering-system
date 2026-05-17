@@ -229,3 +229,44 @@ function dismissToast(toast) {
   toast.classList.add('toast-hide');
   setTimeout(() => toast.remove(), 400);
 }
+
+
+// Scroll reveal animation
+document.addEventListener("DOMContentLoaded", () => {
+  // Disable reveal animation on selected pages
+  if (document.body.classList.contains("no-reveal-page")) {
+    return;
+  }
+
+  document.querySelectorAll("section").forEach(section => {
+    const items = section.querySelectorAll(
+      "h1, h2, h3, p, .category-preview-card, .text-group, .review-card, .step"
+    );
+
+    items.forEach(item => {
+      item.classList.add("reveal");
+    });
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const items = entry.target.querySelectorAll(".reveal");
+
+        items.forEach((item, index) => {
+          setTimeout(() => {
+            item.classList.add("show");
+          }, index * 60);
+        });
+
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.15
+  });
+
+  document.querySelectorAll("section").forEach(section => {
+    observer.observe(section);
+  });
+});

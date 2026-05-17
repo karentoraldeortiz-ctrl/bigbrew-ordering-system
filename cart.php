@@ -6,8 +6,8 @@ include "ban-check.php";
 date_default_timezone_set('Asia/Manila');
 
 $currentTime = date('H:i');
-$openingTime = '01:00';
-$closingTime = '23:59';
+$openingTime = '11:00';
+$closingTime = '21:00';
 
 $isStoreOpen = ($currentTime >= $openingTime && $currentTime < $closingTime);
 $storeStatusText = $isStoreOpen ? 'Open' : 'Closed';

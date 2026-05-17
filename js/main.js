@@ -38,13 +38,12 @@ let currentIndex = 0;
   }
 
   // Flip card functionality
-  document.querySelectorAll('.flip-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      btn.closest('.card').classList.toggle('flip');
+// Flip card functionality - click anywhere inside card-inner
+    document.querySelectorAll('.card-inner').forEach(cardInner => {
+      cardInner.addEventListener('click', () => {
+        cardInner.closest('.card').classList.toggle('flip');
+      });
     });
-  });
-
   // Recalculate on resize
   window.addEventListener('resize', () => moveCarousel(0));
 

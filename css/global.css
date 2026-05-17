@@ -673,7 +673,18 @@ body.has-active-order-bar {
 
 
 
+/* sa stagger effect */
 
+.reveal {
+  opacity: 0;
+  transform: translateY(25px) scale(0.95);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.reveal.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
 
 
 

@@ -184,11 +184,13 @@ if($isLoggedIn){
                 </div>
               </div>
             </div>
-              <div class="acc-info-footer">
+              
     <a href="logout.php">
+      <div class="acc-info-footer">
         <button class="logout-btn">Logout</button>
+        </div>
     </a>
-</div>
+
 
 <!-- NO-SHOW STATUS — i-add dito -->
 <?php if ($no_show_count > 0 || $ban_status !== 'active'): ?>

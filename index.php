@@ -4,7 +4,7 @@ include "db.php";
 include "ban-check.php";
 ?>
 
-
+  
 <!doctype html>
 <html lang="en">
   <head>
@@ -143,40 +143,76 @@ include "ban-check.php";
   </div>
 
 </section>
-          <section class="home-menu-preview">
-            <div class="home-section-header">
-              <h2>What are you craving for?</h2>
-              <p>Quench your thirst!</p>
-            </div>
+<section class="home-menu-preview">
+  <div class="home-section-header">
+    <h2>What are you craving for?</h2>
+    <p>Quench your thirst!</p>
+  </div>
 
-            <div class="category-preview-list">
-              <a href="menu.php#milk-tea" class="category-preview-card">
-                <img src="assets/pictures/milktea.png" alt="Milk Tea">
-                <span>Milk Tea</span>
-              </a>
-              
-              <a href="menu.php#praf" class="category-preview-card">
-                <img src="assets/pictures/praf.png" alt="Praf">
-                <span>Praf</span>
-              </a>
+  <div class="category-preview-list">
 
-              <a href="menu.php#fruit-tea" class="category-preview-card">
-                <img src="assets/pictures/fruittea.png" alt="Fruit Tea">
-                <span>Fruit Tea</span>
-              </a>
+    <a href="menu.php#milk-tea" class="category-preview-card category-milktea">
+      <div class="category-visual">
+        <div class="category-circle"></div>
 
-              <a href="menu.php#coffee" class="category-preview-card">
-                <img src="assets/pictures/coffee.png" alt="Coffee">
-                <span>Coffee</span>
-              </a>
+        <img src="assets/pictures/leaf-no-bg.png" alt="Milk Tea Ingredient" class="ingredient-icon">
 
-              <a href="menu.php#brosty" class="category-preview-card">
-                <img src="assets/pictures/brosty.png" alt="Brosty">
-                <span>Brosty</span>
-              </a>
-            </div>
-          </section>
+        <img src="assets/pictures/milktea-cat.png" alt="Milk Tea" class="cup-image">
+      </div>
 
+      <span class="category-label">Milktea</span>
+    </a>
+
+    <a href="menu.php#praf" class="category-preview-card category-milktea">
+      <div class="category-visual">
+        <div class="category-circle"></div>
+
+        <img src="assets/pictures/strawberry2.png" alt="Praf Ingredient" class="ingredient-icon">
+
+        <img src="assets/pictures/praf-cat.png" alt="Praf" class="cup-image">
+      </div>
+
+      <span class="category-label">Praf</span>
+    </a>
+
+    <a href="menu.php#fruit-tea" class="category-preview-card category-milktea">
+      <div class="category-visual">
+        <div class="category-circle"></div>
+
+        <img src="assets/pictures/mango.png" alt="Fruit Tea Ingredient" class="ingredient-icon">
+
+        <img src="assets/pictures/fruit-tea-cat.png" alt="Fruit Tea" class="cup-image">
+      </div>
+
+      <span class="category-label">Fruit Tea</span>
+    </a>
+
+    <a href="menu.php#coffee" class="category-preview-card category-milktea">
+      <div class="category-visual">
+        <div class="category-circle"></div>
+
+        <img src="assets/pictures/coffee-bean.png" alt="Coffee Ingredient" class="ingredient-icon">
+
+        <img src="assets/pictures/coffee-cat.png" alt="Coffee" class="cup-image">
+      </div>
+
+      <span class="category-label">Coffee</span>
+    </a>
+
+    <a href="menu.php#brosty" class="category-preview-card category-milktea">
+      <div class="category-visual">
+        <div class="category-circle"></div>
+
+        <img src="assets/pictures/lychee.png" alt="Brosty Ingredient" class="ingredient-icon">
+
+        <img src="assets/pictures/brosty-cat.png" alt="Brosty" class="cup-image">
+      </div>
+
+      <span class="category-label">Brosty</span>
+    </a>
+
+  </div>
+</section>
         <section class="best-seller">
           <div class="best-seller-header">
             <h2>Famous Drinks</h2>
@@ -193,12 +229,12 @@ include "ban-check.php";
               <div class="card">
                 <div class="card-inner">
                   <div class="card-front">
-                    <button class="flip-btn">↻</button>
+                    <span class="flip-btn">↻</span>
                     <img src="assets/products/okinawa.jpg" />
                     <h3>Okinawa</h3>
                   </div>
                   <div class="card-back">
-                    <button class="flip-btn">↻</button>
+                    <span class="flip-btn">↻</span>
                     <h4>Okinawa</h4>
                     <p>Buttery caramel notes infused in classic milk tea.</p>
                   </div>
@@ -208,12 +244,12 @@ include "ban-check.php";
               <div class="card">
                 <div class="card-inner">
                   <div class="card-front">
-                    <button class="flip-btn">↻</button>
+                    <span class="flip-btn">↻</span>
                     <img src="assets/products/wintermelon.jpg" />
                     <h3>Wintermelon</h3>
                   </div>
                   <div class="card-back">
-                    <button class="flip-btn">↻</button>
+                    <span class="flip-btn">↻</span>
                     <h4>Wintermelon</h4>
                     <p>Light, sweet, and refreshing wintermelon flavor.</p>
                   </div>  
@@ -223,12 +259,12 @@ include "ban-check.php";
               <div class="card">
                 <div class="card-inner">
                   <div class="card-front">
-                    <button class="flip-btn">↻</button>
+                    <span class="flip-btn">↻</span>
                     <img src="assets/products/no-img-product.png" />
                     <h3>Kiwi</h3>
                   </div>
                   <div class="card-back">
-                    <button class="flip-btn">↻</button>
+                    <span class="flip-btn">↻</span>
                     <h4>Kiwi</h4>
                     <p>no description available</p>
                   </div>
@@ -238,12 +274,12 @@ include "ban-check.php";
               <div class="card">
                 <div class="card-inner">
                   <div class="card-front">
-                    <button class="flip-btn">↻</button>
+                    <span class="flip-btn">↻</span>
                     <img src="assets/products/no-img-product.png" />
                     <h3>Kape Brusko</h3>
                   </div>
                   <div class="card-back">
-                    <button class="flip-btn">↻</button>
+                    <span class="flip-btn">↻</span>
                     <h4>Kape Brusko</h4>
                     <p>no description available</p>
                   </div>
@@ -253,12 +289,12 @@ include "ban-check.php";
               <div class="card">
                 <div class="card-inner">
                   <div class="card-front">
-                    <button class="flip-btn">↻</button>
+                    <span class="flip-btn">↻</span>
                     <img src="assets/products/dark-choco.jpg" />
                     <h3>Dark Choco</h3>
                   </div>
                   <div class="card-back">
-                    <button class="flip-btn">↻</button>
+                    <span class="flip-btn">↻</span>
                     <h4>Dark Choco</h4>
                     <p>Bold and indulgent, this rich dark chocolate blend meets smooth milk tea.</p>
                   </div>
@@ -411,7 +447,24 @@ include "ban-check.php";
             </div>
             
     </section>
-<?php $ban_check_render = true; include "ban-check.php"; ?>  </body>
+<?php $ban_check_render = true; include "ban-check.php"; ?> 
+
+<div class="custom-flip-cursor">
+  <img src="assets/icons/flip.png" alt="Flip">
+</div>
+<script>
+  window.addEventListener("load", function () {
+    if (!sessionStorage.getItem("academicDisclaimerShown")) {
+      alert(
+        "Disclaimer: This website is created solely for academic demonstration purposes. All orders, payments, transactions, and user interactions made within this platform are simulated and shall not be treated as actual, valid, legally binding, or financially enforceable transactions."
+      );
+
+      sessionStorage.setItem("academicDisclaimerShown", "true");
+    }
+  });
+</script>
+
+</body>
 
   <footer class="main-footer">
     <div class="footer-container">
@@ -469,6 +522,29 @@ include "ban-check.php";
   </footer>
   <script>
   window.IS_LOGGED_IN = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+</script>
+<script>
+  const flipCursor = document.querySelector(".custom-flip-cursor");
+  const cards = document.querySelectorAll(".card");
+
+  cards.forEach(card => {
+    card.addEventListener("mouseenter", () => {
+      flipCursor.classList.add("active");
+    });
+
+    card.addEventListener("mouseleave", () => {
+      flipCursor.classList.remove("active");
+    });
+
+    card.addEventListener("mousemove", (e) => {
+      flipCursor.style.left = e.clientX + "px";
+      flipCursor.style.top = e.clientY + "px";
+    });
+
+    card.addEventListener("click", () => {
+      card.classList.toggle("flipped");
+    });
+  });
 </script>
   <script src="js/main.js"></script>
   <script src="js/global.js"></script>
