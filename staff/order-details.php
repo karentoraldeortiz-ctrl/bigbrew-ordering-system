@@ -136,14 +136,14 @@ if (isset($_POST['update_status'])) {
     if ($status === 'completed') {
         mysqli_query($conn,
             "UPDATE orders SET order_status = 'completed', completed_at = NOW(),
-             cancelled_by = NULL, cancel_reason = NULL WHERE order_id = '$order_id'"
+            cancelled_by = NULL, cancel_reason_staff = NULL WHERE order_id = '$order_id'"
         );
     } elseif ($status === 'cancelled') {
         $reason = $cancel_reason ?? 'other';
         mysqli_query($conn,
-            "UPDATE orders SET order_status = 'cancelled', cancelled_by = 'staff',
-             cancel_reason = '$reason', completed_at = NULL WHERE order_id = '$order_id'"
-        );
+        "UPDATE orders SET order_status = 'cancelled', cancelled_by = 'staff',
+        cancel_reason_staff = '$reason', completed_at = NULL WHERE order_id = '$order_id'"
+    );
 
         if ($reason === 'no_show') {
             $uid    = $order['user_id'];
@@ -161,8 +161,8 @@ if (isset($_POST['update_status'])) {
         }
     } else {
         mysqli_query($conn,
-            "UPDATE orders SET order_status = '$status', completed_at = NULL,
-             cancelled_by = NULL, cancel_reason = NULL WHERE order_id = '$order_id'"
+           "UPDATE orders SET order_status = '$status', completed_at = NULL,
+            cancelled_by = NULL, cancel_reason_staff = NULL WHERE order_id = '$order_id'"
         );
     }
 

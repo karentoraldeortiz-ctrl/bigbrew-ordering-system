@@ -16,14 +16,14 @@ if (isset($_POST['update_status'])) {
 
     if (!in_array($current['order_status'], ['completed', 'cancelled'])) {
         $status = mysqli_real_escape_string($conn, $_POST['status']);
-        $cancel_reason = isset($_POST['cancel_reason'])
-            ? mysqli_real_escape_string($conn, $_POST['cancel_reason'])
-            : 'other';
+        $cancel_reason = isset($_POST['cancel_reason_staff'])
+        ? mysqli_real_escape_string($conn, $_POST['cancel_reason_staff'])
+        : 'other';
 
         if ($status === 'completed') {
-            mysqli_query($conn, "UPDATE orders SET order_status = 'completed', completed_at = NOW(), cancelled_by = NULL, cancel_reason = NULL WHERE order_id = '$order_id'");
+            mysqli_query($conn, "UPDATE orders SET order_status = 'completed', completed_at = NOW(), cancelled_by = NULL, cancel_reason_staff = NULL WHERE order_id = '$order_id'");
         } elseif ($status === 'cancelled') {
-            mysqli_query($conn, "UPDATE orders SET order_status = 'cancelled', cancelled_by = 'staff', cancel_reason = '$cancel_reason', completed_at = NULL WHERE order_id = '$order_id'");
+            mysqli_query($conn, "UPDATE orders SET order_status = 'cancelled', cancelled_by = 'staff', cancel_reason_staff = '$cancel_reason', completed_at = NULL WHERE order_id = '$order_id'");
 
             if ($cancel_reason === 'no_show') {
                 $uid = $current['user_id'];
@@ -40,7 +40,7 @@ if (isset($_POST['update_status'])) {
                 }
             }
         } else {
-            mysqli_query($conn, "UPDATE orders SET order_status = '$status', completed_at = NULL, cancelled_by = NULL, cancel_reason = NULL WHERE order_id = '$order_id'");
+            mysqli_query($conn, "UPDATE orders SET order_status = '$status', completed_at = NULL, cancelled_by = NULL, cancel_reason_staff = NULL WHERE order_id = '$order_id'");
         }
     }
 }
@@ -241,17 +241,17 @@ function getPickupDisplay($pickup_value, $created_at) {
                     <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
                         <label style="display:flex; align-items:center; gap:10px; cursor:pointer;
                                     background:#2a2a2a; border-radius:10px; padding:12px 14px;">
-                            <input type="radio" name="cancel_reason" value="no_show" required>
+                            <input type="radio" name="cancel_reason_staff" value="no_show" required>
                             <span style="font-size:13px; color:#fff;">🕐 No-show — Customer did not pick up</span>
                         </label>
                         <label style="display:flex; align-items:center; gap:10px; cursor:pointer;
                                     background:#2a2a2a; border-radius:10px; padding:12px 14px;">
-                            <input type="radio" name="cancel_reason" value="out_of_stock">
+                            <input type="radio" name="cancel_reason_staff" value="out_of_stock">
                             <span style="font-size:13px; color:#fff;">📦 Out of Stock</span>
                         </label>
                         <label style="display:flex; align-items:center; gap:10px; cursor:pointer;
                                     background:#2a2a2a; border-radius:10px; padding:12px 14px;">
-                            <input type="radio" name="cancel_reason" value="other">
+                            <input type="radio" name="cancel_reason_staff" value="other">
                             <span style="font-size:13px; color:#fff;">✏️ Other</span>
                         </label>
                     </div>
