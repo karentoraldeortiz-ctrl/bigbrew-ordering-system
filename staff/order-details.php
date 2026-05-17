@@ -367,6 +367,18 @@ $is_gcash_full   = $payment_method === 'gcash_full';
                         <p class="od-meta">Date of Order: <?php echo $order_date; ?></p>
                         <p class="od-meta"><i class="fa fa-clock" style="color:var(--pop-color);margin-right:6px;"></i>Pickup: <?php echo htmlspecialchars($pickup_display); ?></p>
 
+                        <?php if ($order['order_status'] === 'cancelled'): ?>
+                        <p class="od-meta" style="color:#e57373; margin-top:4px;">
+                            <i class="fa fa-times-circle" style="margin-right:6px;"></i>
+                            Cancelled by: <strong><?php echo ucfirst($order['cancelled_by'] ?? 'N/A'); ?></strong>
+                            <?php if ($order['cancelled_by'] === 'staff' && !empty($order['cancel_reason_staff'])): ?>
+                                &nbsp;·&nbsp; Reason: <strong><?php echo ucwords(str_replace('_', ' ', $order['cancel_reason_staff'])); ?></strong>
+                            <?php elseif ($order['cancelled_by'] === 'customer' && !empty($order['cancel_reason_customer'])): ?>
+                                &nbsp;·&nbsp; Reason: <strong><?php echo htmlspecialchars($order['cancel_reason_customer']); ?></strong>
+                            <?php endif; ?>
+                        </p>
+                        <?php endif; ?>
+
                         <!-- Payment Method Badge -->
                         <?php if ($is_gcash_full): ?>
                             <span class="payment-method-badge gcash-full">💙 GCash Full Payment</span>
@@ -376,11 +388,14 @@ $is_gcash_full   = $payment_method === 'gcash_full';
                             <span class="payment-method-badge pickup">🏪 Pay upon Pickup (Cash)</span>
                         <?php endif; ?>
 
+                        
+
                         <?php if ($order['order_status'] === 'completed' && !empty($order['completed_at'])): ?>
                         <p class="od-meta" style="color:#4caf50; margin-top:4px;">
                             <i class="fa fa-check-circle" style="margin-right:6px;"></i>Picked up: <?php echo date('m/d/Y, · g:i A', strtotime($order['completed_at'])); ?>
                         </p>
                         <?php endif; ?>
+                        
                     </div>
 
                     <form method="POST" id="odStatusForm">

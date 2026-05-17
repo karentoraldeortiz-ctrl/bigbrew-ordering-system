@@ -260,5 +260,48 @@ while($row = mysqli_fetch_assoc($addons_result)) {
   </script>
   <script src="js/order.js"></script>
   <script src="js/global.js"></script>
+  <script>
+function applyMenuAvailability(data) {
+    document.querySelectorAll('.card').forEach(card => {
+        const addBtn = card.querySelector('.add-btn');
+        if (!addBtn) return;
+
+        const productId = addBtn.dataset.id;
+        if (!productId) return;
+
+        const isAvailable = data[productId];
+
+        if (!isAvailable) {
+            card.classList.add('not-available');
+
+            // Palitan ang add button ng unavailable badge kung wala pa
+            if (!card.querySelector('.unavailable-badge')) {
+                const badge = document.createElement('div');
+                badge.className   = 'unavailable-badge';
+                badge.textContent = 'Not Available';
+                addBtn.replaceWith(badge);
+            }
+        } else {
+            card.classList.remove('not-available');
+
+            // Ibalik ang add button kung may unavailable-badge
+            const badge = card.querySelector('.unavailable-badge');
+            if (badge) {
+                badge.replaceWith(addBtn);
+            }
+        }
+    });
+}
+
+function pollMenuAvailability() {
+    fetch('get-availability.php')
+        .then(res => res.json())
+        .then(data => applyMenuAvailability(data))
+        .catch(err => console.warn('Menu availability poll failed:', err));
+}
+
+pollMenuAvailability();
+setInterval(pollMenuAvailability, 1000); 
+</script>
 </body>
 </html>

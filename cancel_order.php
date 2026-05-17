@@ -30,11 +30,11 @@ if(mysqli_num_rows($order_q) === 0) {
 $order = mysqli_fetch_assoc($order_q);
 
 if($order['order_status'] === 'pending') {
-    mysqli_query($conn,
-        "UPDATE orders 
-         SET order_status = 'cancelled' 
-         WHERE order_id = '$order_id' 
-         AND user_id = '$user_id'"
+    mysqli_query($conn, "UPDATE orders SET 
+        order_status = 'cancelled',
+        cancelled_by = 'customer',
+        cancel_reason_customer = '$cancel_reason'
+        WHERE order_id = '$order_id' AND user_id = '$user_id'"
     );
 }
 
