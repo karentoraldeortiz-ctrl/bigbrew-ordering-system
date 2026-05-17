@@ -4,6 +4,7 @@
 
 let allProducts = [];
 let activeCategory = 'all';
+let currentView = 'active';
 
 // ── Image base path (admin folder is inside /admin, assets is at root) ───
 // ✅ FIX: DB stores filename only, so prefix this when displaying
@@ -22,8 +23,13 @@ function showToast(msg, type = 'success') {
 // ── Load & render products ────────────────────────────────────────────────
 async function loadProducts() {
   try {
-    const res = await fetch('menu.php?action=list');
+    const endpoint = currentView === 'archived'
+      ? 'menu.php?action=list_archived'
+      : 'menu.php?action=list';
+
+    const res = await fetch(endpoint);
     allProducts = await res.json();
+
     buildCategoryTabs();
     renderTable(allProducts);
   } catch {
@@ -31,7 +37,6 @@ async function loadProducts() {
       '<tr><td colspan="4" style="color:red;text-align:center;padding:20px;">Failed to load products.</td></tr>';
   }
 }
-
 function buildCategoryTabs() {
   const cats = ['all', ...new Set(allProducts.map(p => p.category).filter(Boolean))];
   const tabs  = document.getElementById('categoryTabs');
@@ -87,18 +92,28 @@ function renderTable(products) {
           ${p.is_available ? 'Available' : 'Not Available'}
         </span>
       </td>
-      <td class="td-actions">
-        <button class="tbl-btn-edit" onclick="openModal(${p.product_id})">
-          <i class="fa fa-pencil"></i> Edit
-        </button>
-        <button class="tbl-btn-avail ${p.is_available ? 'mark-unavail' : 'mark-avail'}"
-          onclick="toggleAvailability(${p.product_id}, ${p.is_available})">
-          ${p.is_available ? 'Mark Unavailable' : 'Mark Available'}
-        </button>
-        <button class="tbl-btn-del" onclick="confirmDelete(${p.product_id})">
-          <i class="fa fa-trash"></i>
-        </button>
-      </td>
+    <td class="td-actions">
+      ${
+        currentView === 'archived'
+          ? `
+            <button class="tbl-btn-edit" onclick="restoreProduct(${p.product_id})">
+              <i class="fa fa-rotate-left"></i> Restore
+            </button>
+          `
+          : `
+            <button class="tbl-btn-edit" onclick="openModal(${p.product_id})">
+              <i class="fa fa-pencil"></i> Edit
+            </button>
+            <button class="tbl-btn-avail ${p.is_available ? 'mark-unavail' : 'mark-avail'}"
+              onclick="toggleAvailability(${p.product_id}, ${p.is_available})">
+              ${p.is_available ? 'Mark Unavailable' : 'Mark Available'}
+            </button>
+            <button class="tbl-btn-del" onclick="confirmDelete(${p.product_id})">
+              <i class="fa fa-box-archive"></i>
+            </button>
+          `
+      }
+    </td>
     </tr>`;
   }).join('');
 }
@@ -354,32 +369,51 @@ async function saveProduct() {
 }
 // ── Delete ────────────────────────────────────────────────────────────────
 async function confirmDelete(productId) {
-  if (!confirm('Delete this product?')) return;
+  if (!confirm("Archive this product? It will be removed from the menu but preserved in order history.")) return;
   try {
     const res  = await fetch('menu.php?action=delete', {
       method: 'DELETE', body: JSON.stringify({ product_id: productId })
     });
     const data = await res.json();
     if (data.error) { showToast(data.error, 'error'); return; }
-    showToast('Product deleted.');
+    showToast('Product archived.');
     loadProducts();
   } catch { showToast('Delete failed.', 'error'); }
 }
 
 async function deleteProductFromModal() {
   const id = document.getElementById('editProductId').value;
-  if (!id || !confirm('Delete this product?')) return;
+  if (!id || !confirm("Archive this product? It will be removed from the menu but preserved in order history.")) return;
   try {
     const res  = await fetch('menu.php?action=delete', {
       method: 'DELETE', body: JSON.stringify({ product_id: parseInt(id) })
     });
     const data = await res.json();
     if (data.error) { showToast(data.error, 'error'); return; }
-    showToast('Product deleted.');
+    showToast('Product archived.');
     closeModal();
     loadProducts();
-  } catch { showToast('Delete failed.', 'error'); }
+  } catch { showToast('Archive failed.', 'error'); }
 }
+function switchProductView(view, btn) {
+  currentView = view;
+  activeCategory = 'all';
 
+  document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const addBtn = document.querySelector('.btn-add-product');
+  const categoryTabs = document.getElementById('categoryTabs');
+
+  if (currentView === 'archived') {
+    addBtn.style.display = 'none';
+    categoryTabs.style.display = 'none';
+  } else {
+    addBtn.style.display = 'inline-flex';
+    categoryTabs.style.display = 'flex';
+  }
+
+  loadProducts();
+}
 // ── Init ──────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', loadProducts);

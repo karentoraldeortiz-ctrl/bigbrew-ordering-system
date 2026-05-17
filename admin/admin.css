@@ -983,3 +983,27 @@ hr {
   -webkit-tap-highlight-color: transparent;
   text-decoration: none;
 }
+
+/* for archived  restore products */
+.menu-view-tabs {
+  display: flex;
+  gap: 10px;
+  margin: 22px 0 16px;
+}
+
+.view-tab {
+  border: 1px solid #e6d8c8;
+  background: white;
+  color: var(--dark-color);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.view-tab.active {
+  background: var(--pop-color);
+  color: white;
+  border-color: var(--pop-color);
+}

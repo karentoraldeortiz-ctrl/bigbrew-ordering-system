@@ -4,179 +4,484 @@ require_once 'db.php';
 // ── API handler ────────────────────────────────────────────────────────────
 if (isset($_GET['action'])) {
     header('Content-Type: application/json');
+
     $action = $_GET['action'];
     $method = $_SERVER['REQUEST_METHOD'];
 
-    // List all products with sizes
+    // ─────────────────────────────────────────────────────
+    // LIST PRODUCTS
+    // ─────────────────────────────────────────────────────
     if ($action === 'list' && $method === 'GET') {
+
         $products = [];
-        $res = mysqli_query($conn, "SELECT * FROM products ORDER BY product_id ASC");
+
+        $res = mysqli_query($conn,
+            "SELECT * 
+             FROM products 
+             WHERE is_archived = 0
+             ORDER BY product_id ASC"
+        );
+
         while ($row = mysqli_fetch_assoc($res)) {
-            $id    = (int)$row['product_id'];
+
+            $id = (int)$row['product_id'];
+
             $row['is_available'] = (int)$row['is_available'];
+
             $sizes = [];
-            $sRes  = mysqli_query($conn, "SELECT * FROM product_sizes WHERE product_id = $id");
-            while ($s = mysqli_fetch_assoc($sRes)) $sizes[] = $s;
+
+            $sRes = mysqli_query($conn,
+                "SELECT * 
+                 FROM product_sizes 
+                 WHERE product_id = $id"
+            );
+
+            while ($s = mysqli_fetch_assoc($sRes)) {
+                $sizes[] = $s;
+            }
+
             $row['sizes'] = $sizes;
-            $products[]   = $row;
+
+            $products[] = $row;
         }
+
+        echo json_encode($products);
+        exit;
+    }
+    // LIST ARCHIVED PRODUCTS
+    if ($action === 'list_archived' && $method === 'GET') {
+        $products = [];
+
+        $res = mysqli_query($conn,
+            "SELECT * 
+            FROM products 
+            WHERE is_archived = 1
+            ORDER BY product_id ASC"
+        );
+
+        while ($row = mysqli_fetch_assoc($res)) {
+            $id = (int)$row['product_id'];
+            $row['is_available'] = (int)$row['is_available'];
+
+            $sizes = [];
+            $sRes = mysqli_query($conn,
+                "SELECT * FROM product_sizes WHERE product_id = $id"
+            );
+
+            while ($s = mysqli_fetch_assoc($sRes)) {
+                $sizes[] = $s;
+            }
+
+            $row['sizes'] = $sizes;
+            $products[] = $row;
+        }
+
         echo json_encode($products);
         exit;
     }
 
-    // All addons
+    // ─────────────────────────────────────────────────────
+    // GET ALL ADDONS
+    // ─────────────────────────────────────────────────────
     if ($action === 'addons' && $method === 'GET') {
+
         $addons = [];
-        $res = mysqli_query($conn, "SELECT * FROM addons ORDER BY addon_id ASC");
-        while ($row = mysqli_fetch_assoc($res)) $addons[] = $row;
+
+        $res = mysqli_query($conn,
+            "SELECT * 
+             FROM addons 
+             ORDER BY addon_id ASC"
+        );
+
+        while ($row = mysqli_fetch_assoc($res)) {
+            $addons[] = $row;
+        }
+
         echo json_encode($addons);
         exit;
     }
 
-    // Single product
+    // ─────────────────────────────────────────────────────
+    // GET SINGLE PRODUCT
+    // ─────────────────────────────────────────────────────
     if ($action === 'get' && $method === 'GET') {
-        $id      = (int)($_GET['id'] ?? 0);
-        $res     = mysqli_query($conn, "SELECT * FROM products WHERE product_id = $id");
+
+        $id = (int)($_GET['id'] ?? 0);
+
+        $res = mysqli_query($conn,
+            "SELECT * 
+             FROM products 
+             WHERE product_id = $id"
+        );
+
         $product = mysqli_fetch_assoc($res);
-        if (!$product) { echo json_encode(['error' => 'Product not found']); exit; }
+
+        if (!$product) {
+            echo json_encode(['error' => 'Product not found']);
+            exit;
+        }
+
         $sizes = [];
-        $sRes  = mysqli_query($conn, "SELECT * FROM product_sizes WHERE product_id = $id");
-        while ($s = mysqli_fetch_assoc($sRes)) $sizes[] = $s;
+
+        $sRes = mysqli_query($conn,
+            "SELECT * 
+             FROM product_sizes 
+             WHERE product_id = $id"
+        );
+
+        while ($s = mysqli_fetch_assoc($sRes)) {
+            $sizes[] = $s;
+        }
+
         $product['sizes'] = $sizes;
+
         echo json_encode($product);
         exit;
     }
 
-    // ── FIX #2: Get assigned addons for a product ──────────────────────────
+    // ─────────────────────────────────────────────────────
+    // GET PRODUCT ADDONS
+    // ─────────────────────────────────────────────────────
     if ($action === 'get_product_addons' && $method === 'GET') {
+
         $id  = (int)($_GET['id'] ?? 0);
         $out = [];
-        // Check if product_addons table exists first
-        $check = mysqli_query($conn, "SHOW TABLES LIKE 'product_addons'");
+
+        $check = mysqli_query($conn,
+            "SHOW TABLES LIKE 'product_addons'"
+        );
+
         if (mysqli_num_rows($check) > 0) {
-            $res = mysqli_query($conn, "SELECT addon_id FROM product_addons WHERE product_id = $id");
-            while ($r = mysqli_fetch_assoc($res)) $out[] = $r;
+
+            $res = mysqli_query($conn,
+                "SELECT addon_id 
+                 FROM product_addons 
+                 WHERE product_id = $id"
+            );
+
+            while ($r = mysqli_fetch_assoc($res)) {
+                $out[] = $r;
+            }
         }
+
         echo json_encode($out);
         exit;
     }
 
-    // ── FIX #3: Save assigned addons for a product ─────────────────────────
+    // ─────────────────────────────────────────────────────
+    // SAVE PRODUCT ADDONS
+    // ─────────────────────────────────────────────────────
     if ($action === 'save_product_addons' && $method === 'POST') {
-        $data      = json_decode(file_get_contents('php://input'), true);
+
+        $data = json_decode(file_get_contents('php://input'), true);
+
         $productId = (int)($data['product_id'] ?? 0);
         $addonIds  = $data['addon_ids'] ?? [];
-        if (!$productId) { echo json_encode(['error' => 'Missing product ID']); exit; }
 
-        // Create table if it doesn't exist yet
-        mysqli_query($conn, "CREATE TABLE IF NOT EXISTS product_addons (
-            id         INT AUTO_INCREMENT PRIMARY KEY,
-            product_id INT NOT NULL,
-            addon_id   INT NOT NULL,
-            UNIQUE KEY unique_pair (product_id, addon_id)
-        )");
-
-        mysqli_query($conn, "DELETE FROM product_addons WHERE product_id = $productId");
-        foreach ($addonIds as $aid) {
-            $aid = (int)$aid;
-            if ($aid) mysqli_query($conn, "INSERT IGNORE INTO product_addons (product_id, addon_id) VALUES ($productId, $aid)");
+        if (!$productId) {
+            echo json_encode(['error' => 'Missing product ID']);
+            exit;
         }
+
+        mysqli_query($conn,
+            "CREATE TABLE IF NOT EXISTS product_addons (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                product_id INT NOT NULL,
+                addon_id INT NOT NULL,
+                UNIQUE KEY unique_pair (product_id, addon_id)
+            )"
+        );
+
+        mysqli_query($conn,
+            "DELETE FROM product_addons 
+             WHERE product_id = $productId"
+        );
+
+        foreach ($addonIds as $aid) {
+
+            $aid = (int)$aid;
+
+            if ($aid) {
+
+                mysqli_query($conn,
+                    "INSERT IGNORE INTO product_addons 
+                     (product_id, addon_id)
+                     VALUES ($productId, $aid)"
+                );
+            }
+        }
+
         echo json_encode(['success' => true]);
         exit;
     }
 
-    // Add product
+    // ─────────────────────────────────────────────────────
+    // ADD PRODUCT
+    // ─────────────────────────────────────────────────────
     if ($action === 'add' && $method === 'POST') {
-        $data         = json_decode(file_get_contents('php://input'), true);
-        $name         = mysqli_real_escape_string($conn, trim($data['product_name'] ?? ''));
-        $description  = mysqli_real_escape_string($conn, trim($data['description'] ?? ''));
-        $category     = mysqli_real_escape_string($conn, trim($data['category'] ?? ''));
-        $image        = mysqli_real_escape_string($conn, trim($data['image'] ?? ''));
-        $is_available = isset($data['is_available']) ? (int)$data['is_available'] : 1;
-        $sizes        = $data['sizes'] ?? [];
 
-        if (!$name) { echo json_encode(['error' => 'Product name is required']); exit; }
+        $data = json_decode(file_get_contents('php://input'), true);
 
-        $sql = "INSERT INTO products (product_name, description, category, image, is_available)
-                VALUES ('$name', '$description', '$category', '$image', $is_available)";
-        if (!mysqli_query($conn, $sql)) { echo json_encode(['error' => mysqli_error($conn)]); exit; }
+        $name = mysqli_real_escape_string($conn,
+            trim($data['product_name'] ?? '')
+        );
+
+        $description = mysqli_real_escape_string($conn,
+            trim($data['description'] ?? '')
+        );
+
+        $category = mysqli_real_escape_string($conn,
+            trim($data['category'] ?? '')
+        );
+
+        $image = mysqli_real_escape_string($conn,
+            trim($data['image'] ?? '')
+        );
+
+        $is_available = isset($data['is_available'])
+            ? (int)$data['is_available']
+            : 1;
+
+        $sizes = $data['sizes'] ?? [];
+
+        if (!$name) {
+            echo json_encode(['error' => 'Product name is required']);
+            exit;
+        }
+
+        $sql = "
+            INSERT INTO products
+            (
+                product_name,
+                description,
+                category,
+                image,
+                is_available,
+                is_archived
+            )
+            VALUES
+            (
+                '$name',
+                '$description',
+                '$category',
+                '$image',
+                $is_available,
+                0
+            )
+        ";
+
+        if (!mysqli_query($conn, $sql)) {
+            echo json_encode(['error' => mysqli_error($conn)]);
+            exit;
+        }
 
         $newId = mysqli_insert_id($conn);
+
         foreach ($sizes as $size) {
-            $sname = mysqli_real_escape_string($conn, trim($size['size_name'] ?? ''));
+
+            $sname = mysqli_real_escape_string($conn,
+                trim($size['size_name'] ?? '')
+            );
+
             $price = (float)($size['price'] ?? 0);
-            if ($sname) mysqli_query($conn, "INSERT INTO product_sizes (product_id, size_name, price) VALUES ($newId, '$sname', $price)");
+
+            if ($sname) {
+
+                mysqli_query($conn,
+                    "INSERT INTO product_sizes
+                    (product_id, size_name, price)
+                    VALUES
+                    ($newId, '$sname', $price)"
+                );
+            }
         }
-        echo json_encode(['success' => true, 'product_id' => $newId]);
+
+        echo json_encode([
+            'success' => true,
+            'product_id' => $newId
+        ]);
+
         exit;
     }
 
-    // ── FIX #1: Upload image — save FILENAME only (not full path) ──────────
+    // ─────────────────────────────────────────────────────
+    // UPLOAD IMAGE
+    // ─────────────────────────────────────────────────────
     if ($action === 'upload_image' && $method === 'POST') {
+
         $uploadDir = dirname(__DIR__) . '/assets/products/';
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
 
-        if (!isset($_FILES['image'])) { echo json_encode(['error' => 'No file uploaded']); exit; }
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
 
-        $file    = $_FILES['image'];
-        $ext     = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        if (!isset($_FILES['image'])) {
+            echo json_encode(['error' => 'No file uploaded']);
+            exit;
+        }
+
+        $file = $_FILES['image'];
+
+        $ext = strtolower(
+            pathinfo($file['name'], PATHINFO_EXTENSION)
+        );
+
         $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-        if (!in_array($ext, $allowed)) { echo json_encode(['error' => 'Invalid file type']); exit; }
 
-        $filename = 'product_' . time() . '_' . rand(100, 999) . '.' . $ext;
+        if (!in_array($ext, $allowed)) {
+            echo json_encode(['error' => 'Invalid file type']);
+            exit;
+        }
+
+        $filename = 'product_' . time() . '_' . rand(100,999) . '.' . $ext;
+
         if (move_uploaded_file($file['tmp_name'], $uploadDir . $filename)) {
-            // ✅ FIX: Save filename only — NOT the full path like '../assets/products/...'
-            echo json_encode(['success' => true, 'path' => $filename]);
+
+            echo json_encode([
+                'success' => true,
+                'path' => $filename
+            ]);
+
         } else {
+
             echo json_encode(['error' => 'Upload failed']);
         }
+
         exit;
     }
 
-    // Update product
+    // ─────────────────────────────────────────────────────
+    // UPDATE PRODUCT
+    // ─────────────────────────────────────────────────────
     if ($action === 'update' && $method === 'PUT') {
-        $data         = json_decode(file_get_contents('php://input'), true);
-        $id           = (int)($data['product_id'] ?? 0);
-        $name         = mysqli_real_escape_string($conn, trim($data['product_name'] ?? ''));
-        $description  = mysqli_real_escape_string($conn, trim($data['description'] ?? ''));
-        $category     = mysqli_real_escape_string($conn, trim($data['category'] ?? ''));
-        $image        = mysqli_real_escape_string($conn, trim($data['image'] ?? ''));
-        $is_available = isset($data['is_available']) ? (int)$data['is_available'] : 1;
-        $sizes        = $data['sizes'] ?? [];
 
-        if (!$id || !$name) { echo json_encode(['error' => 'Missing required fields']); exit; }
-
-        $sql = "UPDATE products SET product_name='$name', description='$description',
-                category='$category', image='$image', is_available=$is_available
-                WHERE product_id=$id";
-        if (!mysqli_query($conn, $sql)) { echo json_encode(['error' => mysqli_error($conn)]); exit; }
-
-        mysqli_query($conn, "DELETE FROM product_sizes WHERE product_id = $id");
-        foreach ($sizes as $size) {
-            $sname = mysqli_real_escape_string($conn, trim($size['size_name'] ?? ''));
-            $price = (float)($size['price'] ?? 0);
-            if ($sname) mysqli_query($conn, "INSERT INTO product_sizes (product_id, size_name, price) VALUES ($id, '$sname', $price)");
-        }
-        echo json_encode(['success' => true]);
-        exit;
-    }
-
-    // Delete product
-    if ($action === 'delete' && $method === 'DELETE') {
         $data = json_decode(file_get_contents('php://input'), true);
-        $id   = (int)($data['product_id'] ?? 0);
-        if (!$id) { echo json_encode(['error' => 'Missing product ID']); exit; }
-        mysqli_query($conn, "DELETE FROM product_sizes WHERE product_id = $id");
-        // Also clean up product_addons if table exists
-        $check = mysqli_query($conn, "SHOW TABLES LIKE 'product_addons'");
-        if (mysqli_num_rows($check) > 0) {
-            mysqli_query($conn, "DELETE FROM product_addons WHERE product_id = $id");
+
+        $id = (int)($data['product_id'] ?? 0);
+
+        $name = mysqli_real_escape_string($conn,
+            trim($data['product_name'] ?? '')
+        );
+
+        $description = mysqli_real_escape_string($conn,
+            trim($data['description'] ?? '')
+        );
+
+        $category = mysqli_real_escape_string($conn,
+            trim($data['category'] ?? '')
+        );
+
+        $image = mysqli_real_escape_string($conn,
+            trim($data['image'] ?? '')
+        );
+
+        $is_available = isset($data['is_available'])
+            ? (int)$data['is_available']
+            : 1;
+
+        $sizes = $data['sizes'] ?? [];
+
+        if (!$id || !$name) {
+            echo json_encode(['error' => 'Missing required fields']);
+            exit;
         }
-        mysqli_query($conn, "DELETE FROM products WHERE product_id = $id");
+
+        $sql = "
+            UPDATE products
+            SET
+                product_name = '$name',
+                description  = '$description',
+                category     = '$category',
+                image        = '$image',
+                is_available = $is_available
+            WHERE product_id = $id
+        ";
+
+        if (!mysqli_query($conn, $sql)) {
+            echo json_encode(['error' => mysqli_error($conn)]);
+            exit;
+        }
+
+        mysqli_query($conn,
+            "DELETE FROM product_sizes 
+             WHERE product_id = $id"
+        );
+
+        foreach ($sizes as $size) {
+
+            $sname = mysqli_real_escape_string($conn,
+                trim($size['size_name'] ?? '')
+            );
+
+            $price = (float)($size['price'] ?? 0);
+
+            if ($sname) {
+
+                mysqli_query($conn,
+                    "INSERT INTO product_sizes
+                    (product_id, size_name, price)
+                    VALUES
+                    ($id, '$sname', $price)"
+                );
+            }
+        }
+
         echo json_encode(['success' => true]);
         exit;
     }
 
+    // ─────────────────────────────────────────────────────
+    // ARCHIVE PRODUCT
+    // ─────────────────────────────────────────────────────
+    if ($action === 'delete' && $method === 'DELETE') {
+
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $id = (int)($data['product_id'] ?? 0);
+
+        if (!$id) {
+            echo json_encode(['error' => 'Missing product ID']);
+            exit;
+        }
+
+        mysqli_query($conn,
+            "UPDATE products
+             SET is_archived = 1,
+                 is_available = 0
+             WHERE product_id = $id"
+        );
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Product archived successfully'
+        ]);
+
+        exit;
+    }
+      // RESTORE ARCHIVED PRODUCT
+    if ($action === 'restore' && $method === 'PUT') {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $id = (int)($data['product_id'] ?? 0);
+
+        if (!$id) {
+            echo json_encode(['error' => 'Missing product ID']);
+            exit;
+        }
+
+        mysqli_query($conn,
+            "UPDATE products
+            SET is_archived = 0,
+                is_available = 1
+            WHERE product_id = $id"
+        );
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Product restored successfully'
+        ]);
+
+        exit;
+    }
     echo json_encode(['error' => 'Invalid request']);
     exit;
 }
@@ -248,9 +553,19 @@ if (isset($_GET['action'])) {
       </div>
 
       <!-- Category tabs -->
-      <div class="category-tabs" id="categoryTabs">
-        <button class="cat-tab active" onclick="filterCategory('all', this)">All</button>
-      </div>
+      <div class="menu-view-tabs">
+      <button class="view-tab active" id="activeProductsTab" onclick="switchProductView('active', this)">
+        Active Products
+      </button>
+      <button class="view-tab" id="archivedProductsTab" onclick="switchProductView('archived', this)">
+        Archived Items
+      </button>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="category-tabs" id="categoryTabs">
+      <button class="cat-tab active" onclick="filterCategory('all', this)">All</button>
+    </div>
 
       <!-- Toast -->
       <div id="toast" class="toast" style="display:none;"></div>
@@ -354,7 +669,7 @@ if (isset($_GET['action'])) {
 
         <div class="modal-footer">
           <button class="btn-delete-item" id="btnDeleteItem" onclick="deleteProductFromModal()" style="display:none;">
-            <i class="fa fa-trash"></i> Delete Item
+            <i class="fa fa-box-archive"></i> Archive Item
           </button>
           <button class="btn-cancel-modal" onclick="closeModal()">Cancel</button>
           <button class="btn-save-changes" onclick="saveProduct()">
