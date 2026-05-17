@@ -1,9 +1,9 @@
 // ============================================================
-// cart.js — DB version (walang PHP, walang duplicate functions)
+// cart.js — DB version
 // ============================================================
-
 const loginBtn = document.querySelector(".login-required-btn");
-if (loginBtn) {
+
+if(loginBtn){
     loginBtn.addEventListener("click", () => {
         alert("Please log in first before placing your order.");
         window.location.href = "login.php";
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const qtySpan    = document.getElementById(`qty-${cart_item_id}`);
         const currentQty = parseInt(qtySpan.textContent.trim());
 
-        if (currentQty + change <= 0) {
+        if(currentQty + change <= 0) {
             showRemoveModal(cart_item_id);
             return;
         }
@@ -62,17 +62,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.json();
 
-            if (result.success) {
+            if(result.success) {
                 qtySpan.textContent = result.new_qty;
-
-                // I-sync ang currentSubtotal bago recalcTotals
                 recalcTotals();
                 checkIfEmpty();
             } else {
                 alert('Something went wrong: ' + result.message);
             }
 
-        } catch (err) {
+        } catch(err) {
             console.error('Update qty error:', err);
             alert('Connection error. Please try again.');
         }
@@ -94,21 +92,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.json();
 
-            if (result.success) {
+            if(result.success) {
                 const card = document.getElementById(`cart-card-${cart_item_id}`);
-                if (card) card.remove();
+                if(card) card.remove();
                 recalcTotals();
                 checkIfEmpty();
                 updateCartBadge();
                 checkUnavailableItems();
             }
-        } catch (err) {
+        } catch(err) {
             console.error('Remove item error:', err);
         }
     };
 
     // ============================================================
-    // RECALCULATE TOTALS
+    // RECALCULATE TOTALS — FIXED: syncs currentSubtotal + onPaymentChange
     // ============================================================
     function recalcTotals() {
         let grandTotal = 0;
@@ -123,23 +121,57 @@ document.addEventListener('DOMContentLoaded', () => {
             grandTotal += itemTotal;
 
             const itemPriceEl = document.getElementById(`item-price-${cart_item_id}`);
-            if (itemPriceEl) itemPriceEl.textContent = `P ${itemTotal.toFixed(2)}`;
+            if(itemPriceEl) itemPriceEl.textContent = `P ${itemTotal.toFixed(2)}`;
         });
 
-        // I-update ang global currentSubtotal para ma-sync ang GCash logic
-        if (typeof currentSubtotal !== 'undefined') {
-            currentSubtotal = grandTotal;
-        }
-
+        // Update subtotal & total display
         const subtotalDisplay = document.getElementById('subtotal-amount');
         const totalDisplay    = document.getElementById('total-amount');
-        if (subtotalDisplay) subtotalDisplay.textContent = `P ${grandTotal.toFixed(2)}`;
-        if (totalDisplay)    totalDisplay.textContent    = `P ${grandTotal.toFixed(2)}`;
+        if(subtotalDisplay) subtotalDisplay.textContent = `P ${grandTotal.toFixed(2)}`;
+        if(totalDisplay)    totalDisplay.textContent    = `P ${grandTotal.toFixed(2)}`;
 
-        // I-refresh ang payment badge at checkout button
-        if (typeof onPaymentChange === 'function') {
-            onPaymentChange(typeof currentPaymentMethod !== 'undefined' ? currentPaymentMethod : 'pickup');
+        // ── FIX: Update currentSubtotal globally, then directly update
+        //         all badge/button DOM elements — no reliance on onPaymentChange
+        //         since it doesn't update badge amounts, only show/hide.
+        currentSubtotal = grandTotal;
+
+        const payMethod     = typeof currentPaymentMethod !== 'undefined' ? currentPaymentMethod : 'pickup';
+        const downpayBadge  = document.getElementById('gcashDownpayBadge');
+        const badgeAmount   = document.getElementById('gcash-badge-amount');
+        const badgeTotal    = document.getElementById('gcash-badge-total');
+        const fullBadge     = document.getElementById('gcashFullBadge');
+        const fullAmountEl  = document.getElementById('gcash-full-amount');
+        const checkoutBtn   = document.getElementById('checkoutBtn');
+
+        if (payMethod === 'gcash_full') {
+            if (fullBadge)    fullBadge.style.display    = 'block';
+            if (downpayBadge) downpayBadge.style.display = 'none';
+            if (fullAmountEl) fullAmountEl.textContent   = '₱' + grandTotal.toFixed(2);
+            if (checkoutBtn && !checkoutBtn.disabled) {
+                checkoutBtn.textContent = 'Checkout & Pay GCash';
+                checkoutBtn.classList.add('gcash');
+            }
+        } else {
+            if (fullBadge) fullBadge.style.display = 'none';
+            if (grandTotal >= 100) {
+                if (downpayBadge) downpayBadge.style.display = 'block';
+                if (badgeAmount)  badgeAmount.textContent    = '₱' + (grandTotal * 0.5).toFixed(2);
+                if (badgeTotal)   badgeTotal.textContent     = '₱' + grandTotal.toFixed(2);
+                if (checkoutBtn && !checkoutBtn.disabled) {
+                    checkoutBtn.textContent = 'Checkout & Pay GCash';
+                    checkoutBtn.classList.add('gcash');
+                }
+            } else {
+                if (downpayBadge) downpayBadge.style.display = 'none';
+                if (checkoutBtn && !checkoutBtn.disabled) {
+                    checkoutBtn.textContent = 'Checkout';
+                    checkoutBtn.classList.remove('gcash');
+                }
+            }
         }
+
+        // Also update GCash modal amounts in real time
+        if (typeof updateGcashModalContent === 'function') updateGcashModalContent();
     }
 
     // ============================================================
@@ -150,9 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const aside     = document.querySelector('aside');
         const container = document.getElementById('cart-items-container');
 
-        if (remaining === 0) {
-            if (aside) aside.style.display = 'none';
-            if (container) container.innerHTML = `
+        if(remaining === 0) {
+            if(aside) aside.style.display = 'none';
+            if(container) container.innerHTML = `
                 <div class="empty-cart">
                     <h3>Your Cart</h3>
                     <p>Your cart is empty.</p>
@@ -201,6 +233,7 @@ function applyCartAvailability(data) {
         if (!isAvailable) {
             card.classList.add('item-unavailable');
 
+            // Add unavailable tag kung wala pa
             const h4 = card.querySelector('h4');
             if (h4 && !card.querySelector('.unavailable-tag')) {
                 const tag = document.createElement('span');
@@ -209,6 +242,7 @@ function applyCartAvailability(data) {
                 h4.insertAdjacentElement('afterend', tag);
             }
 
+            // Add Remove button kung wala pa
             const cartItemId = card.dataset.cartItemId;
             if (cartItemId && !card.querySelector('.remove-unavailable-btn')) {
                 const removeBtn = document.createElement('button');
@@ -244,8 +278,3 @@ function pollCartAvailability() {
 
 pollCartAvailability();
 setInterval(pollCartAvailability, 1000);
-
-// Clear order_success params from URL
-if (window.location.search.includes('order_success=1')) {
-    window.history.replaceState({}, document.title, window.location.pathname);
-}

@@ -10,8 +10,9 @@ if(!isset($_SESSION['user_id']) || !isset($_GET['order_id'])) {
 $order_id = (int)$_GET['order_id'];
 $user_id  = $_SESSION['user_id'];
 
+// ── FIX: Added gcash_receipt_status to SELECT
 $q = mysqli_query($conn,
-    "SELECT order_status, completed_at, pickup_time, created_at
+    "SELECT order_status, gcash_receipt_status, completed_at, pickup_time, created_at
      FROM orders 
      WHERE order_id = '$order_id' AND user_id = '$user_id'
      LIMIT 1"
@@ -25,9 +26,9 @@ if(mysqli_num_rows($q) === 0) {
 $order = mysqli_fetch_assoc($q);
 date_default_timezone_set('Asia/Manila');
 
-$status      = strtolower($order['order_status']);
+$status       = strtolower($order['order_status']);
 $pickup_value = trim($order['pickup_time']);
-$created_at  = !empty($order['created_at']) ? strtotime($order['created_at']) : time();
+$created_at   = !empty($order['created_at']) ? strtotime($order['created_at']) : time();
 
 // Pickup display
 if($status === 'completed') {
@@ -51,18 +52,20 @@ if($status === 'completed') {
 
 // Titles
 $titles = [
-    'pending'          => ['title' => 'Order Confirmed!',          'subtitle' => 'Your order has been received and is waiting to be prepared.'],
-    'preparing'        => ['title' => 'Drink is Being Prepared!',  'subtitle' => 'Our staff is currently preparing your beverages.'],
-    'ready_for_pickup' => ['title' => 'Ready for Pickup!',         'subtitle' => 'Your order is ready. Please proceed to the store for pickup.'],
-    'completed'        => ['title' => 'Order Completed',           'subtitle' => 'Thank you, Brew! Buy again soon.'],
-    'cancelled'        => ['title' => 'Order Cancelled',           'subtitle' => 'This order has been cancelled.'],
+    'pending'          => ['title' => 'Order Confirmed!',         'subtitle' => 'Your order has been received and is waiting to be prepared.'],
+    'preparing'        => ['title' => 'Drink is Being Prepared!', 'subtitle' => 'Our staff is currently preparing your beverages.'],
+    'ready_for_pickup' => ['title' => 'Ready for Pickup!',        'subtitle' => 'Your order is ready. Please proceed to the store for pickup.'],
+    'completed'        => ['title' => 'Order Completed',          'subtitle' => 'Thank you, Brew! Buy again soon.'],
+    'cancelled'        => ['title' => 'Order Cancelled',          'subtitle' => 'This order has been cancelled.'],
 ];
 
 $info = $titles[$status] ?? ['title' => 'Order Updated', 'subtitle' => 'Your order status has been updated.'];
 
+// ── FIX: Return order_status and gcash_receipt_status as proper field names
 echo json_encode([
-    'status'         => $status,
-    'title'          => $info['title'],
-    'subtitle'       => $info['subtitle'],
-    'pickup_display' => $pickup_display,
+    'order_status'         => $status,
+    'gcash_receipt_status' => $order['gcash_receipt_status'] ?? 'not_required',
+    'title'                => $info['title'],
+    'subtitle'             => $info['subtitle'],
+    'pickup_display'       => $pickup_display,
 ]);

@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateCartBadge();
   fetchNotifications();
   setInterval(updateCartBadge, 5000);
-  setInterval(fetchNotifications, 30000);
+  setInterval(fetchNotifications, 2000);
   setActiveNavLink();
   createActiveOrderBar();
 });
@@ -92,7 +92,7 @@ function updateCartBadge() {
     .then(data => {
       const count = data.count || 0;
 
-      const badge = document.getElementById("cartBadge");
+      const badge       = document.getElementById("cartBadge");
       const badgeMobile = document.getElementById("cartBadgeMobile");
       const bottomBadge = document.getElementById("bottomCartBadge");
 
@@ -171,23 +171,61 @@ function fetchNotifications() {
     .then(data => {
       if (data.count === 0) return;
 
-      const notif = data.notifications.find(n => n.is_read == 0);
-      if (!notif) return;
+      data.notifications.forEach(notif => {
+        if (notif.is_read == 1) return;
 
-      // Check kung nalabas na yung specific notif na ito
-      const alertedKey = `notif_alerted_${notif.notification_id}`;
-      if (sessionStorage.getItem(alertedKey)) return;
+        const alertedKey = `notif_alerted_${notif.notification_id}`;
+        if (sessionStorage.getItem(alertedKey)) return;
 
-      const goToPage = `receipt.php?order_id=${notif.order_id}`;
+        sessionStorage.setItem(alertedKey, '1');
+        showToast(notif.title, notif.message, `receipt.php?order_id=${notif.order_id}`);
+      });
 
-      const confirmed = confirm(`🔔 ${notif.title}\n\n${notif.message}\n\nTap OK to view.`);
-
-      sessionStorage.setItem(alertedKey, '1');
       fetch('mark_notifications_read.php');
-
-      if (confirmed) {
-        window.location.href = goToPage;
-      }
     })
     .catch(() => {});
+}
+
+/* ===== TOAST ===== */
+function showToast(title, message, link) {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-notif';
+  toast.innerHTML = `
+    <div class="toast-icon">🔔</div>
+    <div class="toast-body">
+      <div class="toast-title">${title}</div>
+      <div class="toast-message">${message}</div>
+      <div class="toast-cta">Tap to view order →</div>
+    </div>
+    <button class="toast-close" aria-label="Dismiss">✕</button>
+  `;
+
+  // Click toast body — go to receipt
+  toast.addEventListener('click', () => {
+    window.location.href = link;
+  });
+
+  // Close button — dismiss only, no redirect
+  toast.querySelector('.toast-close').addEventListener('click', e => {
+    e.stopPropagation();
+    dismissToast(toast);
+  });
+
+  container.appendChild(toast);
+
+  // Auto-dismiss after 10 seconds
+  setTimeout(() => dismissToast(toast), 10000);
+}
+
+function dismissToast(toast) {
+  if (!toast) return;
+  toast.classList.add('toast-hide');
+  setTimeout(() => toast.remove(), 400);
 }

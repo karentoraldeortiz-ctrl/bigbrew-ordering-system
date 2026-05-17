@@ -123,6 +123,13 @@ if($status === 'pending') {
 $gcash_receipt_status   = $order['gcash_receipt_status']   ?? 'not_required';
 $gcash_rejection_reason = $order['gcash_rejection_reason'] ?? '';
 $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
+
+// ── FIX: Check payment method for correct labels ──────────────────────────────
+$payment_method = $order['payment_method'] ?? 'pickup';
+$is_full_gcash  = ($payment_method === 'gcash_full');
+$payment_label  = $is_full_gcash ? 'GCash (Full Payment)' : 'Pay upon Pickup';
+$gcash_type_label = $is_full_gcash ? 'Full Payment' : 'Downpayment';
+$gcash_type_desc  = $is_full_gcash ? 'full payment' : 'downpayment';
 ?>
 <!doctype html>
 <html lang="en">
@@ -235,9 +242,10 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
                 <strong><?php echo htmlspecialchars($customer_name); ?></strong>
             </div>
 
+            <!-- FIX: Show correct payment method from DB -->
             <div class="detail-line">
                 <span>Mode of Payment:</span>
-                <strong>Pay upon Pickup</strong>
+                <strong><?php echo htmlspecialchars($payment_label); ?></strong>
             </div>
 
             <div class="detail-line">
@@ -279,24 +287,28 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
             </div>
         </div>
 
-        <!-- GCash Receipt Status -->
+        <!-- GCash Receipt Status — FIX: labels now reflect payment_method -->
         <?php if ($gcash_receipt_status !== 'not_required'): ?>
         <div class="gcash-status-box <?php echo htmlspecialchars($gcash_receipt_status); ?>">
 
             <?php if ($gcash_receipt_status === 'pending_verification'): ?>
                 <div class="gcash-status-icon">⏳</div>
                 <h4>GCash Receipt Pending</h4>
-                <p>Your GCash downpayment receipt is being reviewed by our staff. We'll update you once verified.</p>
+                <p>Your GCash <?php echo $gcash_type_desc; ?> receipt is being reviewed by our staff. We'll update you once verified.</p>
                 <?php if ($gcash_downpayment): ?>
-                    <div class="gcash-dp-pill">Downpayment: <strong>₱<?php echo number_format($gcash_downpayment, 2); ?></strong></div>
+                    <div class="gcash-dp-pill">
+                        <?php echo $gcash_type_label; ?>: <strong>₱<?php echo number_format($gcash_downpayment, 2); ?></strong>
+                    </div>
                 <?php endif; ?>
 
             <?php elseif ($gcash_receipt_status === 'verified'): ?>
                 <div class="gcash-status-icon">✅</div>
                 <h4>GCash Receipt Verified</h4>
-                <p>Your downpayment has been confirmed. Your order is being processed!</p>
+                <p>Your <?php echo $gcash_type_desc; ?> has been confirmed. Your order is being processed!</p>
                 <?php if ($gcash_downpayment): ?>
-                    <div class="gcash-dp-pill verified">Downpayment: <strong>₱<?php echo number_format($gcash_downpayment, 2); ?></strong></div>
+                    <div class="gcash-dp-pill verified">
+                        <?php echo $gcash_type_label; ?>: <strong>₱<?php echo number_format($gcash_downpayment, 2); ?></strong>
+                    </div>
                 <?php endif; ?>
 
             <?php elseif ($gcash_receipt_status === 'rejected'): ?>
@@ -329,7 +341,6 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
             <?php if($status === 'pending'): ?>
 
                 <?php if($gcash_receipt_status === 'verified'): ?>
-                    <!-- Verified na — hindi na pwedeng mag-cancel -->
                     <button class="btn-cancel-order btn-full btn-disabled-cancel" disabled>
                         Cancel Order
                     </button>
@@ -338,7 +349,6 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
                     </p>
 
                 <?php elseif($gcash_receipt_status === 'pending_verification'): ?>
-                    <!-- May GCash pero hindi pa verified — may warning bago mag-cancel -->
                     <button class="btn-cancel-order btn-full" onclick="showGcashCancelWarning()">
                         Cancel Order
                     </button>
@@ -347,58 +357,25 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
                     </p>
 
                 <?php else: ?>
-                    <!-- Walang GCash — normal cancel -->
                     <button class="btn-cancel-order btn-full" onclick="showCancelModal()">
                         Cancel Order
                     </button>
                 <?php endif; ?>
 
-                <!-- Cancel Confirmation Modal -->
-                <!-- Cancel Confirmation Modal -->
-            <div id="cancelModal" class="auth-modal-overlay" style="display:none;">
-                <div class="auth-modal-card">
-                    <div class="auth-modal-icon">🗑️</div>
-                    <h3>Cancel Order?</h3>
-                    <p>Are you sure you want to cancel this order? This cannot be undone.</p>
-
-                    <!-- ✅ NEW: Reason selector -->
-                    <div style="width:100%; margin-bottom: 12px; text-align:left;">
-                        <label style="font-size:13px; font-weight:600; color:#333; display:block; margin-bottom:6px;">
-                            Reason for cancellation <span style="color:#e53935;">*</span>
-                        </label>
-                        <select id="cancelReason" style="
-                            width:100%; padding:10px 12px; border-radius:10px;
-                            border:1.5px solid #ddd; font-family:'Poppins',sans-serif;
-                            font-size:13px; color:#333; background:#fafafa;
-                        ">
-                            <option value="">-- Select a reason --</option>
-                            <option value="changed_mind">I changed my mind</option>
-                            <option value="wrong_order">I ordered the wrong item</option>
-                            <option value="too_long">The wait time is too long</option>
-                            <option value="duplicate_order">Duplicate order</option>
-                            <option value="other">Other</option>
-                        </select>
-                        <textarea id="cancelReasonOther" placeholder="Please specify..." style="
-                            display:none; margin-top:8px; width:100%; padding:10px 12px;
-                            border-radius:10px; border:1.5px solid #ddd;
-                            font-family:'Poppins',sans-serif; font-size:13px;
-                            resize:none; height:70px; box-sizing:border-box;
-                        "></textarea>
-                        <p id="cancelReasonError" style="color:#e53935; font-size:12px; margin-top:4px; display:none;">
-                            Please select a reason before cancelling.
-                        </p>
-                    </div>
-
-                    <div class="auth-modal-actions">
-                        <button class="auth-btn-secondary" onclick="closeCancelModal()">Go Back</button>
-                        <form method="POST" action="cancel_order.php" id="cancelForm" style="width:100%;">
-                            <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
-                            <input type="hidden" name="cancel_reason" id="cancelReasonInput">
-                            <button type="button" class="auth-btn-danger" onclick="submitCancel()">Yes, Cancel Order</button>
-                        </form>
+                <div id="cancelModal" class="auth-modal-overlay" style="display:none;">
+                    <div class="auth-modal-card">
+                        <div class="auth-modal-icon">🗑️</div>
+                        <h3>Cancel Order?</h3>
+                        <p>Are you sure you want to cancel this order? This cannot be undone.</p>
+                        <div class="auth-modal-actions">
+                            <button class="auth-btn-secondary" onclick="closeCancelModal()">Go Back</button>
+                            <form method="POST" action="cancel_order.php" style="width:100%;">
+                                <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
+                                <button type="submit" class="auth-btn-danger">Yes, Cancel Order</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
 
             <?php elseif($status === 'preparing' || $status === 'ready_for_pickup'): ?>
                 <button class="btn-cancel-order btn-full btn-disabled-cancel" disabled
@@ -461,79 +438,35 @@ const ORDER_ID          = <?php echo $order_id; ?>;
 const CURR_STATUS       = '<?php echo $status; ?>';
 const CURR_GCASH_STATUS = '<?php echo $gcash_receipt_status; ?>';
 
-// ── Polling ───────────────────────────────────────────────────────────────────
 if (CURR_STATUS !== 'completed' && CURR_STATUS !== 'cancelled') {
     let lastStatus      = CURR_STATUS;
     let lastGcashStatus = CURR_GCASH_STATUS;
 
     function pollStatus() {
-        fetch(`get_orders.php?order_id=${ORDER_ID}`)
+        fetch(`get_orders_status.php?order_id=${ORDER_ID}`)
             .then(res => res.json())
             .then(data => {
                 if (data.error) return;
-
-                const newStatus      = data.order_status       ?? lastStatus;
-                const newGcashStatus = data.gcash_receipt_status ?? lastGcashStatus;
-
-                if (newStatus !== lastStatus || newGcashStatus !== lastGcashStatus) {
+                if (data.order_status !== lastStatus || data.gcash_receipt_status !== lastGcashStatus) {
                     location.reload();
                 }
             })
             .catch(err => console.warn('Poll failed:', err));
     }
 
-    setInterval(pollStatus, 3000); 
+    setInterval(pollStatus, 3000);
 }
-// ── Normal cancel modal ───────────────────────────────────────────────────────
-// ── Normal cancel modal ───────────────────────────────────────────────────────
+
 function showCancelModal() {
     document.getElementById('cancelModal').style.display = 'flex';
 }
 function closeCancelModal() {
     document.getElementById('cancelModal').style.display = 'none';
-    // Reset fields
-    document.getElementById('cancelReason').value = '';
-    document.getElementById('cancelReasonOther').style.display = 'none';
-    document.getElementById('cancelReasonOther').value = '';
-    document.getElementById('cancelReasonError').style.display = 'none';
 }
 document.getElementById('cancelModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeCancelModal();
 });
 
-// Show/hide "other" textarea
-document.getElementById('cancelReason')?.addEventListener('change', function() {
-    const other = document.getElementById('cancelReasonOther');
-    other.style.display = this.value === 'other' ? 'block' : 'none';
-});
-
-function submitCancel() {
-    const select = document.getElementById('cancelReason');
-    const other  = document.getElementById('cancelReasonOther');
-    const errMsg = document.getElementById('cancelReasonError');
-    const input  = document.getElementById('cancelReasonInput');
-
-    if (!select.value) {
-        errMsg.style.display = 'block';
-        return;
-    }
-
-    errMsg.style.display = 'none';
-
-    if (select.value === 'other') {
-        const customReason = other.value.trim();
-        if (!customReason) {
-            other.style.border = '1.5px solid #e53935';
-            return;
-        }
-        input.value = 'Other: ' + customReason;
-    } else {
-        input.value = select.options[select.selectedIndex].text;
-    }
-
-    document.getElementById('cancelForm').submit();
-}
-// ── GCash cancel warning modal ────────────────────────────────────────────────
 function showGcashCancelWarning() {
     document.getElementById('gcashWarnModal').classList.add('active');
 }

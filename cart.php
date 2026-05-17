@@ -617,29 +617,33 @@ window.IS_BUY_AGAIN = <?php
 
 let selectedReceiptFile = null;
 let currentPaymentMethod = 'pickup';
-let currentSubtotal = <?php echo $subtotal; ?>;
+var currentSubtotal = <?php echo $subtotal; ?>;
 
 // ── Payment method change ─────────────────────────────────────────────────────
 function onPaymentChange(method) {
     currentPaymentMethod = method;
 
-    // Update selected styles
     document.getElementById('opt-pickup').classList.toggle('selected', method === 'pickup');
     document.getElementById('opt-gcash').classList.toggle('selected', method === 'gcash_full');
 
-    // Update badges
     const downpayBadge = document.getElementById('gcashDownpayBadge');
     const fullBadge    = document.getElementById('gcashFullBadge');
+    const badgeAmount  = document.getElementById('gcash-badge-amount'); // ← ADD
+    const badgeTotal   = document.getElementById('gcash-badge-total');  // ← ADD
+    const fullAmountEl = document.getElementById('gcash-full-amount');  // ← ADD
     const btn          = document.getElementById('checkoutBtn');
 
     if (method === 'gcash_full') {
         downpayBadge.style.display = 'none';
         fullBadge.style.display    = 'block';
+        if (fullAmountEl) fullAmountEl.textContent = '₱' + currentSubtotal.toFixed(2); // ← ADD
         if (btn) { btn.textContent = 'Checkout & Pay GCash'; btn.classList.add('gcash'); }
     } else {
         fullBadge.style.display = 'none';
         if (currentSubtotal >= 100) {
             downpayBadge.style.display = 'block';
+            if (badgeAmount) badgeAmount.textContent = '₱' + (currentSubtotal * 0.5).toFixed(2); // ← ADD
+            if (badgeTotal)  badgeTotal.textContent  = '₱' + currentSubtotal.toFixed(2);          // ← ADD
             if (btn) { btn.textContent = 'Checkout & Pay GCash'; btn.classList.add('gcash'); }
         } else {
             downpayBadge.style.display = 'none';
