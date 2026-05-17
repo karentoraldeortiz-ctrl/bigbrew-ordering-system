@@ -358,7 +358,6 @@ body {
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     position: relative;
     gap: 20px;
-    /* ✅ FIX: Always animate in — visible by default */
     opacity: 0;
     animation: cartItemEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
@@ -1526,7 +1525,6 @@ body {
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* ✅ FIX: animate-in and buy-again-highlight override with stagger support */
 .cart-item.animate-in {
     animation: cartItemEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
 }
@@ -1554,128 +1552,142 @@ body {
 .card-front:hover .add-btn { background-color: var(--pop-color); }
 .card-front:hover .flip-btn { transform: scale(1.09) rotate(70deg); transition: all 0.2s ease; }
 
+/* ── Payment Method Selector ───────────────────────────────────── */
+.payment-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+.payment-option {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 10px; cursor: pointer;
+    border: 1.5px solid #e0e0e0; background: #fafafa;
+    transition: all 0.2s; font-size: 13px; color: #333;
+}
+.payment-option:hover { border-color: #a0522d; background: #fdf8f5; }
+.payment-option.selected { border-color: #a0522d; background: #fdf8f5; }
+.payment-option input[type="radio"] { accent-color: #a0522d; width: 16px; height: 16px; }
+.payment-option-icon { font-size: 18px; }
+.payment-option-text { display: flex; flex-direction: column; }
+.payment-option-label { font-weight: 600; font-size: 13px; }
+.payment-option-desc  { font-size: 11px; color: #888; margin-top: 1px; }
 
+/* ── GCash info badge ─────────────────────────────────────────── */
+.gcash-required-badge {
+    background: #fff8e1; border: 1px solid #ffe082;
+    border-radius: 10px; padding: 10px 14px; margin-bottom: 14px;
+    font-size: 12px; color: #6d4c00; display: none;
+}
+.gcash-required-badge strong { display: block; margin-bottom: 2px; font-size: 13px; }
+.gcash-full-badge {
+    background: #e8f5e9; border: 1px solid #a5d6a7;
+    border-radius: 10px; padding: 10px 14px; margin-bottom: 14px;
+    font-size: 12px; color: #2e7d32; display: none;
+}
+.gcash-full-badge strong { display: block; margin-bottom: 2px; font-size: 13px; }
 
- /* ── Payment Method Selector ───────────────────────────────────── */
-        .payment-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-        .payment-option {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 14px; border-radius: 10px; cursor: pointer;
-            border: 1.5px solid #e0e0e0; background: #fafafa;
-            transition: all 0.2s; font-size: 13px; color: #333;
-        }
-        .payment-option:hover { border-color: #a0522d; background: #fdf8f5; }
-        .payment-option.selected { border-color: #a0522d; background: #fdf8f5; }
-        .payment-option input[type="radio"] { accent-color: #a0522d; width: 16px; height: 16px; }
-        .payment-option-icon { font-size: 18px; }
-        .payment-option-text { display: flex; flex-direction: column; }
-        .payment-option-label { font-weight: 600; font-size: 13px; }
-        .payment-option-desc  { font-size: 11px; color: #888; margin-top: 1px; }
+/* ── GCash Modal ───────────────────────────────────────────────── */
+.gcash-modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55); z-index: 9999;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(3px);
+}
+.gcash-modal-overlay.active { display: flex; }
+.gcash-modal {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 28px 32px;  /* ← FIX: was 28px bottom, now 32px */
+    width: 90%;
+    max-width: 420px;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: modalIn 0.25s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+@keyframes modalIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
 
-        /* ── GCash info badge ─────────────────────────────────────────── */
-        .gcash-required-badge {
-            background: #fff8e1; border: 1px solid #ffe082;
-            border-radius: 10px; padding: 10px 14px; margin-bottom: 14px;
-            font-size: 12px; color: #6d4c00; display: none;
-        }
-        .gcash-required-badge strong { display: block; margin-bottom: 2px; font-size: 13px; }
-        .gcash-full-badge {
-            background: #e8f5e9; border: 1px solid #a5d6a7;
-            border-radius: 10px; padding: 10px 14px; margin-bottom: 14px;
-            font-size: 12px; color: #2e7d32; display: none;
-        }
-        .gcash-full-badge strong { display: block; margin-bottom: 2px; font-size: 13px; }
+.gcash-steps { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; }
+.gcash-step  { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #aaa; }
+.gcash-step .step-num {
+    width: 26px; height: 26px; border-radius: 50%; background: #e0e0e0; color: #999;
+    display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+}
+.gcash-step.active .step-num { background: #007bff; color: #fff; }
+.gcash-step.done .step-num   { background: #28a745; color: #fff; }
+.gcash-step.active { color: #007bff; }
+.gcash-step.done   { color: #28a745; }
+.gcash-step-line { width: 40px; height: 2px; background: #e0e0e0; border-radius: 2px; }
+.gcash-step-line.done { background: #28a745; }
 
-        /* ── GCash Modal ───────────────────────────────────────────────── */
-        .gcash-modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.55); z-index: 9999;
-            align-items: center; justify-content: center;
-            backdrop-filter: blur(3px);
-        }
-        .gcash-modal-overlay.active { display: flex; }
-        .gcash-modal {
-            background: #fff; border-radius: 20px; padding: 32px 28px 28px;
-            width: 90%; max-width: 420px; font-family: 'Poppins', sans-serif;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25); animation: modalIn 0.25s ease;
-        }
-        @keyframes modalIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to   { transform: translateY(0);    opacity: 1; }
-        }
+.gcash-panel { display: none; text-align: center; }
+.gcash-panel.active { display: block; }
 
-        .gcash-steps { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; }
-        .gcash-step  { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #aaa; }
-        .gcash-step .step-num {
-            width: 26px; height: 26px; border-radius: 50%; background: #e0e0e0; color: #999;
-            display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
-        }
-        .gcash-step.active .step-num { background: #007bff; color: #fff; }
-        .gcash-step.done .step-num   { background: #28a745; color: #fff; }
-        .gcash-step.active { color: #007bff; }
-        .gcash-step.done   { color: #28a745; }
-        .gcash-step-line { width: 40px; height: 2px; background: #e0e0e0; border-radius: 2px; }
-        .gcash-step-line.done { background: #28a745; }
+.gcash-icon { font-size: 36px; margin-bottom: 10px; }
+.gcash-modal h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; margin: 0 0 8px; }
+.gcash-modal p  { font-size: 13px; color: #666; margin: 0 0 12px; line-height: 1.5; }
+.gcash-modal p strong { color: #1a1a1a; }
 
-        .gcash-panel { display: none; text-align: center; }
-        .gcash-panel.active { display: block; }
+/* ── FIX: QR box — restored bottom padding, removed overflow:hidden ── */
+.gcash-qr-box {
+    border: 2px solid #007bff;
+    border-radius: 16px;
+    padding: 16px;              /* ← FIX: was "16px 16px 0 16px" */
+    margin: 0 auto 16px;
+    width: fit-content;
+    background: #f0f7ff;
+    /* overflow: hidden removed ← FIX */
+}
+.gcash-qr-box img { width: 140px; height: 140px; object-fit: contain; display: block; border-radius: 12px; }
 
-        .gcash-icon { font-size: 36px; margin-bottom: 10px; }
-        .gcash-modal h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; margin: 0 0 8px; }
-        .gcash-modal p  { font-size: 13px; color: #666; margin: 0 0 20px; line-height: 1.5; }
-        .gcash-modal p strong { color: #1a1a1a; }
+.gcash-amount-box {
+    background: #f0f7ff;
+    border: 1px solid #cce0ff;
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-bottom: 12px;
+}
+.gcash-amount-label { font-size: 11px; font-weight: 600; color: #007bff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.gcash-amount-value { font-size: 24px; font-weight: 700; color: #007bff; }
+.gcash-amount-sub   { font-size: 12px; color: #888; margin-top: 2px; }
 
-        .gcash-qr-box {
-            border: 2px solid #007bff; border-radius: 16px; padding: 16px 16px 0 16px;
-            margin: 0 auto 16px; width: fit-content; background: #f0f7ff; overflow: hidden;
-        }
-        .gcash-qr-box img { width: 160px; height: 160px; object-fit: contain; display: block; border-radius: 12px; }
+.gcash-upload-zone {
+    border: 2px dashed #ccc; border-radius: 14px; padding: 28px 20px;
+    cursor: pointer; transition: all 0.2s; margin-bottom: 20px;
+    background: #fafafa; position: relative;
+}
+.gcash-upload-zone:hover,
+.gcash-upload-zone.dragover { border-color: #007bff; background: #f0f7ff; }
+.gcash-upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.gcash-upload-icon { font-size: 32px; margin-bottom: 8px; }
+.gcash-upload-zone h4 { font-size: 14px; font-weight: 600; color: #333; margin: 0 0 4px; }
+.gcash-upload-zone p  { font-size: 12px; color: #aaa; margin: 0; }
 
-        .gcash-amount-box {
-            background: #f0f7ff; border: 1px solid #cce0ff;
-            border-radius: 12px; padding: 14px 20px; margin-bottom: 20px;
-        }
-        .gcash-amount-label { font-size: 11px; font-weight: 600; color: #007bff; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-        .gcash-amount-value { font-size: 28px; font-weight: 700; color: #007bff; }
-        .gcash-amount-sub   { font-size: 12px; color: #888; margin-top: 2px; }
+.gcash-preview {
+    display: none; position: relative; margin-bottom: 20px;
+    border-radius: 12px; overflow: hidden; border: 2px solid #28a745;
+}
+.gcash-preview img { width: 100%; max-height: 200px; object-fit: contain; display: block; background: #f5f5f5; }
+.gcash-preview-remove {
+    position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6);
+    color: #fff; border: none; border-radius: 50%; width: 28px; height: 28px;
+    font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
 
-        .gcash-upload-zone {
-            border: 2px dashed #ccc; border-radius: 14px; padding: 28px 20px;
-            cursor: pointer; transition: all 0.2s; margin-bottom: 20px;
-            background: #fafafa; position: relative;
-        }
-        .gcash-upload-zone:hover,
-        .gcash-upload-zone.dragover { border-color: #007bff; background: #f0f7ff; }
-        .gcash-upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-        .gcash-upload-icon { font-size: 32px; margin-bottom: 8px; }
-        .gcash-upload-zone h4 { font-size: 14px; font-weight: 600; color: #333; margin: 0 0 4px; }
-        .gcash-upload-zone p  { font-size: 12px; color: #aaa; margin: 0; }
+.gcash-btn-row { display: flex; gap: 10px; }
+.gcash-btn {
+    flex: 1; padding: 12px; border-radius: 12px;
+    font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600;
+    cursor: pointer; border: none; transition: all 0.2s;
+}
+.gcash-btn-outline { background: transparent; border: 1px solid #ddd; color: #666; }
+.gcash-btn-outline:hover   { background: #f5f5f5; }
+.gcash-btn-primary { background: #007bff; color: #fff; }
+.gcash-btn-primary:hover   { background: #0069d9; }
+.gcash-btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+.gcash-btn-success { background: #28a745; color: #fff; }
+.gcash-btn-success:hover   { background: #218838; }
+.gcash-btn-success:disabled { background: #ccc; cursor: not-allowed; }
 
-        .gcash-preview {
-            display: none; position: relative; margin-bottom: 20px;
-            border-radius: 12px; overflow: hidden; border: 2px solid #28a745;
-        }
-        .gcash-preview img { width: 100%; max-height: 200px; object-fit: contain; display: block; background: #f5f5f5; }
-        .gcash-preview-remove {
-            position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6);
-            color: #fff; border: none; border-radius: 50%; width: 28px; height: 28px;
-            font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-
-        .gcash-btn-row { display: flex; gap: 10px; }
-        .gcash-btn {
-            flex: 1; padding: 12px; border-radius: 12px;
-            font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600;
-            cursor: pointer; border: none; transition: all 0.2s;
-        }
-        .gcash-btn-outline { background: transparent; border: 1px solid #ddd; color: #666; }
-        .gcash-btn-outline:hover   { background: #f5f5f5; }
-        .gcash-btn-primary { background: #007bff; color: #fff; }
-        .gcash-btn-primary:hover   { background: #0069d9; }
-        .gcash-btn-primary:disabled { background: #ccc; cursor: not-allowed; }
-        .gcash-btn-success { background: #28a745; color: #fff; }
-        .gcash-btn-success:hover   { background: #218838; }
-        .gcash-btn-success:disabled { background: #ccc; cursor: not-allowed; }
-
-        .checkout-btn.gcash { background: #007bff; }
-        .checkout-btn.gcash:hover { background: #0069d9; }
+.checkout-btn.gcash { background: #007bff; }
+.checkout-btn.gcash:hover { background: #0069d9; }
