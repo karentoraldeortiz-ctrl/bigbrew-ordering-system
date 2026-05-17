@@ -6,22 +6,26 @@ $message = "";
 $success = false;
 $token = $_GET['token'] ?? '';
 
-if($token != "") {
-    // Check if token exists and not yet verified — expire after 24 hours
-    $check = mysqli_query($conn,
-        "SELECT * FROM users 
-         WHERE verify_token = '$token' 
+if ($token !== "") {
+    $check = mysqli_prepare($conn,
+        "SELECT id FROM users 
+         WHERE verify_token = ? 
          AND is_verified = 0
          AND created_at >= NOW() - INTERVAL 24 HOUR"
     );
+    mysqli_stmt_bind_param($check, "s", $token);
+    mysqli_stmt_execute($check);
+    mysqli_stmt_store_result($check);
 
-    if(mysqli_num_rows($check) > 0) {
-        // Mark as verified and clear token
-        mysqli_query($conn,
+    if (mysqli_stmt_num_rows($check) > 0) {
+        $update = mysqli_prepare($conn,
             "UPDATE users 
              SET is_verified = 1, verify_token = NULL 
-             WHERE verify_token = '$token'"
+             WHERE verify_token = ?"
         );
+        mysqli_stmt_bind_param($update, "s", $token);
+        mysqli_stmt_execute($update);
+
         $success = true;
         $message = "Your email has been verified! You can now log in.";
     } else {
@@ -56,7 +60,7 @@ if($token != "") {
             </span>
 
             <div class="forgot-pass" style="text-align:center; margin-top:16px;">
-                <?php if($success): ?>
+                <?php if ($success): ?>
                     <a href="login.php">Proceed to Login</a>
                 <?php else: ?>
                     <a href="signup.php">Back to Sign Up</a>

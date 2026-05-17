@@ -49,89 +49,69 @@ if(isset($_POST['signup'])){
 <html>
 <head>
   <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <style>
+    @media only screen and (max-width: 480px) {
+      .email-container { width: 100% !important; border-radius: 0 !important; }
+      .email-body { padding-left: 24px !important; padding-right: 24px !important; }
+    }
+  </style>
 </head>
 <body style='margin:0; padding:40px 16px; background-color:#FFF8E4; font-family:Arial, sans-serif;'>
 
   <table width='100%' cellpadding='0' cellspacing='0'>
     <tr>
       <td align='center'>
-        <table width='520' cellpadding='0' cellspacing='0'
-          style='
-            background-color:#ffffff;
-            border-radius:22px;
-            overflow:hidden;
-            box-shadow:0 8px 28px rgba(45,30,23,0.10);
-          '>
+        <table width='480' cellpadding='0' cellspacing='0' class='email-container'
+          style='background:#ffffff; border-radius:12px; overflow:hidden;'>
 
           <!-- TOP STRIP -->
           <tr>
-            <td style='background:#2D1E17; height:10px;'></td>
+            <td style='background:#2D1E17; height:4px;'></td>
           </tr>
 
           <!-- HEADER -->
           <tr>
-            <td align='center' style='padding:42px 40px 20px;'>
-              <div style='font-size:34px; font-weight:800; letter-spacing:1px; color:#2D1E17; line-height:1;'>
+            <td align='center' class='email-body' style='padding:40px 40px 0;'>
+              <div style='font-size:26px; font-weight:800; letter-spacing:2px; color:#2D1E17;'>
                 BIGBREW
               </div>
-              <div style='font-size:12px; letter-spacing:5px; color:#B86D25; margin-top:8px; text-transform:uppercase; font-weight:700;'>
+              <div style='font-size:11px; letter-spacing:5px; color:#B86D25; margin-top:6px; text-transform:uppercase; font-weight:600;'>
                 MAYSAN
               </div>
-              <div style='width:54px; height:4px; border-radius:999px; background:#B86D25; margin:22px auto 0;'></div>
             </td>
           </tr>
 
-          <!-- TITLE -->
+          <!-- BODY -->
           <tr>
-            <td style='padding:0 42px;'>
-              <h2 style='color:#2D1E17; font-size:28px; margin:0 0 16px; text-align:center; font-weight:800;'>
-                Verify Your Email
+            <td class='email-body' style='padding:32px 40px 0; text-align:center;'>
+              <h2 style='color:#2D1E17; font-size:17px; font-weight:600; margin:0 0 12px;'>
+                Verify your email
               </h2>
-              <p style='color:#5F5148; font-size:15px; line-height:1.8; margin:0 0 30px; text-align:center;'>
-                Welcome to BigBrew Maysan! Please verify your email address
-                by clicking the button below to activate your account.
+              <p style='color:#5F5148; font-size:14px; line-height:1.7; margin:0;'>
+                Welcome to BigBrew Maysan! Click below to verify your email address and activate your account.
               </p>
             </td>
           </tr>
 
           <!-- BUTTON -->
           <tr>
-            <td align='center' style='padding:0 42px 34px;'>
+            <td align='center' class='email-body' style='padding:28px 40px;'>
               <a href='$verify_link'
-                 style='
-                  display:inline-block;
-                  background-color:#B86D25;
-                  color:#ffffff;
-                  padding:15px 38px;
-                  border-radius:999px;
-                  text-decoration:none;
-                  font-size:15px;
-                  font-weight:700;
-                  letter-spacing:0.5px;
-                 '>
-                Verify My Email
+                style='display:inline-block; background:#B86D25; color:#ffffff; padding:12px 32px; border-radius:999px; text-decoration:none; font-size:14px; font-weight:600; letter-spacing:0.3px;'>
+                Verify my email
               </a>
-            </td>
-          </tr>
-
-          <!-- INFO BOX -->
-          <tr>
-            <td style='padding:0 42px 28px;'>
-              <div style='background:#FFF8E4; border-radius:16px; padding:18px 20px;'>
-                <p style='margin:0; color:#5F5148; font-size:13px; line-height:1.7; text-align:center;'>
-                  If you did not create an account, you can safely ignore this email.
-                  <br><br>
-                  This verification link will expire after
-                  <strong style='color:#2D1E17;'>24 hours</strong>.
-                </p>
-              </div>
             </td>
           </tr>
 
           <!-- FOOTER -->
           <tr>
-            <td align='center' style='padding:0 42px 34px;'>
-              <p style='color:#8A7B70; font-size:12px; margin:0; line-height:1.6;'>
+            <td class='email-body' style='padding:20px 40px 32px; border-top:1px solid #F0EAE0; text-align:center;'>
+              <p style='color:#9C8E85; font-size:12px; line-height:1.7; margin:0;'>
+                If you didn't create an account, you can safely ignore this email.
+                This link expires in <strong style='color:#5F5148;'>24 hours</strong>.
+              </p>
+              <p style='color:#C0B4AE; font-size:11px; margin:16px 0 0;'>
                 &copy; 2026 BigBrew Maysan. All rights reserved.
               </p>
             </td>
