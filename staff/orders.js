@@ -140,4 +140,4 @@ document.querySelectorAll('.order-card').forEach(card => {
 });
 
 // ── Start polling every 2 seconds ────────────────────────────────────────
-setInterval(pollOrders, 2000);
+setInterval(pollOrders, 1000);

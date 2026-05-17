@@ -50,8 +50,8 @@ if ($isLoggedIn) {
     }
 }
 
-$order_success = false;
-$order_id      = null;
+$order_success = isset($_GET['order_success']) && isset($_GET['order_id']);
+$order_id      = $order_success ? (int)$_GET['order_id'] : null;
 $message       = "";
 
 if (isset($_SESSION['order_success'])) {
@@ -174,7 +174,7 @@ if (isset($_POST['place_order']) && $isLoggedIn && !$is_banned) {
                         $_SESSION['order_id']      = $order_id;
 
                         // ✅ FIX: Added $order_id to redirect
-                        header("Location: orderConfirmed.php?order_id=" . $order_id);
+                        header("Location: cart.php?order_success=1&order_id=" . $order_id);
                         exit();
                     }
                 }
@@ -931,6 +931,13 @@ function submitOrderWithReceipt() {
 document.getElementById('gcashModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeGCashModal();
 });
+
+
+// Clear order_success params from URL after modal shows
+if (window.location.search.includes('order_success=1')) {
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+}
 </script>
 
 <script src="js/global.js"></script>

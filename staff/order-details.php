@@ -82,7 +82,8 @@ if (isset($_POST['verify_receipt'])) {
         mysqli_query($conn,
             "UPDATE orders
              SET gcash_receipt_status = 'verified',
-                 order_status = 'preparing'
+                 order_status = 'preparing',
+                 gcash_rejection_reason = NULL
              WHERE order_id = '$order_id'"
         );
         $notif_title = "GCash Payment Verified ✅";
@@ -90,11 +91,19 @@ if (isset($_POST['verify_receipt'])) {
         mysqli_query($conn, "INSERT INTO notifications (user_id, order_id, title, message) VALUES ('$uid', '$order_id', '$notif_title', '$notif_msg')");
 
     } elseif ($action === 'rejected') {
+        $reject_reason = mysqli_real_escape_string($conn, $_POST['reject_reason'] ?? '');
+        if (empty($reject_reason)) {
+            header("Location: order-details.php?order_id=$order_id&reject_err=1");
+            exit;
+        }
         mysqli_query($conn,
-            "UPDATE orders SET gcash_receipt_status = 'rejected' WHERE order_id = '$order_id'"
+            "UPDATE orders
+             SET gcash_receipt_status = 'rejected',
+                 gcash_rejection_reason = '$reject_reason'
+             WHERE order_id = '$order_id'"
         );
         $notif_title = "GCash Payment Rejected ❌";
-        $notif_msg   = "Your GCash downpayment for Order #$order_code was rejected. Please re-upload your receipt.";
+        $notif_msg   = "Your GCash downpayment for Order #$order_code was rejected. Reason: $reject_reason. Please re-upload your receipt.";
         mysqli_query($conn, "INSERT INTO notifications (user_id, order_id, title, message) VALUES ('$uid', '$order_id', '$notif_title', '$notif_msg')");
     }
 
@@ -109,13 +118,11 @@ if (isset($_POST['update_status'])) {
         exit;
     }
 
-    // Block status change if receipt is still pending
     if ($order['gcash_receipt_status'] === 'pending_verification') {
         header("Location: order-details.php?order_id=$order_id&receipt_warn=1");
         exit;
     }
 
-    // Block if receipt was rejected (can't proceed)
     if ($order['gcash_receipt_status'] === 'rejected') {
         header("Location: order-details.php?order_id=$order_id&receipt_warn=2");
         exit;
@@ -188,133 +195,102 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
     <link rel="stylesheet" href="staff.css">
 
     <style>
-        /* ── GCash Receipt Card ───────────────────────────────────────── */
-        .receipt-card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-        }
+        .receipt-card { background: white; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
 
         .receipt-status-banner {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            font-weight: 600;
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 14px; border-radius: 10px; margin-bottom: 16px;
+            font-size: 13px; font-weight: 600;
         }
         .receipt-status-banner.pending  { background: rgba(255,193,7,0.15);  color: #ffc107; border: 1px solid rgba(255,193,7,0.3); }
         .receipt-status-banner.verified { background: rgba(40,167,69,0.15);  color: #28a745; border: 1px solid rgba(40,167,69,0.3); }
         .receipt-status-banner.rejected { background: rgba(220,53,69,0.15);  color: #dc3545; border: 1px solid rgba(220,53,69,0.3); }
 
         .receipt-img-wrap {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 14px;
-            background: #111;
-            cursor: pointer;
+            position: relative; border-radius: 12px; overflow: hidden;
+            margin-bottom: 14px; background: #111; cursor: pointer;
         }
-        .receipt-img-wrap img {
-            width: 100%;
-            max-height: 280px;
-            object-fit: contain;
-            display: block;
-            transition: transform 0.2s;
-        }
+        .receipt-img-wrap img { width: 100%; max-height: 280px; object-fit: contain; display: block; transition: transform 0.2s; }
         .receipt-img-wrap:hover img { transform: scale(1.02); }
         .receipt-zoom-hint {
-            position: absolute;
-            bottom: 8px;
-            right: 10px;
-            background: rgba(0,0,0,0.6);
-            color: #fff;
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 6px;
+            position: absolute; bottom: 8px; right: 10px;
+            background: rgba(0,0,0,0.6); color: #fff; font-size: 11px;
+            padding: 4px 8px; border-radius: 6px;
         }
 
         .receipt-info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-            font-size: 13px;
-            color: #aaa;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 14px; font-size: 13px; color: #aaa;
         }
         .receipt-info-row strong { color: #fff; font-size: 15px; }
 
-        .receipt-action-row {
-            display: flex;
-            gap: 10px;
-        }
+        .receipt-action-row { display: flex; gap: 10px; }
         .receipt-btn {
-            flex: 1;
-            padding: 11px;
-            border-radius: 10px;
-            border: none;
-            font-family: 'Poppins', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+            flex: 1; padding: 11px; border-radius: 10px; border: none;
+            font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
         }
-        .receipt-btn-reject  { background: rgba(220,53,69,0.15);  color: #dc3545; border: 1px solid rgba(220,53,69,0.3); }
+        .receipt-btn-reject  { background: rgba(220,53,69,0.15); color: #dc3545; border: 1px solid rgba(220,53,69,0.3); }
         .receipt-btn-reject:hover  { background: rgba(220,53,69,0.3); }
         .receipt-btn-verify  { background: #28a745; color: #fff; }
         .receipt-btn-verify:hover  { background: #218838; }
 
-        /* Status warning banner */
         .od-warn-banner {
-            background: rgba(255,193,7,0.12);
-            border: 1px solid rgba(255,193,7,0.35);
-            border-radius: 10px;
-            padding: 12px 16px;
-            font-size: 13px;
-            color: #ffc107;
-            margin-bottom: 14px;
-            display: flex;
-            gap: 8px;
-            align-items: flex-start;
+            background: rgba(255,193,7,0.12); border: 1px solid rgba(255,193,7,0.35);
+            border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #ffc107;
+            margin-bottom: 14px; display: flex; gap: 8px; align-items: flex-start;
         }
 
-        /* Lightbox */
         .receipt-lightbox {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 99999;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            z-index: 99999; align-items: center; justify-content: center; backdrop-filter: blur(4px);
         }
         .receipt-lightbox.active { display: flex; }
-        .receipt-lightbox img {
-            max-width: 92vw;
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 12px;
-        }
+        .receipt-lightbox img { max-width: 92vw; max-height: 90vh; object-fit: contain; border-radius: 12px; }
         .receipt-lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: #fff;
-            font-size: 22px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.15);
+            border: none; color: #fff; font-size: 22px; width: 40px; height: 40px;
+            border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
+
+        /* ── Reject Reason Modal ── */
+        .reject-modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            z-index: 99999; align-items: center; justify-content: center;
+        }
+        .reject-modal-overlay.active { display: flex; }
+        .reject-modal {
+            background: #1e1e1e; border-radius: 16px; padding: 28px 24px;
+            width: 90%; max-width: 400px; font-family: Poppins;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        .reject-modal h3 { margin: 0 0 6px; font-size: 16px; color: #fff; }
+        .reject-modal p  { margin: 0 0 16px; font-size: 13px; color: #aaa; }
+
+        .reject-reason-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+        .reject-reason-option {
+            display: flex; align-items: center; gap: 10px; cursor: pointer;
+            background: #2a2a2a; border-radius: 10px; padding: 12px 14px;
+        }
+        .reject-reason-option span { font-size: 13px; color: #fff; }
+
+        .reject-custom-input {
+            width: 100%; padding: 10px 12px; background: #2a2a2a; border: 1px solid #444;
+            border-radius: 10px; color: #fff; font-family: Poppins; font-size: 13px;
+            margin-bottom: 16px; resize: none; display: none;
+        }
+        .reject-custom-input:focus { outline: none; border-color: #dc3545; }
+
+        .reject-modal-actions { display: flex; gap: 10px; }
+        .reject-modal-actions button {
+            flex: 1; padding: 11px; border-radius: 10px; font-family: Poppins;
+            font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+        }
+        .btn-reject-cancel { background: transparent; border: 1px solid #444 !important; color: #aaa; }
+        .btn-reject-confirm { background: #dc3545; color: #fff; }
+        .btn-reject-confirm:hover { background: #c82333; }
+
+        .reject-err { color: #dc3545; font-size: 12px; margin-bottom: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -355,7 +331,6 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
 
         <div class="od-content">
 
-            <!-- WARNING BANNERS -->
             <?php if (isset($_GET['receipt_warn'])): ?>
             <div class="od-warn-banner">
                 <span>⚠️</span>
@@ -433,7 +408,6 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
 
                 <hr class="od-divider">
 
-                <!-- CUSTOMER INFO -->
                 <h4 class="od-section-title">Customer Information</h4>
                 <div class="od-customer-grid">
                     <div>
@@ -451,14 +425,13 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
                 </div>
             </div>
 
-            <!-- ── GCASH RECEIPT CARD ─────────────────────────────────────── -->
+            <!-- GCASH RECEIPT CARD -->
             <?php if ($receipt_status !== 'not_required'): ?>
             <div class="od-card receipt-card">
                 <h4 class="od-section-title" style="margin-bottom:14px;">
                     💙 GCash Downpayment Receipt
                 </h4>
 
-                <!-- Status banner -->
                 <?php
                     $banner_class = $receipt_status === 'verified' ? 'verified' :
                                    ($receipt_status === 'rejected' ? 'rejected' : 'pending');
@@ -472,7 +445,13 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
                     <span><?php echo $banner_text; ?></span>
                 </div>
 
-                <!-- Downpayment amount -->
+                <!-- Show rejection reason if rejected -->
+                <?php if ($receipt_status === 'rejected' && !empty($order['gcash_rejection_reason'])): ?>
+                <div style="background:rgba(220,53,69,0.1); border:1px solid rgba(220,53,69,0.3); border-radius:10px; padding:10px 14px; margin-bottom:14px; font-size:13px; color:#dc3545;">
+                    <strong>Rejection Reason:</strong> <?php echo htmlspecialchars($order['gcash_rejection_reason']); ?>
+                </div>
+                <?php endif; ?>
+
                 <?php if ($downpayment): ?>
                 <div class="receipt-info-row">
                     <span>Required Downpayment (50%)</span>
@@ -480,11 +459,9 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
                 </div>
                 <?php endif; ?>
 
-                <!-- Receipt image -->
                 <?php if ($has_receipt): ?>
                 <div class="receipt-img-wrap" onclick="openReceiptLightbox()">
-                    <img src="../uploads/receipts/<?php echo htmlspecialchars($receipt_file); ?>"
-                         alt="GCash Receipt">
+                    <img src="../uploads/receipts/<?php echo htmlspecialchars($receipt_file); ?>" alt="GCash Receipt">
                     <div class="receipt-zoom-hint">🔍 Tap to zoom</div>
                 </div>
                 <?php else: ?>
@@ -493,14 +470,14 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
                 </div>
                 <?php endif; ?>
 
-                <!-- Action buttons (only show if pending and has receipt) -->
                 <?php if ($receipt_status === 'pending_verification' && $has_receipt): ?>
                 <form method="POST" id="receiptVerifyForm">
                     <input type="hidden" name="verify_receipt" value="1">
                     <input type="hidden" name="receipt_action" id="receiptActionInput" value="">
+                    <input type="hidden" name="reject_reason" id="rejectReasonInput" value="">
                     <div class="receipt-action-row">
                         <button type="button" class="receipt-btn receipt-btn-reject"
-                            onclick="submitReceiptAction('rejected')">
+                            onclick="openRejectModal()">
                             ✕ Reject
                         </button>
                         <button type="button" class="receipt-btn receipt-btn-verify"
@@ -601,6 +578,43 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
                 </div>
             </div>
         </div>
+
+        <!-- REJECT REASON MODAL -->
+        <div class="reject-modal-overlay" id="rejectModal">
+            <div class="reject-modal">
+                <h3>Reject Receipt</h3>
+                <p>Select or type a reason for rejection:</p>
+
+                <div class="reject-reason-options">
+                    <label class="reject-reason-option">
+                        <input type="radio" name="reject_reason_radio" value="Amount paid does not match the required downpayment.">
+                        <span>💰 Wrong amount paid</span>
+                    </label>
+                    <label class="reject-reason-option">
+                        <input type="radio" name="reject_reason_radio" value="Receipt is blurry or unreadable.">
+                        <span>📷 Blurry or unreadable receipt</span>
+                    </label>
+                    <label class="reject-reason-option">
+                        <input type="radio" name="reject_reason_radio" value="Receipt appears to be invalid or edited.">
+                        <span>🚫 Invalid or edited receipt</span>
+                    </label>
+                    <label class="reject-reason-option">
+                        <input type="radio" name="reject_reason_radio" value="other">
+                        <span>✏️ Other (type below)</span>
+                    </label>
+                </div>
+
+                <textarea class="reject-custom-input" id="rejectCustomText"
+                    placeholder="Type your reason here..." rows="3"></textarea>
+
+                <p class="reject-err" id="rejectErr">⚠️ Please select or enter a reason.</p>
+
+                <div class="reject-modal-actions">
+                    <button class="btn-reject-cancel" onclick="closeRejectModal()">Go Back</button>
+                    <button class="btn-reject-confirm" onclick="confirmReject()">Confirm Reject</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- Receipt Lightbox -->
@@ -654,15 +668,61 @@ document.getElementById('odCancelModal').addEventListener('click', function(e) {
 
 // ── Receipt verification ──────────────────────────────────────────────────────
 function submitReceiptAction(action) {
-    const confirmMsg = action === 'verified'
-        ? 'Verify this GCash receipt and allow the order to proceed?'
-        : 'Reject this receipt? The customer will need to re-upload.';
-
-    if (!confirm(confirmMsg)) return;
-
+    if (!confirm('Verify this GCash receipt and allow the order to proceed?')) return;
     document.getElementById('receiptActionInput').value = action;
     document.getElementById('receiptVerifyForm').submit();
 }
+
+// ── Reject Modal ──────────────────────────────────────────────────────────────
+function openRejectModal() {
+    document.getElementById('rejectModal').classList.add('active');
+}
+
+function closeRejectModal() {
+    document.getElementById('rejectModal').classList.remove('active');
+    document.querySelectorAll('input[name="reject_reason_radio"]').forEach(r => r.checked = false);
+    document.getElementById('rejectCustomText').value = '';
+    document.getElementById('rejectCustomText').style.display = 'none';
+    document.getElementById('rejectErr').style.display = 'none';
+}
+
+// Show/hide custom text area
+document.querySelectorAll('input[name="reject_reason_radio"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const customInput = document.getElementById('rejectCustomText');
+        customInput.style.display = this.value === 'other' ? 'block' : 'none';
+    });
+});
+
+function confirmReject() {
+    const selected = document.querySelector('input[name="reject_reason_radio"]:checked');
+    const errEl    = document.getElementById('rejectErr');
+
+    if (!selected) {
+        errEl.style.display = 'block';
+        return;
+    }
+
+    let reason = selected.value;
+
+    if (reason === 'other') {
+        reason = document.getElementById('rejectCustomText').value.trim();
+        if (!reason) {
+            errEl.style.display = 'block';
+            errEl.textContent   = '⚠️ Please type a reason.';
+            return;
+        }
+    }
+
+    errEl.style.display = 'none';
+    document.getElementById('rejectReasonInput').value  = reason;
+    document.getElementById('receiptActionInput').value = 'rejected';
+    document.getElementById('receiptVerifyForm').submit();
+}
+
+document.getElementById('rejectModal').addEventListener('click', function(e) {
+    if (e.target === this) closeRejectModal();
+});
 
 // ── Lightbox ──────────────────────────────────────────────────────────────────
 function openReceiptLightbox() {
@@ -674,7 +734,10 @@ function closeReceiptLightbox() {
     document.body.style.overflow = '';
 }
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeReceiptLightbox();
+    if (e.key === 'Escape') {
+        closeReceiptLightbox();
+        closeRejectModal();
+    }
 });
 </script>
 </body>

@@ -170,18 +170,19 @@ function fetchNotifications() {
     .then(r => r.json())
     .then(data => {
       if (data.count === 0) return;
-      if (sessionStorage.getItem('notif_alerted')) return;
 
       const notif = data.notifications.find(n => n.is_read == 0);
       if (!notif) return;
 
-     const goToPage = notif.title.includes('Rejected')
-  ? `receipt.php?order_id=${notif.order_id}`
-  : `receipt.php?order_id=${notif.order_id}`;
+      // Check kung nalabas na yung specific notif na ito
+      const alertedKey = `notif_alerted_${notif.notification_id}`;
+      if (sessionStorage.getItem(alertedKey)) return;
+
+      const goToPage = `receipt.php?order_id=${notif.order_id}`;
 
       const confirmed = confirm(`🔔 ${notif.title}\n\n${notif.message}\n\nTap OK to view.`);
 
-      sessionStorage.setItem('notif_alerted', '1');
+      sessionStorage.setItem(alertedKey, '1');
       fetch('mark_notifications_read.php');
 
       if (confirmed) {
