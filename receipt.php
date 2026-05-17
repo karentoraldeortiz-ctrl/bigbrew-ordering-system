@@ -122,14 +122,19 @@ if($status === 'pending') {
 // GCash fields
 $gcash_receipt_status   = $order['gcash_receipt_status']   ?? 'not_required';
 $gcash_rejection_reason = $order['gcash_rejection_reason'] ?? '';
-$gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
+$gcash_downpayment      = (float)($order['gcash_downpayment'] ?? 0);
+$total_amount           = (float)($order['total_amount'] ?? 0);
 
-// ── FIX: Check payment method for correct labels ──────────────────────────────
-$payment_method = $order['payment_method'] ?? 'pickup';
-$is_full_gcash  = ($payment_method === 'gcash_full');
-$payment_label  = $is_full_gcash ? 'GCash (Full Payment)' : 'Pay upon Pickup';
+$payment_method   = $order['payment_method'] ?? 'pickup';
+$is_full_gcash    = ($payment_method === 'gcash_full');
+$payment_label    = $is_full_gcash ? 'GCash (Full Payment)' : 'Pay upon Pickup';
 $gcash_type_label = $is_full_gcash ? 'Full Payment' : 'Downpayment';
 $gcash_type_desc  = $is_full_gcash ? 'full payment' : 'downpayment';
+
+// For completed orders — compute balance paid upon pickup (downpayment mode only)
+$balance_pickup = (!$is_full_gcash && $gcash_downpayment > 0)
+    ? ($total_amount - $gcash_downpayment)
+    : 0;
 ?>
 <!doctype html>
 <html lang="en">
@@ -144,6 +149,7 @@ $gcash_type_desc  = $is_full_gcash ? 'full payment' : 'downpayment';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 
     <style>
+        /* ── GCash Status Box (non-completed orders) ── */
         .gcash-status-box {
             border-radius: 16px; padding: 20px; margin-bottom: 16px;
             text-align: center; font-family: 'Poppins', sans-serif;
@@ -165,6 +171,60 @@ $gcash_type_desc  = $is_full_gcash ? 'full payment' : 'downpayment';
             font-weight: 600; text-decoration: none; transition: background 0.2s;
         }
         .gcash-reupload-btn:hover { background: #c62828; }
+
+        /* ── Payment Summary Box (completed orders only) ── */
+        .payment-summary-box {
+            background: #f0fff4;
+            border: 1.5px solid #81c784;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .payment-summary-box .ps-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .payment-summary-box .ps-icon {
+            font-size: 22px;
+        }
+        .payment-summary-box .ps-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0;
+        }
+        .payment-summary-box .ps-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            padding: 6px 0;
+            border-bottom: 1px solid #d4edda;
+            color: #444;
+        }
+        .payment-summary-box .ps-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .payment-summary-box .ps-row span { color: #666; }
+        .payment-summary-box .ps-row strong { color: #1a1a1a; }
+        .payment-summary-box .ps-badge {
+            display: inline-block;
+            background: #28a745;
+            color: #fff;
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .payment-summary-box .ps-badge.pickup {
+            background: #6c757d;
+        }
 
         /* ── GCash Cancel Warning Modal ── */
         .gcash-warn-overlay {
@@ -242,7 +302,6 @@ $gcash_type_desc  = $is_full_gcash ? 'full payment' : 'downpayment';
                 <strong><?php echo htmlspecialchars($customer_name); ?></strong>
             </div>
 
-            <!-- FIX: Show correct payment method from DB -->
             <div class="detail-line">
                 <span>Mode of Payment:</span>
                 <strong><?php echo htmlspecialchars($payment_label); ?></strong>
@@ -287,8 +346,50 @@ $gcash_type_desc  = $is_full_gcash ? 'full payment' : 'downpayment';
             </div>
         </div>
 
-        <!-- GCash Receipt Status — FIX: labels now reflect payment_method -->
-        <?php if ($gcash_receipt_status !== 'not_required'): ?>
+        <?php if ($status === 'completed' && $gcash_receipt_status !== 'not_required'): ?>
+        <!-- ── PAYMENT SUMMARY (completed orders with GCash) ── -->
+        <div class="payment-summary-box">
+            <div class="ps-header">
+                <span class="ps-icon">💙</span>
+                <p class="ps-title">
+                    <?php echo $is_full_gcash ? 'GCash Payment' : 'GCash Downpayment'; ?>
+                </p>
+            </div>
+
+            <?php if ($is_full_gcash): ?>
+                <!-- Full GCash payment -->
+                <div class="ps-row">
+                    <span>GCash Paid</span>
+                    <strong>₱<?php echo number_format($total_amount, 2); ?></strong>
+                </div>
+                <div class="ps-row">
+                    <span>Status</span>
+                    <span class="ps-badge">Paid</span>
+                </div>
+                <div class="ps-row">
+                    <span>Order Status</span>
+                    <span class="ps-badge">Completed</span>
+                </div>
+
+            <?php else: ?>
+                <!-- Downpayment + balance upon pickup -->
+                <div class="ps-row">
+                    <span>Downpayment Paid (GCash)</span>
+                    <strong>₱<?php echo number_format($gcash_downpayment, 2); ?></strong>
+                </div>
+                <div class="ps-row">
+                    <span>Balance Paid Upon Pickup</span>
+                    <strong>₱<?php echo number_format($balance_pickup, 2); ?></strong>
+                </div>
+                <div class="ps-row">
+                    <span>Order Status</span>
+                    <span class="ps-badge">Completed</span>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <?php elseif ($status !== 'completed' && $gcash_receipt_status !== 'not_required'): ?>
+        <!-- ── GCASH STATUS BOX (non-completed orders) ── -->
         <div class="gcash-status-box <?php echo htmlspecialchars($gcash_receipt_status); ?>">
 
             <?php if ($gcash_receipt_status === 'pending_verification'): ?>
@@ -325,6 +426,8 @@ $gcash_type_desc  = $is_full_gcash ? 'full payment' : 'downpayment';
         </div>
         <?php endif; ?>
 
+        <!-- Pickup Instructions — hidden when completed or cancelled -->
+        <?php if ($status !== 'completed' && $status !== 'cancelled'): ?>
         <div class="pickup-box">
             <h4>Pickup Instructions</h4>
             <ol>
@@ -336,6 +439,7 @@ $gcash_type_desc  = $is_full_gcash ? 'full payment' : 'downpayment';
                 <li><span>Enjoy your drinks!</span></li>
             </ol>
         </div>
+        <?php endif; ?>
 
         <div class="receipt-actions">
             <?php if($status === 'pending'): ?>
