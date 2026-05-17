@@ -16,7 +16,6 @@ if(!isset($_GET['order_id']) || !is_numeric($_GET['order_id'])) {
 $user_id  = $_SESSION['user_id'];
 $order_id = (int)$_GET['order_id'];
 
-// Check if already reviewed
 $already_reviewed = false;
 $rev_check = mysqli_query($conn,
     "SELECT review_id FROM reviews WHERE user_id = '$user_id' LIMIT 1"
@@ -99,7 +98,7 @@ if($status === 'pending') {
     $receipt_subtitle = 'Thank you, Brew! Buy again.';
 } elseif($status === 'cancelled') {
     $receipt_title    = 'Order Cancelled';
-    if (!empty($order['cancelled_by']) && $order['cancelled_by'] === 'staff' && $order['cancel_reason'] === 'no_show') {
+    if (!empty($order['cancelled_by']) && $order['cancelled_by'] === 'staff' && $order['cancel_reason_staff'] === 'no_show') {
         $ns_q    = mysqli_query($conn, "SELECT no_show_count FROM users WHERE user_id = '$user_id'");
         $ns_row  = mysqli_fetch_assoc($ns_q);
         $ns_count = (int)($ns_row['no_show_count'] ?? 0);
@@ -139,62 +138,62 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
 
     <style>
         .gcash-status-box {
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            text-align: center;
-            font-family: 'Poppins', sans-serif;
+            border-radius: 16px; padding: 20px; margin-bottom: 16px;
+            text-align: center; font-family: 'Poppins', sans-serif;
         }
-        .gcash-status-box.pending_verification {
-            background: #fffbea;
-            border: 1.5px solid #ffe082;
-        }
-        .gcash-status-box.verified {
-            background: #f0fff4;
-            border: 1.5px solid #81c784;
-        }
-        .gcash-status-box.rejected {
-            background: #fff5f5;
-            border: 1.5px solid #e57373;
-        }
+        .gcash-status-box.pending_verification { background: #fffbea; border: 1.5px solid #ffe082; }
+        .gcash-status-box.verified             { background: #f0fff4; border: 1.5px solid #81c784; }
+        .gcash-status-box.rejected             { background: #fff5f5; border: 1.5px solid #e57373; }
         .gcash-status-icon { font-size: 32px; margin-bottom: 8px; }
         .gcash-status-box h4 { font-size: 15px; font-weight: 700; margin: 0 0 6px; color: #1a1a1a; }
         .gcash-status-box p  { font-size: 13px; color: #555; margin: 0 0 12px; line-height: 1.5; }
         .gcash-dp-pill {
-            display: inline-block;
-            background: #fff3cd;
-            border: 1px solid #ffe082;
-            border-radius: 20px;
-            padding: 4px 14px;
-            font-size: 13px;
-            color: #6d4c00;
+            display: inline-block; background: #fff3cd; border: 1px solid #ffe082;
+            border-radius: 20px; padding: 4px 14px; font-size: 13px; color: #6d4c00;
         }
         .gcash-dp-pill.verified { background: #e8f5e9; border-color: #81c784; color: #2e7d32; }
         .gcash-reupload-btn {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 10px 20px;
-            background: #e53935;
-            color: #fff;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: background 0.2s;
+            display: inline-block; margin-top: 8px; padding: 10px 20px;
+            background: #e53935; color: #fff; border-radius: 10px; font-size: 13px;
+            font-weight: 600; text-decoration: none; transition: background 0.2s;
         }
         .gcash-reupload-btn:hover { background: #c62828; }
+
+        /* ── GCash Cancel Warning Modal ── */
+        .gcash-warn-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.55); z-index: 9999;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+        .gcash-warn-overlay.active { display: flex; }
+        .gcash-warn-modal {
+            background: #fff; border-radius: 20px; padding: 28px 24px;
+            width: 90%; max-width: 400px; font-family: 'Poppins', sans-serif;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2); text-align: center;
+        }
+        .gcash-warn-icon  { font-size: 36px; margin-bottom: 12px; }
+        .gcash-warn-modal h3 { font-size: 17px; font-weight: 700; color: #1a1a1a; margin: 0 0 10px; }
+        .gcash-warn-modal p  { font-size: 13px; color: #555; line-height: 1.6; margin: 0 0 20px; }
+        .gcash-warn-actions  { display: flex; gap: 10px; }
+        .gcash-warn-actions button {
+            flex: 1; padding: 12px; border-radius: 12px;
+            font-family: 'Poppins', sans-serif; font-size: 13px;
+            font-weight: 600; cursor: pointer; border: none;
+        }
+        .btn-warn-back    { background: #f5f5f5; color: #555; }
+        .btn-warn-confirm { background: #e53935; color: #fff; }
+        .btn-warn-confirm:hover { background: #c62828; }
     </style>
 </head>
 <body>
 
-    <!-- TOP BAR -->
     <div class="topbar">
         <a href="javascript:history.back()" class="back-btn">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
     </div>
 
-    <!-- RECEIPT CARD -->
     <div class="receipt-card">
 
         <div class="receipt-header">
@@ -328,8 +327,33 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
 
         <div class="receipt-actions">
             <?php if($status === 'pending'): ?>
-                <button class="btn-cancel-order btn-full" onclick="showCancelModal()">Cancel Order</button>
 
+                <?php if($gcash_receipt_status === 'verified'): ?>
+                    <!-- Verified na — hindi na pwedeng mag-cancel -->
+                    <button class="btn-cancel-order btn-full btn-disabled-cancel" disabled>
+                        Cancel Order
+                    </button>
+                    <p style="font-size:12px; color:#e53935; text-align:center; margin-top:6px;">
+                        ⚠️ Cancellation is no longer allowed. Your GCash payment has been verified and is non-refundable.
+                    </p>
+
+                <?php elseif($gcash_receipt_status === 'pending_verification'): ?>
+                    <!-- May GCash pero hindi pa verified — may warning bago mag-cancel -->
+                    <button class="btn-cancel-order btn-full" onclick="showGcashCancelWarning()">
+                        Cancel Order
+                    </button>
+                    <p style="font-size:12px; color:#f39c12; text-align:center; margin-top:6px;">
+                        ⚠️ Cancellation allowed since payment is not yet verified. Note: GCash payment is non-refundable.
+                    </p>
+
+                <?php else: ?>
+                    <!-- Walang GCash — normal cancel -->
+                    <button class="btn-cancel-order btn-full" onclick="showCancelModal()">
+                        Cancel Order
+                    </button>
+                <?php endif; ?>
+
+                <!-- Cancel Confirmation Modal -->
                 <div id="cancelModal" class="auth-modal-overlay" style="display:none;">
                     <div class="auth-modal-card">
                         <div class="auth-modal-icon">🗑️</div>
@@ -365,10 +389,7 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
                     <button class="btn-submit-review" id="btnSubmitReview">Submit</button>
                 </div>
                 <div class="receipt-btn-row">
-                    <button class="btn-cancel-order btn-disabled-cancel" disabled
-                            title="Completed orders cannot be cancelled.">
-                        Cancel Order
-                    </button>
+                    <button class="btn-cancel-order btn-disabled-cancel" disabled>Cancel Order</button>
                     <form method="POST" action="buy_again.php" style="flex:1;">
                         <input type="hidden" name="order_id" value="<?php echo $order_id; ?>">
                         <button type="submit" class="btn-buy-again">Buy Again</button>
@@ -386,6 +407,23 @@ $gcash_downpayment      = $order['gcash_downpayment']      ?? 0;
         </div>
 
     </div><!-- /.receipt-card -->
+
+    <!-- GCash Cancel Warning Modal -->
+    <div class="gcash-warn-overlay" id="gcashWarnModal">
+        <div class="gcash-warn-modal">
+            <div class="gcash-warn-icon">⚠️</div>
+            <h3>Cancel with GCash Payment?</h3>
+            <p>
+                Once the payment has been made, cancellation is allowed
+                <strong>only if the payment has not yet been verified</strong> by our staff.<br><br>
+                Please note: <strong style="color:#e53935;">The payment made is non-refundable.</strong>
+            </p>
+            <div class="gcash-warn-actions">
+                <button class="btn-warn-back" onclick="closeGcashWarnModal()">Go Back</button>
+                <button class="btn-warn-confirm" onclick="proceedCancel()">Yes, Proceed</button>
+            </div>
+        </div>
+    </div>
 
 <script>
 const ORDER_ID          = <?php echo $order_id; ?>;
@@ -411,6 +449,7 @@ if (CURR_STATUS !== 'completed' && CURR_STATUS !== 'cancelled') {
     setInterval(pollStatus, 3000);
 }
 
+// ── Normal cancel modal ───────────────────────────────────────────────────────
 function showCancelModal() {
     document.getElementById('cancelModal').style.display = 'flex';
 }
@@ -419,6 +458,21 @@ function closeCancelModal() {
 }
 document.getElementById('cancelModal')?.addEventListener('click', function(e) {
     if (e.target === this) closeCancelModal();
+});
+
+// ── GCash cancel warning modal ────────────────────────────────────────────────
+function showGcashCancelWarning() {
+    document.getElementById('gcashWarnModal').classList.add('active');
+}
+function closeGcashWarnModal() {
+    document.getElementById('gcashWarnModal').classList.remove('active');
+}
+function proceedCancel() {
+    closeGcashWarnModal();
+    showCancelModal();
+}
+document.getElementById('gcashWarnModal').addEventListener('click', function(e) {
+    if (e.target === this) closeGcashWarnModal();
 });
 </script>
 

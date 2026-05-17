@@ -87,7 +87,9 @@ if (isset($_POST['verify_receipt'])) {
              WHERE order_id = '$order_id'"
         );
         $notif_title = "GCash Payment Verified ✅";
-        $notif_msg   = "Your GCash downpayment for Order #$order_code has been verified! Your order is now being prepared.";
+        $notif_msg   = $order['payment_method'] === 'gcash_full'
+            ? "Your GCash full payment for Order #$order_code has been verified! Your order is now being prepared."
+            : "Your GCash downpayment for Order #$order_code has been verified! Your order is now being prepared.";
         mysqli_query($conn, "INSERT INTO notifications (user_id, order_id, title, message) VALUES ('$uid', '$order_id', '$notif_title', '$notif_msg')");
 
     } elseif ($action === 'rejected') {
@@ -103,7 +105,9 @@ if (isset($_POST['verify_receipt'])) {
              WHERE order_id = '$order_id'"
         );
         $notif_title = "GCash Payment Rejected ❌";
-        $notif_msg   = "Your GCash downpayment for Order #$order_code was rejected. Reason: $reject_reason. Please re-upload your receipt.";
+        $notif_msg   = $order['payment_method'] === 'gcash_full'
+            ? "Your GCash full payment for Order #$order_code was rejected. Reason: $reject_reason. Please re-upload your receipt."
+            : "Your GCash downpayment for Order #$order_code was rejected. Reason: $reject_reason. Please re-upload your receipt.";
         mysqli_query($conn, "INSERT INTO notifications (user_id, order_id, title, message) VALUES ('$uid', '$order_id', '$notif_title', '$notif_msg')");
     }
 
@@ -182,6 +186,8 @@ $receipt_status  = $order['gcash_receipt_status'] ?? 'not_required';
 $receipt_file    = $order['gcash_receipt'] ?? null;
 $has_receipt     = !empty($receipt_file);
 $downpayment     = $order['gcash_downpayment'] ?? null;
+$payment_method  = $order['payment_method'] ?? 'pickup';
+$is_gcash_full   = $payment_method === 'gcash_full';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -240,6 +246,15 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
             border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #ffc107;
             margin-bottom: 14px; display: flex; gap: 8px; align-items: flex-start;
         }
+
+        .payment-method-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
+            margin-top: 4px;
+        }
+        .payment-method-badge.gcash-full { background: rgba(33,150,243,0.15); color: #2196f3; border: 1px solid rgba(33,150,243,0.3); }
+        .payment-method-badge.pickup     { background: rgba(255,193,7,0.15);  color: #ffc107; border: 1px solid rgba(255,193,7,0.3); }
+        .payment-method-badge.downpay    { background: rgba(76,175,80,0.15);  color: #4caf50; border: 1px solid rgba(76,175,80,0.3); }
 
         .receipt-lightbox {
             display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
@@ -351,6 +366,16 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
                         <h2>ORDER ID: ORD-<?php echo str_pad($order_id, 3, '0', STR_PAD_LEFT); ?></h2>
                         <p class="od-meta">Date of Order: <?php echo $order_date; ?></p>
                         <p class="od-meta"><i class="fa fa-clock" style="color:var(--pop-color);margin-right:6px;"></i>Pickup: <?php echo htmlspecialchars($pickup_display); ?></p>
+
+                        <!-- Payment Method Badge -->
+                        <?php if ($is_gcash_full): ?>
+                            <span class="payment-method-badge gcash-full">💙 GCash Full Payment</span>
+                        <?php elseif ($payment_method === 'pickup' && $downpayment): ?>
+                            <span class="payment-method-badge downpay">💙 Pay upon Pickup + GCash Downpayment</span>
+                        <?php else: ?>
+                            <span class="payment-method-badge pickup">🏪 Pay upon Pickup (Cash)</span>
+                        <?php endif; ?>
+
                         <?php if ($order['order_status'] === 'completed' && !empty($order['completed_at'])): ?>
                         <p class="od-meta" style="color:#4caf50; margin-top:4px;">
                             <i class="fa fa-check-circle" style="margin-right:6px;"></i>Picked up: <?php echo date('m/d/Y, · g:i A', strtotime($order['completed_at'])); ?>
@@ -429,7 +454,7 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
             <?php if ($receipt_status !== 'not_required'): ?>
             <div class="od-card receipt-card">
                 <h4 class="od-section-title" style="margin-bottom:14px;">
-                    💙 GCash Downpayment Receipt
+                    💙 <?php echo $is_gcash_full ? 'GCash Full Payment Receipt' : 'GCash Downpayment Receipt'; ?>
                 </h4>
 
                 <?php
@@ -454,7 +479,7 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
 
                 <?php if ($downpayment): ?>
                 <div class="receipt-info-row">
-                    <span>Required Downpayment (50%)</span>
+                    <span><?php echo $is_gcash_full ? 'Full Amount Paid' : 'Required Downpayment (50%)'; ?></span>
                     <strong>₱<?php echo number_format($downpayment, 2); ?></strong>
                 </div>
                 <?php endif; ?>
@@ -528,16 +553,29 @@ $downpayment     = $order['gcash_downpayment'] ?? null;
                     <span>SubTotal:</span>
                     <span>P<?php echo number_format($subtotal, 0); ?></span>
                 </div>
+
                 <?php if ($downpayment): ?>
-                <div class="od-summary-row">
-                    <span>GCash Downpayment (50%):</span>
-                    <span style="color:#28a745;">₱<?php echo number_format($downpayment, 2); ?></span>
-                </div>
-                <div class="od-summary-row">
-                    <span>Remaining upon Pickup:</span>
-                    <span>₱<?php echo number_format($order['total_amount'] - $downpayment, 2); ?></span>
-                </div>
+                    <?php if ($is_gcash_full): ?>
+                        <div class="od-summary-row">
+                            <span>GCash Full Payment:</span>
+                            <span style="color:#28a745;">₱<?php echo number_format($downpayment, 2); ?></span>
+                        </div>
+                        <div class="od-summary-row">
+                            <span>Remaining upon Pickup:</span>
+                            <span style="color:#28a745;">₱0.00</span>
+                        </div>
+                    <?php else: ?>
+                        <div class="od-summary-row">
+                            <span>GCash Downpayment (50%):</span>
+                            <span style="color:#28a745;">₱<?php echo number_format($downpayment, 2); ?></span>
+                        </div>
+                        <div class="od-summary-row">
+                            <span>Remaining upon Pickup:</span>
+                            <span>₱<?php echo number_format($order['total_amount'] - $downpayment, 2); ?></span>
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
+
                 <div class="od-summary-row od-total">
                     <span>Total:</span>
                     <span>P<?php echo number_format($order['total_amount'], 0); ?></span>
